@@ -1,0 +1,95 @@
+security:
+    providers:
+        chain_provider:
+            chain:
+                providers: [in_memory, user_db]
+        administrators:
+            entity: { class: MisionSucreRipesBundle:User}
+        in_memory:
+            memory:
+                users:
+                    admin: { password: hola , roles: 'ROLE_ADMIN' }
+        user_db:
+            entity: { class: MisionSucre\RipesBundle\Entity\User, property: username }
+    role_hierarchy:
+        ROLE_ADMIN:       [ ROLE_COORD, ROLE_TRF, ROLE_DOC, ROLE_CTRL, ROLE_EJE,ROLE_OP ]
+        ROLE_CTRL: [ROLE_EJE]
+        ROLE_EJE: [ ROLE_COORD]
+        ROLE_COORD: [ ROLE_TRF,ROLE_DOC, ROLE_OP]
+        
+    encoders:
+        Symfony\Component\Security\Core\User\User:
+            algorithm: bcrypt
+            cost:      15
+        MisionSucre\RipesBundle\Entity\User:
+            algorithm: bcrypt
+            cost:      15
+    firewalls:
+        dev:
+            pattern: ^/(_(profiler|wdt|error)|css|images|js)/
+            security: false
+        login_firewall:
+            pattern: ^/login$
+            anonymous: ~
+        default:
+            anonymous: ~
+            provider: user_db
+            http_basic: ~        
+            form_login:
+                login_path: /login
+                check_path: /login_check
+                username_parameter: _username
+                password_parameter: _password
+            logout:
+                path: /logout
+                target: /
+                invalidate_session: false
+        main:
+            form_login:
+            # el usuario es redirigido aquí cuando él/ella necesita ingresar
+                login_path: /login
+                # si es ‘‘true‘‘, reenvía al usuario al formulario de acceso en lugar de redirig
+                use_forward: false
+                # presenta el formulario de acceso aquí
+                check_path: /login_check
+                # por omisión, el formulario de acceso DEBE ser POST, no GET
+                post_only: true
+                # opciones para redirigir en ingreso satisfactorio (lee más adelante)
+                always_use_default_target_path: false
+                default_target_path: /
+                target_path_parameter: _target_path
+                use_referer: false
+                # opciones para redirigir en ingreso fallido (lee más adelante)
+                failure_path: null
+                failure_forward: false
+                # nombres de campo para el nombre de usuario y contraseña
+                username_parameter: _username
+                password_parameter: _password
+                # opciones del elemento csrf
+                csrf_parameter: _csrf_token
+                intention: authenticate
+        secure_area:
+            pattern: ^/
+            form_login: ~
+            provider: user_db
+    access_control:
+        # require ROLE_ADMIN for /admin*
+        - { path: ^/admin, roles: ROLE_ADMIN }
+        - { path: ^/aldea, roles: IS_AUTHENTICATED_FULLY }
+        - { path: ^/coord, roles: ROLE_COORD }
+        - { path: ^/usuario, roles: IS_AUTHENTICATED_FULLY }
+        - { path: ^/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/ambiente, roles: IS_AUTHENTICATED_FULLY }
+        - { path: ^/persona, roles: IS_AUTHENTICATED_FULLY }
+        - { path: ^/triunfadorinfo, roles: ROLE_TRF }
+        - { path: ^/docenteinfo, roles: ROLE_DOC }
+        - { path: ^/triunfador, roles: ROLE_COORD }
+        - { path: ^/operario, roles: ROLE_COORD }
+        - { path: ^/docente, roles: ROLE_COORD }
+        - { path: ^/eje, roles: ROLE_EJE }
+        - { path: ^/aldeacoordinador, roles: ROLE_COORD }
+        
+    
+        
+        
+    

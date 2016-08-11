@@ -1,0 +1,32 @@
+<?php
+
+namespace MisionSucre\RipesBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * Parroquia
+ *
+ * @ORM\Table(name="mision")
+ * @ORM\Entity
+ */
+class Mision
+{
+    /**
+     * @ORM\Column(type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="AUTO")
+     */
+    private $id;
+    
+    /**
+     * @ORM\OneToMany(targetEntity="ParticipacionComunitaria", mappedBy="mision")
+     */
+    protected $personas;
+
+    /**
+     * @ORM\Column(type="string", length=40)
+     */
+    private $nombre;
+    
+}

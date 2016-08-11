@@ -1,0 +1,25 @@
+.gray{
+    background-color: gray;
+}
+
+.alerta *{
+    background-color: #EFF951;
+    background: #EFF951;
+    font-weight: bold;
+}
+
+.red{
+    background-color: red;
+    background: red;
+}
+
+.rojosuave{
+    background-color: #F78181;
+    background: #F78181;
+}
+
+.rojosuave *{
+    background-color: #F78181;
+    background: #F78181;
+}
+

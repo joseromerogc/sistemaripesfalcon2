@@ -1,0 +1,68 @@
+{% extends 'MisionSucreRipesBundle::layout.html.twig' %}
+{% block stylesheets %}
+{{ parent() }}
+	<link rel="stylesheet" type="text/css" href="{{asset('css/demo_table.css')}}">
+	<link rel="stylesheet" type="text/css" href="{{asset('css/demo_page.css')}}">
+	<link rel="stylesheet" type="text/css" href="{{asset('css/botones.css')}}">
+	<link rel="stylesheet" type="text/css" href="{{asset('css/dataTables.tableTools.css')}}">	
+        <link rel="stylesheet" type="text/css" href="{{asset('css/table/littletable.css')}}">
+{% endblock %}
+
+{% block content %}
+<h1 class="heading_style">Registrar Triunfador</h1> 
+
+<h1 class="heading_style">Triundadores no Vinculados</h1> 
+            
+<h1 class="sub_heading_style">Buscar por: </h1> 
+Cédula: <input type="search" class="cedula" />
+Apellido: <input type="search" class="apellido" />
+<input type="button" value="Buscar" id="b_buscar"/>
+
+<div class="error">
+</div>
+
+<div class="tabla_triunfadores">
+    
+</div>
+
+<script>    
+    
+$(document).ready(function(){
+
+
+$('#b_buscar').click( function () {
+
+if($('.cedula').val()=="" && $('.apellido').val()==""){
+    $('.error').html("Parámetros de Busqueda Vacios.");
+}
+else{
+
+$('.error').html("");
+
+$('.tabla_triunfadores').html('<img src="{{asset('img/ajax-loader.gif')}}" width="16" height="16" alt="cargando" />');
+
+var cedula=$('.cedula').val();
+var apellido=$('.apellido').val();
+
+var query='{"query":{"cedula":"'+cedula+'","apellido":"'+apellido+'"}}';
+
+$.ajax({
+        url: "vincular/busqueda/"+query+"",
+        success: function (html) {$('.tabla_triunfadores').html(html);}
+    });
+$('html, body').animate({scrollTop:220});
+
+}
+
+});
+
+$('.cedula').keypress( function (event) {
+    return event.charCode >= 48 && event.charCode <= 57  || event.charCode ==0  ||event.charCode ==45;
+});
+
+});
+
+</script>
+
+
+{% endblock %}

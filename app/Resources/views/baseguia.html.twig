@@ -1,0 +1,70 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" >
+<head>
+	<meta http-equiv="content-type"/>
+         <meta charset="UTF-8" />
+         <link rel="icon" type="image/x-icon" href="{{ asset('favicon.png') }}" />
+	<title>Guía | Sistema Ripes Falcón</title>
+<link rel="stylesheet" type="text/css" media="screen" href="{{asset('css/guia/style.css')}}" />
+{% block head %}
+                        {% endblock %}
+
+</head>
+<body>
+
+<div id="container">
+	<div id="intro">
+		<div id="pageHeader">
+			<h1><span>Sistema Ripes Falcón</span></h1>
+			<h2><span>Guía de Usuario</span></h2>
+		</div>
+	</div>
+
+	<div id="supportingText">
+            
+                    <div id="cuerpo">
+			{% block body %}
+                        {% endblock %}
+                    </div>    
+		<div id="footer">
+                        Fundaremis 2016
+		</div>
+
+	</div>
+
+	
+	<div id="linkList">
+		<div id="linkList2">
+			<div id="lselect">
+				<ul>
+                                    <li></li>
+                                        <li><a href="{{path('guia')}}" >Inicio</a></li>
+                                        <li><a href="{{path('home')}}" >Ir al Sistema</a></li>
+                                        <li><a href="{{asset('documentos/manual.pdf')}}" >Manual</a></li>
+					<li><a href="{{path('guia_ingreso')}}" >¿Cómo Ingresar al Sistema?</a></li>
+					<li><a href="">About Us</a></li>
+					<li><a href="">News</a></li>
+					<li><a href="">Contact</a></li>
+					<li><a href="">Links</a></li>
+				</ul>
+			</div>
+
+			<div id="larchives">
+				<h3 class="archives"><span>¿Cómo Ingresar al Sistema?</span></h3>
+				<ul>
+					<li><a href="">Lorem Ipsum</a></li>
+					<li><a href="">Lorem Ipsum</a></li>
+					<li><a href="">Lorem Ipsum</a></li>
+					<li><a href="">Lorem Ipsum</a></li>
+				</ul>
+			</div>
+		</div>
+	</div>
+
+
+</div>
+<!-- Designed by DreamTemplate. Please leave link unmodified. -->
+<br><center><a href="http://www.dreamtemplate.com" title="Website Templates" target="_blank">Website templates</a></center>
+</body>
+</html>

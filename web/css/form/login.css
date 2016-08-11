@@ -1,0 +1,125 @@
+p {
+  padding: 0px;
+}
+.clearfix:after {
+  content: ".";
+  display: block;
+  clear: both;
+  visibility: hidden;
+  line-height: 0;
+  height: 0;
+}
+.logo {
+  font-family: 'Gabriela';
+  font-size: 30pt;
+  font-weight:bolder;
+  text-shadow: -5px -5px 5px black;
+  color: white;
+  line-height: 1;
+  text-align: center;
+}
+form h2{
+text-align: center;	
+	}
+#login,
+#register,
+#reset-password {
+  width: 600px;
+  background: #a91313;
+  margin: 5% auto 0 auto;
+  padding: 30px;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  border-radius: 5px;
+  border: 1px solid #ddd;
+}
+
+.col-50 {
+  float: left;
+  width: 48%;
+  margin-right: 4%;
+}
+.col-50:nth-child(2n) {
+  margin-right: 0px;
+}
+.cj-form label {
+  display: block;
+  margin: 10px 0;
+  width: 100%;
+  position: relative;
+}
+.cj-form label span {
+  top: 12px;
+  left: 15px;
+  color: black;
+  font-size: 1.3em;
+  margin-left: 0px;
+  font-weight: bolder;
+}
+
+#cajaform{
+margin-left: 15%;	
+	}
+
+.cj-form label input[type="text"],
+.cj-form label input[type="email"],
+.cj-form label input[type="password"] {
+  width: 82%;
+  border: 0px;
+  padding: 2% 2% 2% 2%;
+  background: #ffffff;
+  box-shadow: none;
+  border: 1px solid #ddd;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  border-radius: 5px;
+  outline: none;
+  font-size: 1.5em;
+  color: #333;
+}
+.cj-form button[type="submit"] ,
+.cj-form button[type="button"] {
+  background: #5858FA;
+  color: #fff;
+  font-size: 12pt;
+  text-transform: uppercase;
+  border: 1px solid #2E2EFE;
+  text-align: center;
+  width: 86%;
+  padding: 2% 2% 2% 2%;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.cj-form button[type="button"]{
+    margin-top: 20px;
+    background: #01DF74;
+    border: 1px solid #01DF01;
+}
+.cj-form .sep {
+  border-top: 1px solid #ededed;
+  margin: 30px 0 10px 0;
+  position: relative;
+}
+.cj-form .sep span {
+  width: 50px;
+  background: #fff;
+  padding: 10px 10px 0 10px;
+  display: inline-block;
+  position: absolute;
+  top: -23px;
+  left: 50%;
+  margin-left: -25px;
+  color: #999;
+}
+
+.flash-notice{
+    
+background: crimson;
+text-align: center;
+font-size: 1.5em;
+font-weight: bold;
+color: #ffffff;
+}

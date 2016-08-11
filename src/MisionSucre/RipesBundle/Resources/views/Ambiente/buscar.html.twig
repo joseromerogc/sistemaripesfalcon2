@@ -1,0 +1,317 @@
+{% extends 'MisionSucreRipesBundle::layout.html.twig' %}
+{% block stylesheets %}
+{{ parent() }}
+	<link rel="stylesheet" type="text/css" href="{{asset('css/demo_table.css')}}">
+	<link rel="stylesheet" type="text/css" href="{{asset('css/demo_page.css')}}">
+	<link rel="stylesheet" type="text/css" href="{{asset('css/botones.css')}}">
+	<link rel="stylesheet" type="text/css" href="{{asset('css/dataTables.tableTools.css')}}">	
+        <link rel="stylesheet" type="text/css" href="{{asset('css/table/littletable.css')}}">
+{% endblock %}
+
+{% block content %}
+    
+<h1 class="heading_style">Busqueda de Ambiente</h1> 
+
+<h1 class="sub_heading_style">Buscar por: </h1> 
+
+
+ <table style="width:100%;">
+  <tr>
+       {% if app.user.tipUsr!="5"  %}
+      <td>
+         
+            Municipio Aldea: 
+            <select id="form_municipio" class="municipio" >
+                        <option value="" selected> Seleccione</option>
+                        {% for key, m in municipios %}
+                            <option value="{{ key }}" >{{m}}</option>
+                        {% endfor %}
+            </select>
+      </td>
+      <td>
+          Parroquia Aldea:
+        <select id="form_parroquia" required="required" class ="parroquia">
+                                <option value=""> Seleccione</option>
+        </select>
+      </td>
+    <td>
+        Aldea:
+        <select id="form_aldea" required="required" class ="aldea">
+                                <option value=""> Seleccione</option>
+        </select>
+    </td>
+    {% endif %}
+  </tr>
+  <tr>
+      <td>
+          Anexo:
+        <select id="form_anexo" required="required" class ="anexo">
+                                <option value=""> Seleccione</option>
+        </select>
+      </td>
+      <td>
+          Nombre de Ambiente: <input type="search" class="nombre" />
+      </td>
+      <td>
+          Turno: 
+        <select id="form_turno" class="turno" >
+                                <option value="" selected> Seleccione</option>
+                                {% if app.user.tipUsr=="5"  %}
+                                {% for t in turnoscoordinador %}
+                                <option value="{{t.turno}}" >{{t.turno}}</option>
+                                {%endfor %}
+                                {%endif %}
+        </select>
+      </td>
+  </tr>
+  
+  <tr>
+      <td>
+          Modalidad de P.N.F.: 
+        <select id="form_modalidad" class="modalidad" >
+                                <option value="" selected> Seleccione</option>
+                                <option value="TRIMESTRAL" > TRIMESTRAL</option>
+                                <option value="SEMESTRAL" > SEMESTRAL</option>
+                                <option value="TI" > T.I.</option>
+        </select>
+      </td>
+      <td>
+      P.N.F.:
+<select id="form_pnf" required="required" class ="pnf">
+                        <option value=""> Seleccione</option>
+</select>
+      </td>
+      <td>
+          Condición:
+
+        <select id="form_condicion" required="required" class="condicion" >
+            <option selected="selected" value="">Seleccione</option>
+            <option value="Nuevo">Nuevo</option>
+            <option value="Activo">Activo</option>
+            <option value="Egresado">Egresado</option>
+            <option value="Retirado">Retirado</option>
+            <option value="Culminado">Culminado</option>
+        </select>
+      </td>
+  </tr>
+  
+  <tr>
+      <td>
+          Periodo Académico
+<select id="form_periodoacademico" required="required" class ="periodoacademico">
+                        <option value="">Seleccion </option>
+</select>
+      </td>
+      
+      <td>
+          Trayecto:
+<select id="form_trayecto" required="required" class ="trayecto">
+                        <option value=""> Seleccione</option>
+                        <option value="1"> 1</option>
+                        <option value="2"> 2</option>
+                        <option value="3"> 3</option>
+                        <option value="4"> 4</option>
+                        <option value="5"> 5</option>
+</select>
+      </td>
+      <td>
+          Periodo/Tramo:
+<select id="form_periodo" required="required" class ="periodo">
+                        <option value=""> Seleccione</option>
+                        <option value="1"> 1</option>
+                        <option value="2"> 2</option>
+                        <option value="3"> 3</option>
+</select>
+      </td>
+  </tr>
+      
+</table> 
+
+<input type="submit" value="Buscar" id="b_buscar" required/>
+
+<div class="error">
+</div>
+
+<div class="tabla_ambiente">    
+</div>
+
+<script>    
+    
+$(document).ready(function(){
+    
+if($('#form_modalidad').value!=""){
+    
+    $('#form_pnf').html('<option value="">Cargando........</option>');
+    
+    var id=$('#form_modalidad').val();
+    $.ajax({
+        url: "../ambiente/modalidad/"+id+"",
+        success: function (html) {$('#form_pnf').html(html);}
+    });
+}
+
+{% if aldea  %}
+    var aldea = {{aldea}};
+    $('#form_anexo').html('<option value="" >Seleccione</option>');
+    
+    var id=aldea;
+    $.ajax({
+        url: "../anexoaldea/"+id+"",
+        success: function (html) {$('#form_anexo').html(html);}
+    });
+{% else  %}
+    
+if($('#form_municipio').value!=""){
+    
+    $('#form_parroquia').html('<option value="" >Seleccione</option>');
+    
+    var id=$('#form_municipio').val();
+    $.ajax({
+        url: "../../persona/parroquias/"+id+"",
+        success: function (html) {$('#form_parroquia').html(html);}
+    });
+}
+
+ $('#form_municipio').change( function () {
+
+    $('#form_parroquia').html('<option value="">Cargando........</option>');
+    
+    var id=$('#form_municipio').val();
+    $.ajax({
+        url: "../../persona/parroquias/"+id+"",
+        success: function (html) {$('#form_parroquia').html(html);}
+    });
+});
+
+if($('#form_parroquia').value!=""){
+    
+    $('#form_aldea').html('<option value="" >Seleccione</option>');
+    
+    var id=$('#form_parroquia').val();
+    $.ajax({
+        url: "../../aldea/coordinador/aldeas/"+id+"",
+        success: function (html) {$('#form_aldea').html(html);}
+    });
+}
+
+ $('#form_parroquia').change( function () {
+
+    $('#form_aldea').html('<option value="" >Seleccione</option>');
+    
+    var id=$('#form_parroquia').val();
+    $.ajax({
+        url: "../../aldea/coordinador/aldeas/"+id+"",
+        success: function (html) {$('#form_aldea').html(html);}
+    });
+});
+
+if($('#form_aldea').value!=""){
+    
+    $('#form_anexo').html('<option value="" >Seleccione</option>');
+    
+    var id=$('#form_aldea').val();
+    $.ajax({
+       url: "../anexoaldea/"+id+"",
+        success: function (html) {$('#form_anexo').html(html);}
+    });
+}
+
+ $('#form_aldea').change( function () {
+
+    $('#form_anexo').html('<option value="" >Seleccione</option>');
+    
+    var id=$('#form_aldea').val();
+    $.ajax({
+        url: "../anexoaldea/"+id+"",
+        success: function (html) {$('#form_anexo').html(html);}
+    });
+});
+
+{%endif%}
+    
+$('#form_modalidad').change( function () {
+
+if($('#form_modalidad').val()=="TI"){
+    $('#form_trayecto').html("<option value='1'>1</option>");
+    $('#form_periodo').html("<option value='1'>1</option>");
+}
+
+else{
+    
+    var txtt="<option value=''>Seleccione</option>";
+    var txtp="<option value=''>Seleccione</option>";
+    
+    for(i=1;i<6;i++)
+            txtt+="<option value='"+i+"' >"+i+"</option>";
+    for(i=1;i<4;i++)
+            txtp+="<option value='"+i+"' >"+i+"</option>";
+            
+    $('#form_trayecto').html(txtt);
+    $('#form_periodo').html(txtp);
+    
+}
+
+$('#form_pnf').html('<option value="">Cargando........</option>');
+$('#form_periodoacademico').html('<option value="">Cargando........</option>');
+    
+    var id=$('#form_modalidad').val();
+    
+    $.ajax({
+        url: "../ambiente/modalidad/"+id+"",
+        success: function (html) {$('#form_pnf').html(html);}
+    });
+    $.ajax({
+        url: "../periodoacademico/modalidad/"+id+"",
+        success: function (html) {$('#form_periodoacademico').html(html);}
+    });
+});
+
+$('#b_buscar').click( function () {
+
+$('.error').html("");
+
+$('.tabla_ambiente').html('<img src="{{asset('img/ajax-loader.gif')}}" width="16" height="16" alt="cargando" />');
+
+{% if aldea  %}
+    var aldea = {{aldea}};
+    var municipio = "%%";
+    var parroquia = "%%";
+{% else  %}
+    var aldea=$('.aldea').val();
+    var municipio=$('.municipio').val();
+    var parroquia=$('.parroquia').val();
+    if(!aldea)
+        aldea="%%"
+{% endif  %}
+
+var nombre=$('.nombre').val();
+var turno=$('.turno').val();
+var modalidad=$('.modalidad').val();
+var pnf=$('.pnf').val();
+var trayecto=$('.trayecto').val();
+var periodo=$('.periodo').val();
+var condicion=$('.condicion').val();
+var periodoacademico=$('.periodoacademico').val();
+
+var query='{"query":{"aldea":"'+aldea+'","municipio":"'+municipio+'","parroquia":"'+parroquia+'","nombre":"'+nombre+'","turno":"'+turno+'","modalidad":"'+modalidad+'","pnf":"'+pnf+'","trayecto":"'+trayecto+'","periodo":"'+periodo+'","periodoacademico":"'+periodoacademico+'","condicion":"'+condicion+'"}}';
+
+$.ajax({
+    method: "POST",
+        url: "busqueda",
+        data: {param: query},
+        success: function (html) {$('.tabla_ambiente').html(html);}
+    });
+$('html, body').animate({scrollTop:220});
+});
+
+$('.promocion').keypress( function (event) {
+
+    return event.charCode >= 48 && event.charCode <= 57  || event.charCode ==0  ||event.charCode ==45;
+});
+
+});
+
+</script>
+
+
+{% endblock %}

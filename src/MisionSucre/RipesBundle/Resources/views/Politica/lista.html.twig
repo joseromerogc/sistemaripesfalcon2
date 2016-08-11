@@ -1,0 +1,167 @@
+{% extends 'MisionSucreRipesBundle::layout.html.twig' %}
+{% block stylesheets %}
+{{ parent() }}
+	<link rel="stylesheet" type="text/css" href="{{asset('css/demo_table.css')}}">
+	<link rel="stylesheet" type="text/css" href="{{asset('css/demo_page.css')}}">
+	<link rel="stylesheet" type="text/css" href="{{asset('css/botones.css')}}">
+	<link rel="stylesheet" type="text/css" href="{{asset('css/dataTables.tableTools.css')}}">
+	
+	
+{% endblock %}
+
+{% block content %}
+
+<h1 class="heading_style">Lista de Participación Política</h1> 
+<div id="dt_example">
+<div id="container" style="width: 100%">
+   
+<table cellpadding="0" cellspacing="0" border="0" class="display" id="example">
+	<thead>
+		<tr>
+			<th>#</th></th><th>Cédula</th><th>Nombres</th><th>Apellidos</th><th>Aldea</th><th>Estatus</th><th>Afiliciación Política</th>
+                        <th>Cargo</th>
+                        <th></th>
+		</tr>
+	</thead>
+	<tbody>
+	
+{% set i = 1 %}
+
+
+{% for c in politicastriunfadores %}
+    
+    
+	{% if c.sexPer == 'm' %}
+			{% set class = 'gradeA' %}
+	{% else %}	
+			{% set class = 'gradeU' %}		
+{% endif %}	
+
+	
+		<tr class="{{class}}">
+    <td>{{i}}</td><td>{{ c.cedPer}}</td>
+    <td>{{ c.priNom |upper}} {{ c.segNom |upper}}</td>
+    <td>{{ c.priApe |upper}} {{ c.segApe |upper}}</td>
+    <td><a class="enlace" href="{{path('aldea_show',{'id': c.idaldea})}}">{{c.aldea}}</a></td>
+    <td>Triunfador</td>
+    <td>{{c.afiliacion}} </td>
+    <td>{{c.cargo}} </td>
+   
+    <td><a class="enlace" href="{{path('usuario_show',{'id': c.idusr})}}">Mostrar</a></td>
+    
+    
+{% set i = i+1 %}
+
+{% endfor %}  
+
+{% for c in politicasdocentes %}
+    
+    
+	{% if c.sexPer == 'm' %}
+			{% set class = 'gradeA' %}
+	{% else %}	
+			{% set class = 'gradeU' %}		
+{% endif %}	
+
+	
+		<tr class="{{class}}">
+    <td>{{i}}</td><td>{{ c.cedPer}}</td>
+    <td>{{ c.priNom |upper}} {{ c.segNom |upper}}</td>
+    <td>{{ c.priApe |upper}} {{ c.segApe |upper}}</td>
+    <td><a class="enlace" href="{{path('aldea_show',{'id': c.idaldea})}}">{{c.aldea}}</a></td>
+    <td>Docente</td>
+    <td>{{c.afiliacion}} </td>
+    <td>{{c.cargo}} </td>
+   
+    <td><a class="enlace" href="{{path('usuario_show',{'id': c.idusr})}}">Mostrar</a></td>
+    
+    
+{% set i = i+1 %}
+
+{% endfor %}  
+
+{% for c in politicasoperarios %}
+    
+    
+	{% if c.sexPer == 'm' %}
+			{% set class = 'gradeA' %}
+	{% else %}	
+			{% set class = 'gradeU' %}		
+{% endif %}	
+
+	
+		<tr class="{{class}}">
+    <td>{{i}}</td><td>{{ c.cedPer}}</td>
+    <td>{{ c.priNom |upper}} {{ c.segNom |upper}}</td>
+    <td>{{ c.priApe |upper}} {{ c.segApe |upper}}</td>
+    <td><a class="enlace" href="{{path('aldea_show',{'id': c.idaldea})}}">{{c.aldea}}</a></td>
+    <td>Operarios</td>
+    <td>{{c.afiliacion}} </td>
+    <td>{{c.cargo}} </td>
+    
+    <td><a class="enlace" href="{{path('usuario_show',{'id': c.idusr})}}">Mostrar</a></td>
+    
+    
+{% set i = i+1 %}
+
+{% endfor %}  
+   
+{% for c in politicascoordinadores %}
+    
+    
+	{% if c.sexPer == 'm' %}
+			{% set class = 'gradeA' %}
+	{% else %}	
+			{% set class = 'gradeU' %}		
+{% endif %}	
+
+	
+		<tr class="{{class}}">
+    <td>{{i}}</td><td>{{ c.cedPer}}</td>
+    <td>{{ c.priNom |upper}} {{ c.segNom |upper}}</td>
+    <td>{{ c.priApe |upper}} {{ c.segApe |upper}}</td>
+    <td><a class="enlace" href="{{path('aldea_show',{'id': c.idaldea})}}">{{c.aldea}}</a></td>
+    <td>Coordinador de Aldea</td>
+    <td>{{c.afiliacion}} </td>
+    <td>{{c.cargo}} </td>
+    <td><a class="enlace" href="{{path('usuario_show',{'id': c.idusr})}}">Mostrar</a></td>
+    
+    
+{% set i = i+1 %}
+
+{% endfor %}  
+		</tr>
+		
+</table>
+</div>
+</div>
+</div>
+<script src="{{asset('js/jquery.dataTables.js')}}" type="text/javascript" type="text/javascript"></script>
+<script src="{{asset('js/dataTables.tableTools.js')}}" type="text/javascript" type="text/javascript"></script>
+
+<script>
+$(document).ready(function() {
+$('#example').dataTable( {
+        "order": [[ 1, "asc" ]],
+        "oLanguage": {
+            "sLengthMenu": "Mostrar _MENU_ Aliados por Página",
+            "sZeroRecords": "No se encontraron Resultados",
+            "sSearch": "Filtro: ",
+            
+            "sInfo": "Mostrando _START_ a _END_  de un Total de _TOTAL_ Aliados",
+            "sInfoEmpty": "Mostrando 0 de 0 de 0 Aliados",
+            "sInfoFiltered": "(Filtrado de un _MAX_ total de Aliados)",
+            "oPaginate": {
+                "sNext": "Página Siguiente",
+                "sPrevious": "Página Anterior"
+                }
+        },
+        dom: 'T<"clear">lfrtip'
+        ,
+        tableTools:{
+        		"sSwfPath": "{{asset('swf/copy_csv_xls_pdf.swf')}}",
+        }
+    } );
+} );
+</script>
+{% endblock %}

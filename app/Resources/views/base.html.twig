@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html xmlns:hx="http://purl.org/NET/hinclude">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="theme-color" content="#ffffff">
+        <title>Sistema Ripes Falcón-{{app.request.attributes.get('_route')|replace({'_': '->'})|capitalize}}</title>
+        {% block stylesheets %}{% endblock %}
+        <link rel="icon" type="image/x-icon" href="{{ asset('favicon.png') }}" />
+        <link rel="stylesheet" type="text/css" href="{{ asset('css/base.css') }}"/>        
+        {% block js %}{% endblock %}
+    </head>
+    <body>
+    <div id="cintillo">
+			<img src="{{ asset('img/cintillo.png') }}" alt="Cintillo Misión Sucre"/>    
+    </div>
+
+	{% for flashMessage in app.session.flashbag.get('notice') %}
+        <div class="flash-notice">
+        {{ flashMessage }}
+        </div>
+        
+        
+        <div class="flash-notice">
+            {% block ms %}
+            {% endblock %}                
+        </div>
+        {% endfor %}    
+		
+		<div id="cuerpo">
+		{% block body %}
+		{% endblock %}
+		<div class='footer-wrapper'>
+			Misión Sucre Falcón 2015 | Todos los Derechos Reservados
+		</div>	
+		<script>
+		{% block javascripts %}
+                {% endblock %}
+                </script>
+		
+    
+    </body>
+</html>

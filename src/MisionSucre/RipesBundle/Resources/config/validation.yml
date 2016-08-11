@@ -1,0 +1,71 @@
+MisionSucre\RipesBundle\Entity\User:
+  constraints:
+        - Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity: 
+            fields: username
+            message: Este Nombre de Usuario ya Existe
+  properties:
+        username:
+            - Email: { message: "Formato de correo Errado. Ej: example@punto.com" }
+            - NotBlank: ~
+        password:
+            - NotBlank: ~
+            - Length:
+                min: 8
+                max: 30
+                minMessage: "La Contraseña debe ser mayor a {{ limit }} Caracteres"
+                maxMessage: "La Contraseña debe ser menor a {{ limit }} Caracteres"
+        tip_usr:
+            - NotBlank: { message: "Eliga Uno"}
+
+MisionSucre\RipesBundle\Entity\Persona:
+  constraints:
+        - Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity: 
+            fields: cedPer
+            message: Cédula ya Registrada
+        - Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity: user
+  properties:
+        priNom:
+            - NotBlank: { message: "Por favor Escribir Nombre"}
+        priApe:
+            - NotBlank: { message: "Por favor Escribir Nombre"}
+        celPer:
+            - Regex:
+                pattern: '/[0][4|2][1|2][4|2|6][-][0-9]{7}/'
+                message: "Formato Incorrecto. Ej: 0414-1487596"
+        cedPer:
+            - NotBlank: { message: "Por favor Escribir Cédula"}
+            - Length:
+                min: 4
+                max: 9
+                minMessage: "La Cédula debe ser mayor a {{ limit }} Caracteres"
+                maxMessage: "La Cédula debe ser menor a {{ limit }} Caracteres"
+        edadPer:
+            - NotBlank: { message: "Por favor Escribir Cédula"}
+            - Length:
+                min: 1
+                minMessage: "La Cédula debe ser mayor a {{ limit }} Caracteres"
+            - Range: 
+                min: 15
+                minMessage: "Edad muy corta"
+
+MisionSucre\RipesBundle\Entity\Persona:
+  constraints:
+        - Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity: user
+  properties:
+        cant_hij:
+            - NotBlank: { message: "Por favor Escribir Cantidad de Hijos"}
+            - Range: 
+                min: 0
+                minMessage: "Edad muy corta"
+                
+MisionSucre\RipesBundle\Entity\Aldea:
+  constraints:
+        - Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity: 
+            fields: nombre
+            message: Este Nombre de Aldea ya Existe
+
+MisionSucre\RipesBundle\Entity\AldeaComunal:
+ constraints:
+        - Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity: 
+            fields: nombre
+            message: Este Nombre de Ambiente Comunal ya Existe

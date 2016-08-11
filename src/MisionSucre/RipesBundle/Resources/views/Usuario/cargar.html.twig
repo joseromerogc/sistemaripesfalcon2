@@ -1,0 +1,99 @@
+{% extends 'MisionSucreRipesBundle::layout.html.twig' %}
+
+{% block stylesheets %}
+{{ parent() }}
+<link href="{{ asset('css/botones.css') }}" rel="stylesheet" />
+<link href="{{ asset('css/form/input.css') }}" rel="stylesheet" />
+<link href="{{ asset('css/table/table.css') }}" rel="stylesheet" />
+{% endblock %}
+
+{% block content %}
+{{ parent() }}	
+ 
+<h1 class="heading_style">Cargar Usuarios {{tipousuario.0}}</h1> 
+ <a class="boton" href="{{ asset('documentos/usuarios.csv') }}" download>Descargar Formato</a>  
+ <div>
+ </br>Si usted tiene Microsoft Windows utilice este <a href="http://home.hccnet.nl/s.j.francke/csved/csvedsetup.exe" target="_blank">editor</a> para poder usar mejor el formato
+ </div> 
+ <form action="" method="post" {{ form_enctype(form) }}>
+       
+       <div style="margin: 40px;" class="upload">
+        {{ form_label(form.submitFile) }}:
+        {{ form_errors(form.submitFile) }}
+        {{ form_widget(form.submitFile) }}
+        </div>
+
+        <input type="button" value="Cargar" id="cargar"/>
+</form>
+
+        <div id="tabla">
+            
+        </div>
+  
+<script>       
+$(document).ready(function(){
+
+
+$( "#cargar" ).click(function() {
+
+        
+var inputFileImage = document.getElementById("form_submitFile");
+
+if(inputFileImage.value!==""){
+
+var img="<img src='{{asset('img/loader2.gif')}}'>";
+$('#tabla').html(img);
+
+var file = inputFileImage.files[0];
+
+var data = new FormData();
+
+data.append('archivo', file);
+
+
+    $.ajax({
+        url: "../usuario/tablacarga",
+        type: "POST",
+        contentType:false,
+        data: data,
+        processData:false,
+        cache:false,
+        success: function (html) {$('#tabla').html(html);}
+    });
+
+}
+else{
+   $('#tabla').html("<h1 class='error'>Por Favor Cargar Formato¡¡¡¡¡¡¡</h1>") 
+}
+});
+        
+});
+
+function registrar(){
+    
+    //convertir tabla en array javascript
+    var myTableArray = [];
+
+$("table#tablacentrada tr").each(function() {
+    var arrayOfThisRow = [];
+    var tableData = $(this).find('td');
+    if (tableData.length > 0) {
+        tableData.each(function() { arrayOfThisRow.push($(this).text()); });
+        myTableArray.push(arrayOfThisRow);
+    }  
+});
+var img="<img src='{{asset('img/loader.gif')}}'>";
+$('#msg').html(img);
+
+var usuarios = JSON.stringify(myTableArray);  
+    $.ajax({
+  method: "POST",
+  url: "../usuario/registrarcarga",
+  data: { usuarios: usuarios,tipousuario:  {{tipousuario.1}}},
+  success: function (html) {$('#msg').html(html);}
+});
+}
+</script>
+{% endblock %}
+
+

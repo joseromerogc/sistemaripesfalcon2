@@ -1,0 +1,109 @@
+@import url(http://fonts.googleapis.com/css?family=Roboto+Slab);
+* {
+    /* With these codes padding and border does not increase it's width and gives intuitive style.*/
+  
+	-webkit-box-sizing: border-box;   
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+}
+
+div#envelope{
+	width: 65%;
+	margin: 10px 10% 10px 10%;
+	padding:10px 0;
+	border: 2px solid gray;
+	border-radius:10px;
+} 	
+form{
+	width:70%;
+	margin:4% 15%;
+	font-family: 'Roboto Slab', serif;
+}  
+header{
+
+	background: url("../../img/form.png") top right no-repeat,
+	 url("../../img/form.png") top left no-repeat, #4180C5 ;
+	
+	text-align: center;
+	padding-top: 5px;
+	padding-bottom: 5px;
+	margin-top: -11px;
+	margin-bottom: -8px;
+	border-radius: 10px 10px 0 0;
+	color: aliceblue;
+} 
+
+/* Makes responsive fields.Sets size and field alignment.*/
+input[type=text],input[type=email],input[type=password],input[type=date]{
+	margin-bottom: 20px;
+	margin-top: 10px;
+	width:100%;
+	padding: 10px;
+	border-radius:5px;
+	border:1px solid #7ac9b7;
+	font-size: 1.5em;
+}
+input[type=submit],button[type=submit]
+{
+	margin-bottom: 20px;
+	width:100%;
+	padding: 15px;
+	border-radius:5px;
+	border:1px solid #7ac9b7;
+	background-color: #4180C5;
+	color: aliceblue;
+	cursor:pointer;
+}
+
+#submit:hover,#form_save:hover
+{
+ background-color: red;
+}
+textarea{
+	width:100%;
+	padding: 15px;
+	margin-top: 10px;
+    border:1px solid #7ac9b7;
+	border-radius:5px; 
+	margin-bottom: 20px;
+	resize:none;
+  } 
+input[type=text]:focus,textarea:focus {
+	border-color: #4697e4;
+}
+
+div.styled {
+    overflow:hidden; /* this hides the select's drop button */
+    padding:0; 
+    margin:20px 0 10px 0;
+    background: white url(../../img/formelements-select.png) no-repeat bottom right;
+    /* this is the new drop button, in image form */
+    border-radius:2px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+    border: solid 1px #ccc;
+    width:100%;
+}
+
+div.styled select {
+    width:115% /* this percentage effectively extends the drop down button out of view */;
+    background-color:transparent /* this hides the select's background making any styling visible from the div */;
+    background-image:none;
+    -webkit-appearance: none /* this is required for Webkit browsers */;
+    border:none;
+    box-shadow:none;
+    padding:0.3em 0.5em; /* padding should be added to the select, not the div */
+}
+
+.error ul,.error{
+margin: 0 0 10px 0;
+padding: 0;
+}
+
+.error ul li,.error{
+font-variant: small-caps;
+color: maroon;
+margin: 0;
+padding: 0;
+list-style-type: none;
+font-size: .9em; 
+}

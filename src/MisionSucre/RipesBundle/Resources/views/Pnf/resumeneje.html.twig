@@ -1,0 +1,167 @@
+{% extends 'MisionSucreRipesBundle::layout.html.twig' %}
+
+{% block stylesheets %}
+{{ parent() }}
+	<link rel="stylesheet" type="text/css" href="{{asset('css/table/littletable.css')}}">
+        <link rel="stylesheet" type="text/css" href="{{asset('css/blitzer/jquery-ui-1.10.4.custom.css')}}">
+{% endblock %}
+
+{% block js %}
+        {{ parent() }}
+	<script src="{{asset('js/jquery-ui-1.10.4.custom.js')}}"></script>
+        <script>
+            $(function() {
+		$( "#accordion" ).accordion({
+                heightStyle: "content",        
+                collapsible: true,
+                active: false
+                }        );            
+            });            
+            
+        </script>
+{% endblock %}    
+
+{% block content %}
+	{{ parent() }}
+
+        
+{% for flashMessage in app.session.flashbag.get('notice') %}
+        <div class="flash-notice">
+        {{ flashMessage }}
+        </div>
+{% endfor %}
+<h1 class="heading_style">Resumen de P.N.F.</h1> 
+<div id="accordion">
+    <h3>  Ambientes</h3>
+      <div> 
+    <table cellspacing='0'  style="display: inline"> <!-- cellspacing='0' is important, must stay -->
+        <tr > <th class="heading" colspan='7'> Cantidad de Ambientes por P.N.F.</th></tr>
+            <tr>
+                <th>P.N.F.</th><th>Cantidad de Ambiente</th>           
+            </tr><!-- Table Header -->
+    {% set cont = 0 %}               
+    {% for ca in cantamb%}
+        <tr>
+            <td>{{ca.nombre}}</td>
+            <td>{{ca.ca}}</td>
+            {% set cont = cont+ ca.ca%}
+        </tr><!-- Table Row -->
+    {% endfor%}
+    <td class = 'total'>Total</td><td>{{cont}}</td>
+    </table>
+    
+    <div id="container" style="height: 350px; float:right; "></div>
+    </div>
+      <h3> Triunfadores</h3>
+        <div>
+    <table cellspacing='0' style="display: inline"> <!-- cellspacing='0' is important, must stay -->
+        <tr > <th class="heading" colspan='7'> Cantidad de Triunfadores por P.N.F.</th></tr>
+            <tr>
+                <th>PNF</th><th>Cantidad de Triunfadores</th>           
+            </tr><!-- Table Header -->
+    {% set conttrf = 0 %}         
+    {% for ct in canttrf%}
+        <tr>
+            <td>{{ct.nombre}}</td>
+            <td>{{ct.ct}}</td>
+            {% set conttrf = conttrf+ ct.ct%}
+        </tr><!-- Table Row -->
+    {% endfor%}
+    <td class = 'total'>Total</td><td>{{conttrf}}</td>
+    </table>
+    <div id="container2" style="height: 350px;float: right"></div>
+    
+       </div>
+    </div>
+<script src="http://code.highcharts.com/highcharts.js"></script>
+<script src="http://code.highcharts.com/highcharts-3d.js"></script>
+<script src="http://code.highcharts.com/modules/exporting.js"></script>
+<script>    
+    
+$(document).ready(function(){
+    
+$(function () {
+    $('#container').highcharts({
+        chart: {
+            type: 'pie',
+            options3d: {
+                enabled: true,
+                alpha: 45,
+                beta: 0
+            }
+        },
+        title: {
+            text: 'Ambientes por PNF'
+        },
+        tooltip: {
+            pointFormat: '{series.name}: <b>{point.percentage:.0f}%</b>'
+        },
+        plotOptions: {
+            pie: {
+                allowPointSelect: true,
+                cursor: 'pointer',
+                depth: 35,
+                dataLabels: {
+                    enabled: true,
+                    format: '{point.name}'
+                }
+            }
+        },
+        series: [{
+            type: 'pie',
+            name: 'Cantidad de Ambientes',
+            data: [
+                {% for ca in cantamb%}
+                    ['{{ca.nombre}}',{{ca.ca}}],
+                {% endfor%} 
+            ]
+        }]
+    });
+});
+
+$(function () {
+    $('#container2').highcharts({
+        chart: {
+            type: 'pie',
+            options3d: {
+                enabled: true,
+                alpha: 45,
+                beta: 0
+            }
+        },
+        title: {
+            text: 'Triunfadores por PNF '
+        },
+        tooltip: {
+            pointFormat: '{series.name}: <b>{point.percentage:.0f}%</b>'
+        },
+        plotOptions: {
+            pie: {
+                allowPointSelect: true,
+                cursor: 'pointer',
+                depth: 35,
+                dataLabels: {
+                    enabled: true,
+                    format: '{point.name}'
+                }
+            }
+        },
+        series: [{
+            type: 'pie',
+            name: 'Cantidad de Triunfadores',
+            data: [
+                {% for ca in canttrf%}
+                    ['{{ca.nombre}}',{{ca.ct}}],
+                {% endfor%} 
+            ]
+        }]
+    });
+});
+
+
+
+});
+
+</script>
+{% endblock %}
+

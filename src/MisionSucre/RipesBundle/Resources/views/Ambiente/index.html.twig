@@ -1,0 +1,24 @@
+{% extends 'MisionSucreRipesBundle::layout.html.twig' %}
+
+{% block stylesheets %}
+{{ parent() }}
+<link href="{{ asset('css/botones.css') }}" rel="stylesheet" />
+{% endblock %}
+
+{% block content %}
+{{ parent() }}	
+
+
+<div>
+<button   class="styled-button-10" id="green" onclick="window.location.href='{{path('ambiente_lista_new')}}'"> <span ><img src="{{asset('img/new-document-icon.png')}}"/></span>Nuevo Ambiente</button>
+<button class="styled-button-10" id="blue" onclick="window.location.href='{{path('ambiente_lista')}}'"> <span ><img src="{{asset('img/Actions-view-list-details-icon.png')}}"/></span>Lista de Ambientes</button>
+</div>
+        
+<div> 
+<button id="purple" class="styled-button-10" onclick="window.location.href='{{path('ambiente_buscar')}}'"> <span ><img src="{{asset('img/search-icon.png')}}"/></span>Buscar Ambiente</button> 
+<button  id="red" class="styled-button-10" onclick="window.location.href='{{path('ambiente_resumen')}}'"> <span ><img src="{{asset('img/Resume-icon.png')}}"/></span>Resumen de Ambientes</button> 
+</div>
+
+        
+{% endblock %}
+

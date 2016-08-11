@@ -1,0 +1,92 @@
+{% extends 'MisionSucreRipesBundle::layout.html.twig' %}
+{% block stylesheets %}
+{{ parent() }}
+	<link rel="stylesheet" type="text/css" href="{{asset('css/demo_table.css')}}">
+	<link rel="stylesheet" type="text/css" href="{{asset('css/demo_page.css')}}">
+	<link rel="stylesheet" type="text/css" href="{{asset('css/botones.css')}}">
+	<link rel="stylesheet" type="text/css" href="{{asset('css/dataTables.tableTools.css')}}">	
+{% endblock %}
+
+{% block content %}
+
+<div id="dt_example">
+<div id="container">
+
+    <table cellpadding="0" cellspacing="0" border="0" class="display" id="example">
+	<thead>
+		<tr>
+			<th>#</th><th>Nombre de Usuario</th><th>Cédula</th><th>Nombres y Apellidos</th><th>Aldea</th>
+                        <th>Turno</th>
+		</tr>
+	</thead>
+	<tbody>
+	
+{% set i = 1 %}
+
+{% for c in coordinadores %}
+
+	{% if c.sexPer == 'm' %}
+			{% set class = 'gradeA' %}
+	{% else %}	
+			{% set class = 'gradeU' %}		
+        {% endif %}	
+
+{% set turno = '' %}        
+        
+{% if c.turno == 'n' %}
+	{% set turno = 'Nocturno' %}
+        
+        {% elseif turno == 'f' %}	
+			{% set turno = 'Fines de Semana' %}
+            {% else %}	
+            {% set turno = 'N./F.S.' %}		
+{% endif %}	
+	
+		<tr class="{{class}}">
+    <td>{{i}}</td><td>{{ c.username}}</td><td>{{ c.cedPer}}</td>
+    <td>{{ c.priNom |upper}} {{ c.segNom |upper}}
+    {{ c.priApe |upper}} {{ c.segApe |upper}}</td>
+    <td>{{ c.nombre}}</td>
+    <td>{{ turno}}</td>
+    <td><a class="enlace" href="{{path('usuario_show',{'id': c.id})}}">Mostrar</a></td>
+{% set i = i+1 %}
+{% endfor %}    
+		</tr>
+      </tbody>
+</table>
+               
+</div>
+</div>
+
+<a href="new" id="boton_nuevo">Nuevo Coordinador</a>
+
+<script src="{{asset('js/jquery.dataTables.js')}}" type="text/javascript" type="text/javascript"></script>
+<script src="{{asset('js/dataTables.tableTools.js')}}" type="text/javascript" type="text/javascript"></script>
+{% endblock %}
+
+{% block javascripts %}
+{{parent()}}
+
+$(document).ready(function() {
+$('#example').dataTable( {
+        "oLanguage": {
+            "sLengthMenu": "Mostrar _MENU_ Registros por Página",
+            "sZeroRecords": "No se encontraron Resultados",
+            "sSearch": "Filtro: ",
+            "sInfo": "Mostrando _START_ a _END_  de un Total de _TOTAL_ Usuarios",
+            "sInfoEmpty": "Mostrando 0 de 0 de 0 Usuarios",
+            "sInfoFiltered": "(Filtrado de un _MAX_ total de Usuarios)",
+            "oPaginate": {
+                "sNext": "Página Siguiente",
+                "sPrevious": "Página Anterior"
+                }
+        },
+        dom: 'T<"clear">lfrtip'
+        ,
+        tableTools:{
+        		"sSwfPath": "{{asset('swf/copy_csv_xls_pdf.swf')}}",
+        }
+    } );
+} );
+
+{% endblock %}

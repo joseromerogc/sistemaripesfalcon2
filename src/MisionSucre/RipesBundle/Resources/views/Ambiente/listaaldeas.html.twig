@@ -1,0 +1,97 @@
+{% extends 'MisionSucreRipesBundle::layout.html.twig' %}
+{% block stylesheets %}
+{{ parent() }}
+	<link rel="stylesheet" type="text/css" href="{{asset('css/demo_table.css')}}">
+	<link rel="stylesheet" type="text/css" href="{{asset('css/demo_page.css')}}">
+	<link rel="stylesheet" type="text/css" href="{{asset('css/botones.css')}}">
+	<link rel="stylesheet" type="text/css" href="{{asset('css/dataTables.tableTools.css')}}">
+	
+	
+{% endblock %}
+
+{% block js %}
+        {{ parent() }}
+	<script src="{{asset('js/jquery-ui-1.10.4.custom.js')}}"></script>
+        <script src="{{asset('js/jquery.dataTables.js')}}" type="text/javascript" type="text/javascript"></script>
+        <script src="{{asset('js/dataTables.tableTools.js')}}" type="text/javascript" type="text/javascript"></script>
+        
+{% endblock %} 
+
+{% block content %}
+
+<h1 class="heading_style">Seleccionar Aldea</h1>
+
+<div id="dt_example">
+<div id="container" style="width: 100%">
+<table cellpadding="0" cellspacing="0" border="0" class="display" id="example" width="100%">
+	<thead>
+		<tr>
+                    <th>ID</th><th>Nombre de la Aldea</th><th>Dirreción</th><th>Eje</th><th>Municipio</th><th>Parroquia</th><th>                        
+		</tr>
+	</thead>
+	<tbody>
+
+
+{% set i = 1 %}
+
+{% for aldea in aldeas %}
+
+	{% if aldea.parroquia.eje.id == 1 %}
+			{% set class = 'gradeA' %}
+        {% elseif  aldea.parroquia.eje.id == 7 %}	
+			{% set class = 'gradeB' %}
+	{% elseif  aldea.parroquia.eje.id == 4 %}	
+			{% set class = 'gradeC' %}
+	{% elseif  aldea.parroquia.eje.id == 5 %}	
+			{% set class = 'gradeX' %}
+	{% else %}	
+			{% set class = 'gradeU' %}		
+        {% endif %}	
+        <tr class="{{class}}">   
+	<td>{{aldea.id}}</td><td>{{aldea.nombre}}</td><td>{{aldea.direccion}}</td><td>{{aldea.parroquia.eje.nombre}}</td><td>{{aldea.parroquia.municipio.municipio}}</td><td>{{aldea.parroquia.parroquia}}</td>
+            <td><a class="enlace" href="{{path('ambiente_new',{'idaldea':aldea.id})}}">Registrar Ambiente</a></td>
+        </tr><!-- Table Row -->
+    
+{% set i = i+1 %}
+{% endfor %}    
+
+	
+        
+        </tbody>
+</table>
+</div>
+</div>
+
+<script>
+$(function() {
+                $( "#tabs" ).tabs();
+                $( "#accordionambientes" ).accordion({
+                heightStyle: "content",        
+                collapsible: true,
+                active: false
+                });
+                $('#example').dataTable( {
+        "oLanguage": {
+            "sLengthMenu": "Mostrar _MENU_ Usuarios por Página",
+            "sZeroRecords": "No se encontraron Resultados",
+            "sSearch": "Filtro: ",
+            "sInfo": "Mostrando _START_ a _END_  de un Total de _TOTAL_ Usuarios",
+            "sInfoEmpty": "Mostrando 0 de 0 de 0 Usuarios",
+            "sInfoFiltered": "(Filtrado de un _MAX_ total de Usuarios)",
+            "oPaginate": {
+                "sNext": "Página Siguiente",
+                "sPrevious": "Página Anterior"
+                }
+        },
+        dom: 'T<"clear">lfrtip'
+        ,
+         "bLengthChange": true,
+        tableTools:{
+        		"sSwfPath": "{{asset('swf/copy_csv_xls_pdf.swf')}}",
+        }
+    } );
+            });            
+</script>
+
+{% endblock %}
+

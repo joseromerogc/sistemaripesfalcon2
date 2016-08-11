@@ -1,0 +1,11 @@
+{% extends 'MisionSucreRipesBundle::layout.html.twig' %}
+
+{% block content %}
+
+<div id='mensaje'>
+
+<h1>Bienvenido</h1>
+
+<center><img src="{{asset('img/misionsucre2.jpg')}}" width="400" height="300"/></center>
+</div>
+{% endblock  %}

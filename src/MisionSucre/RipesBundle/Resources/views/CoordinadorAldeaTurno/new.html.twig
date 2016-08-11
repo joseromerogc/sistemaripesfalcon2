@@ -1,0 +1,69 @@
+{% extends 'MisionSucreRipesBundle::layout.html.twig' %}
+
+{% block stylesheets %}
+{{ parent() }}
+	<link rel="stylesheet" type="text/css" href="{{asset('css/form/responsiveform.css')}}">
+	<link rel="stylesheet" media="screen and (max-width: 1200px) and (min-width: 601px)" href="{{asset('css/form/responsiveform1.css')}}" />
+	<link rel="stylesheet" media="screen and (max-width: 600px) and (min-width: 351px)" href="{{asset('css/form/responsiveform2.css')}}" />
+	<link rel="stylesheet" media="screen and (max-width: 350px)" href="{{asset('css/form/responsiveform3.css')}}" />
+        <link rel="stylesheet" type="text/css" href="{{asset('css/table/littletable.css')}}">
+{% endblock %}
+
+{% block content %}
+
+{% for f in form %}
+                {% if f.vars.block_prefixes[0]!="button" %}
+                    <div class="flash-notice">
+                        {{f.vars.errors}}
+                    </div>
+                {% endif %}
+    {% endfor %}
+        
+        
+        
+	<div id="envelope" style='width: 75%;'>
+	<header>
+	    <h2>{{mensaje_heading}}</h2>
+	    <p>{{sub_heading}}</p>
+	</header>
+	<hr>	
+        
+        <table cellspacing='0' style='margin-left: 10%;' > <!-- cellspacing='0' is important, must stay -->
+            <tr><th>ID</th><th>Nombre de Usuario</th><th>Nombres</th><th>Apellido</th><th>Cédula</th></tr>
+            
+            <td>{{usr.id}}</td><td>{{usr.username}}</td>
+            <td>{{ per.priNom |upper}} {{ per.segNom |upper}}</td>
+            <td>{{ per.priApe |upper}} {{ per.segApe |upper}}</td>
+            <td>{{ per.cedPer}}</td>
+        </tr><!-- Table Row -->
+        </table>  
+        
+        <h1 class="sub_heading_style" style="margin-left: 15px" >Información de Aldea</h1> 
+    <table cellspacing='0'> <!-- cellspacing='0' is important, must stay -->
+            <tr><th>ID</th><th>Nombre de la Aldea</th><th>Dirreción</th><th>Eje</th><th>Municipio</th><th>Parroquia</th></tr><!-- Table Header -->
+
+
+        <tr><td>{{aldea.id}}</td><td>{{aldea.nombre}}</td><td>{{aldea.direccion}}</td><td>{{aldea.parroquia.eje.nombre}}</td><td>{{aldea.parroquia.municipio.municipio}}</td><td>{{aldea.parroquia.parroquia}}</td>
+            
+        </tr><!-- Table Row -->
+    </table>
+        
+        {{ form_start(form) }}
+	
+        <div>
+            {{ form_label(form.turno) }}
+	<div class="styled">
+            {{ form_widget(form.turno) }}
+	</div>
+            <div class="error">
+                    {{ form_errors(form.turno) }}
+            </div>
+        </div>
+              
+        <div>
+		{{ form_widget(form.save) }}
+	</div>
+		{{ form_end(form) }}		
+</div>
+                
+{% endblock %}

@@ -1,0 +1,73 @@
+{% extends 'MisionSucreRipesBundle::layout.html.twig' %}
+
+{% block stylesheets %}
+{{ parent() }}
+	<link rel="stylesheet" type="text/css" href="{{asset('css/form/responsiveform.css')}}">
+	<link rel="stylesheet" media="screen and (max-width: 1200px) and (min-width: 601px)" href="{{asset('css/form/responsiveform1.css')}}" />
+	<link rel="stylesheet" media="screen and (max-width: 600px) and (min-width: 351px)" href="{{asset('css/form/responsiveform2.css')}}" />
+	<link rel="stylesheet" media="screen and (max-width: 350px)" href="{{asset('css/form/responsiveform3.css')}}" />
+{% endblock %}
+
+{% block content %}
+
+	<div id="envelope">
+	<header>
+	    <h2>{{mensaje_heading}}</h2>
+	    <p>{{sub_heading}}</p>
+	</header>
+	<hr>
+	{{ form_start(form) }}
+	
+            
+        <div>
+            {{ form_label(form.bachillerato) }}
+	<div class="styled">
+            {{ form_widget(form.bachillerato) }}
+	</div>
+            <div class="error">
+                    {{ form_errors(form.bachillerato) }}
+            </div>
+        </div>
+        
+        <div>
+            {{ form_label(form.titulouniversitario) }}
+            {{ form_widget(form.titulouniversitario) }}
+            <div class="error">
+                    {{ form_errors(form.titulouniversitario) }}
+            </div>
+        </div>
+        
+        <div>
+            {{ form_label(form.instituto) }}
+	
+            {{ form_widget(form.instituto) }}
+                    {{ form_errors(form.instituto) }}
+        </div>
+        <div>
+            {{ form_label(form.postgrado) }}
+	
+            {{ form_widget(form.postgrado) }}
+                    {{ form_errors(form.postgrado) }}
+        </div>
+        <div>
+            {{ form_label(form.areaconocimiento) }}
+            {{ form_widget(form.areaconocimiento) }}
+            <div class="error">
+                    {{ form_errors(form.areaconocimiento) }}
+            </div>
+        </div>            
+        <div>
+            {{ form_label(form.cursos) }}
+            {{ form_widget(form.cursos) }}
+            <div class="error">
+                    {{ form_errors(form.cursos) }}
+            </div>
+        </div>            
+	<div>
+		{{ form_widget(form.save) }}
+	</div>
+		{{ form_end(form) }}		
+</div>
+
+{% endblock %}
+

@@ -1,0 +1,463 @@
+{% extends 'Ripes/layout.html.twig' %}
+
+{% block stylesheets %}
+{{ parent() }}
+<link href="{{ asset('css/nav/vertical.css') }}" rel="stylesheet" />
+{% endblock %}
+
+{% block menu %}
+<nav>
+            <ul class="fancyNav">
+                <li id="home"><a href="{{path('home')}}" class="homeIcon">Home</a></li>
+                
+                {% if is_granted('ROLE_COORD') %}
+                <li id="usuario"><a href="{{path('usuario')}}" class="userIcon">Usuario</a></li>
+                {% else %}
+                <li id="usuario"><a href="{{path('usuario')}}" class="userIcon">Información de Usuario</a></li>
+                {% endif %}
+                <li id="aldea" ><a href="{{path('aldea')}}" class="aldeaIcon">Aldea</a></li>
+                {% if is_granted('ROLE_TRF') %}
+                <li id="aldea" ><a href="{{path('ambiente')}}" class="ambienteIcon">Ambiente</a></li>
+                <li id="triunfadores" ><a href="{{path('triunfador')}}" class="aldeaIcon">Triunfadores</a></li>
+                {% endif %}
+                
+                <li id="logout" ><a href="{{path('logout')}}" class="logoutIcon">Cerrar Sesión</a></li>
+                <li id="nombreusuario" Onclick="location.href='{{path('usuario_info')}}'"></li>
+            </ul>              
+</nav> 
+             
+{% endblock %}
+
+{% block menulateral %}
+
+<div id="accordian">
+	<ul>    
+                {% if is_granted('ROLE_ADMIN') %}
+                {% set route = app.request.attributes.get('_route')| split('_',2) %}
+                    
+                {% if route[0] == 'periodo' or route[0] == 'docenteinfo' or route[0] == 'estructura_lista' %}
+                   {% set class='active' %}
+                {% else%}
+                   {% set class='' %}
+                {% endif %}
+                    
+		<li class ={{class}} >
+			<h3><span ><img src="{{asset('img/Admin-icon.png')}}"/></span>Sistema </h3>
+                        <ul>
+                            <li>
+                                <a href="{{path('periodo_academico')}}"><span ><img src="{{asset('img/calender.png')}}"/> </span>Periodos Académicos</a>
+                            </li>
+                            <li>
+                                <a href="{{path('periodo_academico_new')}}"><span ><img src="{{asset('img/save-icon.png')}}"/> </span>Registrar Periodos Académicos</a>
+                            </li>
+                            <li>
+                                <a href="{{path('periodo_academico_lista')}}"><span ><img src="{{asset('img/Apps-preferences-contact-list-icon.png')}}"/> </span>Periodos Académicos</a>
+                            </li>
+                            <li>
+                                <a href="{{path('estructura_lista')}}"><span ><img src="{{asset('img/Business-Tree-Structure-icon')}}"/> </span>Estructuras</a>
+                            </li>
+                        </ul>
+		</li>
+                {% endif %}
+                
+                {% set route = app.request.attributes.get('_route')| split('_',2) %}
+                    
+                {% if route[0] == 'usuario' %}
+                   {% set class='active' %}
+                {% else%}
+                   {% set class='' %}
+                {% endif %}
+                
+		<li class ={{class}}>
+			<h3><span ><img src="{{asset('img/user-icon_small.png')}}"/></span>Usuario</h3>
+			<ul>    
+                            {% if not is_granted('ROLE_CTRL') %}
+                                <li><a href="{{path('usuario_info')}}"><span ><img src="{{asset('img/Button-Info-icon.png')}}"/>
+                                 </span>Información de Usuario</a></li>
+                                <li><a href="{{path('usuario_password')}}"><span ><img src="{{asset('img/update.png')}}"/>
+                                 </span>Actualizar Constraseña</a></li>
+                            {% endif %}
+                            
+                            {% if is_granted('ROLE_COORD') %}
+				<li><a href="{{path('usuario_new')}}"><span ><img src="{{asset('img/save-icon.png')}}"/>
+                                        </span>Registrar Nuevo</a></li>
+				<li><a href="{{path('usuario_lista')}}">
+                                        <span ><img src="{{asset('img/Apps-preferences-contact-list-icon.png')}}"/>
+                                        </span>
+                                        Lista Usuario</a></li>
+                                <li><a href="{{path('usuario_buscar')}}">
+                                        <span ><img src="{{asset('img/Zoom-icon.png')}}"/>
+                                        </span>
+                                        Buscar Usuario</a></li>
+                                <li><a href="{{path('usuario_resumen')}}">
+                                        <span ><img src="{{asset('img/Resume-icon-small.png')}}"/>
+                                        </span>
+                                        Resumen de Usuarios</a></li>
+                                <li><a href="{{path('usuario_novinculados')}}">
+                                        <span ><img src="{{asset('img/group-delete-icon.png')}}"/>
+                                        </span>
+                                        Usuarios no Vinculados</a></li>
+                            {% endif %}            
+                        {% if is_granted('ROLE_EJE') %}
+                            <li><a href="{{ asset('documentos/ManualUsuarioResponsableEje.pdf') }}" download>
+                                        <span ><img src="{{asset('img/Mimetypes-application-pdf-icon')}}"/>
+                                        </span>
+                                        Manual de usuario</a></li>
+                        {% endif %}            
+			</ul>
+                        
+		</li>
+                
+                {% set route = app.request.attributes.get('_route')| split('_',2) %}
+                    
+                {% if route[0] == 'aldea' or route[0] == 'eje' %}
+                   {% set class='active' %}
+                {% else%}
+                   {% set class='' %}
+                {% endif %}
+                
+		<li class ={{class}} >
+			<h3><span><img src="{{asset('img/home-icon.png')}}"/></span>Aldea</h3>
+			<ul>
+				{% if not is_granted('ROLE_EJE') %}
+                                <li><a href="{{path('aldea_info')}}"><span ><img src="{{asset('img/Button-Info-icon.png')}}"/>
+                                 </span>Información de Aldea</a></li>
+                            {% endif %}
+                            
+                            {% if is_granted('ROLE_EJE') %}
+				<li><a href="{{path('aldea_new')}}"><span ><img src="{{asset('img/save-icon.png')}}"/>
+                                        </span>Registrar aldea</a></li>
+				<li><a href="{{path('aldea_lista')}}">
+                                        <span ><img src="{{asset('img/Actions-view-list-details-icon-small.png')}}"/>
+                                        </span>
+                                        Lista de Aldeas</a></li>
+                                <li><a href="{{path('aldea_buscar')}}">
+                                        <span ><img src="{{asset('img/Zoom-icon.png')}}"/>
+                                        </span>
+                                        Buscar Aldea</a></li>
+                                <li><a href="{{path('aldea_resumen')}}">
+                                        <span ><img src="{{asset('img/Resume-icon-small.png')}}"/>
+                                        </span>
+                                        Resumen de Aldea</a></li>
+                                <li><a href="{{path('eje_lista')}}">
+                                        <span ><img src="{{asset('img/Link-icon.png')}}"/>
+                                        </span>
+                                        Coordinadores de Ejes</a></li>
+                            {% endif %}            
+			</ul>
+		</li>
+                {% set route = app.request.attributes.get('_route')| split('_',2) %}
+                {% if route[0] == 'ambiente' %}
+                   {% set class='active' %}
+                {% else%}
+                   {% set class='' %}
+                {% endif %}
+                
+                {% if is_granted('ROLE_TRF')%}
+                <li class ={{class}}>
+			<h3><span><img src="{{asset('img/Categories-applications-education-school-icon.png')}}"/></span>Ambiente</h3>
+			<ul>
+				{% if not is_granted('ROLE_COORD') and  is_granted('ROLE_TRF')%}
+                                <li><a href="{{path('ambiente_info')}}"><span ><img src="{{asset('img/Button-Info-icon.png')}}"/>
+                                 </span>Información de Ambiente</a></li>
+                            {% endif %}
+                            
+                            {% if is_granted('ROLE_COORD') %}
+				<li><a href="{{path('ambiente_lista_new')}}"><span ><img src="{{asset('img/save-icon.png')}}"/>
+                                        </span>Registrar Ambiente</a></li>
+				<li><a href="{{path('ambiente_lista')}}">
+                                        <span ><img src="{{asset('img/Actions-view-list-details-icon-small.png')}}"/>
+                                        </span>
+                                        Lista de Ambientes</a></li>
+                                <li><a href="{{path('ambiente_buscar')}}">
+                                        <span ><img src="{{asset('img/Zoom-icon.png')}}"/>
+                                        </span>
+                                        Buscar Ambientes</a></li>
+                                <li><a href="{{path('ambiente_resumen')}}">
+                                        <span ><img src="{{asset('img/Resume-icon-small.png')}}"/>
+                                        </span>
+                                        Resumen de Ambientes</a></li>
+                                <li><a href="{{path('ambiente_vocero_lista')}}">
+                                        <span ><img src="{{asset('img/Actions-view-list-details-icon-small.png')}}"/>
+                                        </span>
+                                        Lista de Voceros</a></li>
+                            {% endif %}            
+			</ul>
+		</li>
+                
+                {% set route = app.request.attributes.get('_route')| split('_',2) %}
+                {% if route[0] == 'triunfador' or route[0] == 'vincular' %}
+                   {% set class='active' %}
+                {% else%}
+                   {% set class='' %}
+                {% endif %}
+                
+                <li class ={{class}}>
+			<h3><span><img src="{{asset('img/Notebook-Photo-Sunflower-icon')}}"/></span>Triunfador</h3>
+			<ul>
+                            {% if not is_granted('ROLE_COORD') and  is_granted('ROLE_TRF')%}
+                                <li><a href="{{path('triunfador_info_academica')}}"><span ><img src="{{asset('img/Button-Info-icon.png')}}"/>
+                                 </span>Información de Triunfador</a></li>
+                            {% endif %}
+                            {% if is_granted('ROLE_COORD') %}
+				<li><a href="{{path('vincular_triunfador')}}"><span ><img src="{{asset('img/Natural-Link-icon.png')}}"/>
+                                        </span>Vincular Triunfador</a></li>
+				<li><a href="{{path('triunfador_lista')}}">
+                                        <span ><img src="{{asset('img/Actions-view-list-details-icon-small.png')}}"/>
+                                        </span>
+                                        Lista de Triunfadores</a></li>
+				<li><a href="{{path('triunfador_carga')}}">
+                                        <span ><img src="{{asset('img/Upload-Folder-icon')}}"/>
+                                        </span>
+                                        Cargar Triunfadores</a></li>
+				<li><a href="{{path('triunfador_egresado_lista')}}">
+                                        <span ><img src="{{asset('img/Actions-view-list-details-icon-small.png')}}"/>
+                                        </span>
+                                        Lista de Egresados</a></li>
+                                <li><a href="{{path('triunfador_buscar')}}">
+                                        <span ><img src="{{asset('img/Zoom-icon.png')}}"/>
+                                        </span>
+                                        Buscar Triunfador</a></li>
+                                <li><a href="{{path('triunfador_resumen')}}">
+                                        <span ><img src="{{asset('img/Resume-icon-small.png')}}"/>
+                                        </span>
+                                        Resumen de Triunfador</a></li>
+                                <li><a href="{{path('triunfador_egresado_resumen')}}">
+                                        <span ><img src="{{asset('img/Resume-icon-small.png')}}"/>
+                                        </span>
+                                        Resumen de Egresados</a></li>
+                            {% endif %}            
+			</ul>
+		</li>
+                {% endif%}
+                
+                {% set route = app.request.attributes.get('_route')| split('_',2) %}
+                {% if route[0] == 'docente' or route[0] == 'vincular' %}
+                   {% set class='active' %}
+                {% else%}
+                   {% set class='' %}
+                {% endif %}
+                
+                {% if is_granted('ROLE_DOC')%}
+                    <li class ={{class}}>
+			<h3><span><img src="{{asset('img/Teachers-icon.png')}}"/></span>Docente</h3>
+			<ul>
+                            {% if not is_granted('ROLE_COORD') and  is_granted('ROLE_DOC')%}
+                                <li><a href="{{path('docente_info')}}"><span ><img src="{{asset('img/Button-Info-icon.png')}}"/>
+                                 </span>Información de Docente</a></li>
+                            {% endif %}
+                            {% if is_granted('ROLE_COORD') %}
+				<li><a href="{{path('docente_asignar')}}"><span ><img src="{{asset('img/Natural-Link-icon.png')}}"/>
+                                        </span>Vincular Docente</a></li>
+				<li><a href="{{path('docente_lista')}}">
+                                        <span ><img src="{{asset('img/Actions-view-list-details-icon-small.png')}}"/>
+                                        </span>
+                                        Lista de Docente</a></li>
+                                <li><a href="{{path('docente_carga')}}">
+                                        <span ><img src="{{asset('img/Upload-Folder-icon')}}"/>
+                                        </span>
+                                        Cargar Docentes</a></li>
+                                <li><a href="{{path('docente_buscar')}}">
+                                        <span ><img src="{{asset('img/Zoom-icon.png')}}"/>
+                                        </span>
+                                        Buscar Docente</a></li>
+                                {% if is_granted('ROLE_EJE')%}        
+                                <li><a href="{{path('docente_resumen')}}">
+                                        <span ><img src="{{asset('img/Resume-icon-small.png')}}"/>
+                                        </span>
+                                        Resumen de Docente</a></li>
+                                {%endif%}        
+                            {% endif %}            
+			</ul>
+		</li>
+              {% endif%}
+              
+              {% set route = app.request.attributes.get('_route')| split('_',2) %}
+                {% if route[0] == 'Operario' or route[0] == 'vincular' %}
+                   {% set class='active' %}
+                {% else%}
+                   {% set class='' %}
+                {% endif %}
+              
+                {% if is_granted('ROLE_OP')%}
+                    <li class ={{class}}>
+			<h3><span><img src="{{asset('img/Key-icon')}}"/></span>Operario</h3>
+			<ul>
+                            {% if not is_granted('ROLE_COORD') and  is_granted('ROLE_OP')%}
+                                <li><a href="{{path('operario_info')}}"><span ><img src="{{asset('img/Button-Info-icon.png')}}"/>
+                                 </span>Información de Operario</a></li>
+                            {% endif %}
+                            {% if is_granted('ROLE_COORD') %}
+				
+				<li><a href="{{path('operario_lista')}}">
+                                        <span ><img src="{{asset('img/Actions-view-list-details-icon-small.png')}}"/>
+                                        </span>
+                                        Lista de Operarios</a></li>
+                                <li><a href="{{path('operario_buscar')}}">
+                                        <span ><img src="{{asset('img/Zoom-icon.png')}}"/>
+                                        </span>
+                                        Buscar Operario</a></li>
+                                {% if is_granted('ROLE_EJE')%}        
+                                <li><a href="{{path('operario_resumen')}}">
+                                        <span ><img src="{{asset('img/Resume-icon-small.png')}}"/>
+                                        </span>
+                                        Resumen de Operario</a></li>
+                                {%endif%}        
+                            {% endif %}            
+			</ul>
+		</li>
+              {% endif%}
+              
+               {% set route = app.request.attributes.get('_route')| split('_',2) %}
+                {% if route[0] == 'pnf' %}
+                   {% set class='active' %}
+                {% else%}
+                   {% set class='' %}
+                {% endif %}
+             
+              
+              {% if is_granted('ROLE_COORD')%}
+                    <li class ={{class}}>
+			<h3><span><img src="{{asset('img/books-icon')}}"/></span>P.N.F.</h3>
+			<ul>
+                            {% if is_granted('ROLE_ADMIN')%}
+                                <li><a href="{{path('pnf_new')}}"><span ><img src="{{asset('img/save-icon.png')}}"/>
+                                        </span>Registrar</a></li>
+                                <li><a href="{{path('universidad_new')}}"><span ><img src="{{asset('img/save-icon.png')}}"/>
+                                        </span>Registrar Universidad</a></li>        
+                                <li><a href="{{path('universidad_lista')}}"><span ><img src="{{asset('img/Actions-view-list-details-icon-small.png')}}"/>
+                                        </span>Lista de Universidades</a></li>        
+                            {% endif %}
+                            
+				<li><a href="{{path('pnf_lista')}}">
+                                        <span ><img src="{{asset('img/Actions-view-list-details-icon-small.png')}}"/>
+                                        </span>
+                                        Lista de P.N.F.</a></li>
+                                <li><a href="{{path('pnf_resumen')}}">
+                                        <span ><img src="{{asset('img/Resume-icon-small.png')}}"/>
+                                        </span>
+                                        Resumen</a></li>           
+			</ul>
+		</li>
+                {% endif %}
+               {% set route = app.request.attributes.get('_route')| split('_',2) %}
+                {% if route[0] == 'comunitario' or route[0] == 'politica'%}
+                   {% set class='active' %}
+                {% else%}
+                   {% set class='' %}
+                {% endif %}
+             
+              
+              {% if is_granted('ROLE_COORD')%}
+                    <li class ={{class}}>
+			<h3><span><img src="{{asset('img/community-users-icon.png')}}"/></span>Participación Política-Comunitaria</h3>
+			<ul>
+                                  
+                                <li><a href="{{path('comunitaria_lista')}}"><span ><img src="{{asset('img/Actions-view-list-details-icon-small.png')}}"/>
+                                        </span>Participación Comunitaria</a></li>         
+                                <li><a href="{{path('politica_lista')}}"><span ><img src="{{asset('img/Actions-view-list-details-icon-small.png')}}"/>
+                                        </span>Participación Política</a></li> 
+                                <li><a href="{{path('comunitaria_resumen')}}">
+                                        <span ><img src="{{asset('img/Resume-icon-small.png')}}"/>
+                                        </span>
+                                        Resumen Partipación Comunitarias</a></li> 
+                                <li><a href="{{path('politica_resumen')}}">
+                                        <span ><img src="{{asset('img/Resume-icon-small.png')}}"/>
+                                        </span>
+                                        Resumen Partipación Resumen Política</a></li> 
+                                <li><a href="{{path('comunitaria_consejocomunal_lista')}}">
+                                        <span ><img src="{{asset('img/Actions-view-list-details-icon-small.png')}}"/>
+                                        </span>
+                                        Lista Consejo Comunal</a></li> 
+                                <li><a href="{{path('comunitaria_consejocomunal_resumen')}}">
+                                        <span ><img src="{{asset('img/Resume-icon-small.png')}}"/>
+                                        </span>
+                                        Resumen Consejo Comunal</a></li> 
+                                <li><a href="{{path('politica_ubch_lista')}}">
+                                        <span ><img src="{{asset('img/Actions-view-list-details-icon-small.png')}}"/>
+                                        </span>
+                                        Lista Centro Electoral</a></li> 
+                                <li><a href="{{path('politica_ubch_resumen')}}">
+                                        <span ><img src="{{asset('img/Resume-icon-small.png')}}"/>
+                                        </span>
+                                        Resumen Centro Electoral</a></li> 
+			</ul>
+		</li>
+              {% endif%}
+              
+              
+               {% set route = app.request.attributes.get('_route')| split('_',2) %}
+                {% if route[0] == 'consejocomunal'%}
+                   {% set class='active' %}
+                {% else%}
+                   {% set class='' %}
+                {% endif %}
+             
+              
+              {% if is_granted('ROLE_COORD')%}
+                    <li class ={{class}}>
+			<h3><span><img src="{{asset('img/community-users-icon.png')}}"/></span>Consejo Comunal</h3>
+			<ul>
+                                  
+                                <li><a href="{{path('comunitaria_lista')}}"><span ><img src="{{asset('img/Actions-view-list-details-icon-small.png')}}"/>
+                                        </span>Participación Comunitaria</a></li>         
+                                <li><a href="{{path('politica_lista')}}"><span ><img src="{{asset('img/Actions-view-list-details-icon-small.png')}}"/>
+                                        </span>Participación Política</a></li> 
+                                <li><a href="{{path('comunitaria_resumen')}}">
+                                        <span ><img src="{{asset('img/Resume-icon-small.png')}}"/>
+                                        </span>
+                                        Resumen Partipación Comunitarias</a></li> 
+                                <li><a href="{{path('politica_resumen')}}">
+                                        <span ><img src="{{asset('img/Resume-icon-small.png')}}"/>
+                                        </span>
+                                        Resumen Partipación Resumen Política</a></li> 
+                                <li><a href="{{path('comunitaria_consejocomunal_lista')}}">
+                                        <span ><img src="{{asset('img/Actions-view-list-details-icon-small.png')}}"/>
+                                        </span>
+                                        Lista Consejo Comunal</a></li> 
+                                <li><a href="{{path('comunitaria_consejocomunal_resumen')}}">
+                                        <span ><img src="{{asset('img/Resume-icon-small.png')}}"/>
+                                        </span>
+                                        Resumen Consejo Comunal</a></li> 
+                                <li><a href="{{path('politica_ubch_lista')}}">
+                                        <span ><img src="{{asset('img/Actions-view-list-details-icon-small.png')}}"/>
+                                        </span>
+                                        Lista Centro Electoral</a></li> 
+                                <li><a href="{{path('politica_ubch_resumen')}}">
+                                        <span ><img src="{{asset('img/Resume-icon-small.png')}}"/>
+                                        </span>
+                                        Resumen Centro Electoral</a></li> 
+			</ul>
+		</li>
+              {% endif%}
+	</ul>
+</div>
+
+{% block js %}
+<script src="{{asset('js/menu/prefixfree-1.0.7.js')}}" type="text/javascript" type="text/javascript"></script>
+<script src="{{asset('js/jquery-1.10.2.js')}}" type="text/javascript" type="text/javascript"></script>
+{% endblock %}
+			
+{% endblock %}
+
+{% block javascripts %}
+{{parent()}}
+
+/*jQuery time*/
+$(document).ready(function(){
+	$("#accordian h3").click(function(){
+		//slide up all the link lists
+		$("#accordian ul ul").slideUp();
+		//slide down the link list below the h3 clicked - only if its closed
+		if(!$(this).next().is(":visible"))
+		{
+			$(this).next().slideDown();
+		}
+	});
+        
+        $.ajax({
+        url: "{{ app.request.getBaseURL() }}/nombreusuario",
+        success: function (html) {$('#nombreusuario').html(html);}
+        });
+});
+{% endblock %}

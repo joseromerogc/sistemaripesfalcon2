@@ -1,0 +1,69 @@
+{% extends 'baseguia.html.twig' %}
+
+ {% block body %} 
+     
+     <h1 class="titulo">Carga de Usuarios</h1>
+ 
+     <p class="parrafo">
+     Cuando la cantidad de usuarios a registrar es amplia, se puede cargar varios a la vez. Esta opción sólo esta disponible para triunfadores y 
+     docentes, la cual aparece en su menú correspondiente: <strong>Triunfador->Cargar Triunfadores</strong>, <strong>Docente->Cargar Docentes</strong>
+     </p>
+    
+     <div class="central"> 
+     <img  src="{{asset('img/guia/Usuarios/cargartriunfadores.png')}}" width="300">
+     <img  src="{{asset('img/guia/Usuarios/cargardocente.png')}}" width="300">
+     </div>
+     <h3>Pasos:</h3>
+     <p class="parrafo">
+     <strong>1) Descargar Formato: </strong> la informaciòn de los usuarios lo necesitas tener en un documento .csv el cual lo obtienes a darle clic en descargar formato.
+     </p>
+     <div class="central"> 
+     <img  src="{{asset('img/guia/Usuarios/descargarformato.png')}}" width="700">
+     </div>
+     <p class="parrafo">
+     <strong>2) Escribir los datos en el formato correspondiente: </strong> debes llenar los datos de todos usuarios a registrar :
+     </p>
+
+     <table style="width:100%">
+    <tr><td>
+        CEDULA</td>
+<td>NOMBRE</td>
+<td>APELLIDO</td>
+<td>CORREO</td>
+<td class="celdacolor">TELEFONO*</td>
+<td class="celdacolor">CELULAR*</td>
+<td>EDAD</td>
+<td>SEXO</td>
+<td>FECHA DE NACIMIENTO</td>
+    </tr>
+</table>
+     <p><strong>*No son obligatorios.</strong> </p>
+
+<p><strong class="subrayado">NOTA:</strong></br>
+    La cédula debe estar sin sepación de las unidades de mil(,) y tampoco sin comas(,)</br>
+    Usar 'm' y 'f' para sexo</br>
+    El correo debe ser único para cada usuario</br>
+    El formato de fecha de nacimiento es DD/MM/AAAA, ejemplo: 12/05/1986</br>
+    Los datos no deben contener comas(,) </br>
+    La Cantidad de Filas Máxima para cargar es de 50</p>
+     
+<p class="parrafo">
+     <strong>3) Cargar Formato:</strong> haz clic en Examinar para cargar el formato seleccionando luego el archivo en la computadora.
+     </p>
+     <div class="central"> 
+     <img  src="{{asset('img/guia/Usuarios/cargarusuarios.png')}}" width="700">
+     </div>
+<p class="parrafo">
+     <strong>4) Dar clic en Cargar:</strong> Ahora te sale una tabla con los datos de los usuarios a registrar.
+     </p>
+<p class="parrafo">
+     <strong>5) Clic en Registrar Usuarios: </strong> para registrar todos los usuarios que aparecieron en la tabla.
+     </p>
+     <div class="central"> 
+     <img  src="{{asset('img/guia/Usuarios/registrar.png')}}" width="700">
+     </div>
+   
+     
+        
+ {% endblock body %} 
+ 

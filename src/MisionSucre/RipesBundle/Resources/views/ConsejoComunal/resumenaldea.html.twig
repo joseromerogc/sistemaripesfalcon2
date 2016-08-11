@@ -1,0 +1,134 @@
+{% extends 'MisionSucreRipesBundle::layout.html.twig' %}
+
+{% block stylesheets %}
+{{ parent() }}
+	<link rel="stylesheet" type="text/css" href="{{asset('css/table/littletable.css')}}">
+        <link rel="stylesheet" type="text/css" href="{{asset('css/blitzer/jquery-ui-1.10.4.custom.css')}}">
+        <link rel="stylesheet" type="text/css" href="{{ asset('css/color.css') }}"/>
+{% endblock %}
+
+{% block js %}
+        {{ parent() }}
+	<script src="{{asset('js/jquery-ui-1.10.4.custom.js')}}"></script>
+        <script>
+            $(function() {
+		$( "#accordion" ).accordion({
+                heightStyle: "content",        
+                collapsible: true,
+                active: false
+                }        );            
+            });            
+            
+        </script>
+{% endblock %}    
+
+{% block content %}
+	{{ parent() }}
+
+        
+{% for flashMessage in app.session.flashbag.get('notice') %}
+        <div class="flash-notice">
+        {{ flashMessage }}
+        </div>
+{% endfor %}
+<h1 class="heading_style">Resumen de Consejo Comunal</h1> 
+<div id="accordion">
+    
+    <h3>  Parroquia</h3>
+      <div> 
+    <table cellspacing='0'  style="display: inline"> <!-- cellspacing='0' is important, must stay -->
+        <tr > <th class="heading" colspan='9'> Cantidad de Consejo Comunal</th></tr>
+            <tr>
+                <th>Municipio</th><th>Parroquia</th><th>Cantidad</th>
+                
+            </tr><!-- Table Header -->
+    {% set cont = 0 %}               
+                 
+                   
+    
+    {% for ca in cxparroquia%}
+        
+        <tr>
+             {% if ca.cantidad!=0%}
+            <td>{{ca.municipio}}</td>
+            <td>{{ca.parroquia}}</td>
+            <td>{{ca.cantidad}}</td>
+            
+            {% set cont = cont+ ca.cantidad%}
+            {% endif%}
+        </tr><!-- Table Row -->
+    {% endfor%}
+    <td class = 'total' colspan="2">Total</td><td>{{cont}}</td>
+    </table>
+    
+    <div id="vocerias" style="width: 70%;"></div>
+    </div>
+    </div>
+<script src="http://code.highcharts.com/highcharts.js"></script>
+<script src="http://code.highcharts.com/highcharts-3d.js"></script>
+<script src="http://code.highcharts.com/modules/exporting.js"></script>
+<script>    
+    
+$(document).ready(function(){
+
+$(function () {
+    $('#vocerias').highcharts({
+         chart: {
+            type: 'column'
+        },
+        title: {
+            text: 'Consejo Comunal'
+        },
+        xAxis: {
+            type: 'category',
+            labels: {
+                rotation: -45,       
+                style: {
+                    fontSize: '13px',
+                    fontFamily: 'Verdana, sans-serif'
+                }
+        },
+        yAxis: {
+            title: {
+                text: 'Porcentaje',
+                }
+            }
+
+        },
+        legend: {
+            enabled: false
+        },
+        plotOptions: {
+            series: {
+                borderWidth: 0,
+                dataLabels: {
+                    enabled: true,
+                    format: '{point.y:.1f}%'
+                }
+            }
+        },
+
+        tooltip: {
+            headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
+            pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y:.2f}%</b> del Total<br/>'
+        },
+        series: [{
+            name: 'Cantidad de Consejo Comunal',
+            data: [
+                {% for ca in cxparroquia%}    
+                    {% if ca.cantidad!=0%}                    
+                    ["{{ca.parroquia}}",{{(ca.cantidad/cont*100)}}],
+                    {% endif%}                    
+                {% endfor%} 
+                        
+                        
+            ]
+        }]
+    });
+});
+
+});
+
+</script>
+{% endblock %}
+

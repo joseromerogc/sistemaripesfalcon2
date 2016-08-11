@@ -1,0 +1,57 @@
+<?php
+
+namespace MisionSucre\RipesBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * Sector
+ *
+ * @ORM\Table(name="anexo_aldea")
+ * @ORM\Entity(repositoryClass="MisionSucre\RipesBundle\Entity\AnexoAldeaRepository")
+ */
+class AnexoAldea
+{   
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="id", type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="AUTO")
+     */
+    private $id;
+    
+     /**
+     * @ORM\ManyToOne(targetEntity="Aldea", inversedBy="anexos")
+     * @ORM\JoinColumn(name="aldea_id", referencedColumnName="id")
+     */
+    protected $aldea;
+    
+    /**
+     * @ORM\ManyToOne(targetEntity="Sector", inversedBy="anexos")
+     * @ORM\JoinColumn(name="sector_id", referencedColumnName="id")
+     */
+    protected $sector;
+    
+    /**
+     * @ORM\OneToMany(targetEntity="Ambiente", mappedBy="anexo")
+     */
+    protected $ambientes;
+        
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="nombre", type="string", length=70)
+     */
+    
+    private $nombre;
+    
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="direccion", type="string", length=80)
+     */
+    
+    private $direccion;
+
+    }

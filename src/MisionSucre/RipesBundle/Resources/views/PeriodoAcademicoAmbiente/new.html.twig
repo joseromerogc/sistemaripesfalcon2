@@ -1,0 +1,79 @@
+{% extends 'MisionSucreRipesBundle::layout.html.twig' %}
+
+{% block stylesheets %}
+{{ parent() }}
+	<link rel="stylesheet" type="text/css" href="{{asset('css/form/responsiveform.css')}}">
+	<link rel="stylesheet" media="screen and (max-width: 1200px) and (min-width: 601px)" href="{{asset('css/form/responsiveform1.css')}}" />
+	<link rel="stylesheet" media="screen and (max-width: 600px) and (min-width: 351px)" href="{{asset('css/form/responsiveform2.css')}}" />
+	<link rel="stylesheet" media="screen and (max-width: 350px)" href="{{asset('css/form/responsiveform3.css')}}" />
+        <link rel="stylesheet" type="text/css" href="{{asset('css/table/littletable.css')}}">
+{% endblock %}
+
+{% block content %}
+
+{% for f in form %}
+                {% if f.vars.block_prefixes[0]!="button" %}
+                    <div class="flash-notice">
+                        {{f.vars.errors}}
+                    </div>
+                {% endif %}
+    {% endfor %}
+
+	<div id="envelope" style='width: 75%;'>
+	
+        <header>
+            <h2>{{mensaje_heading|raw}}</h2>
+	</header>
+            {{ form_start(form) }}
+            
+        <h1 class="sub_heading_style">Ambiente </h1> 
+        <table cellspacing='0' style='margin-top: 0px; margin-bottom: 40px;margin-left: 0px;'> <!-- cellspacing='0' is important, must stay -->
+                <tr><th>ID</th><th>P.N.F.</th><th>Turno</th><th>Nombre</th><th>Promoción</th><th>Condición</th>
+                </tr><!-- Table Header -->  
+            <tr>
+                    
+                {% if ambiente.turno == 'n' %}
+                        {% set turno = 'Nocturno' %}
+
+                {% else%}	
+                        {% set turno = 'Fines de Semana' %}
+                {% endif %}	
+
+                    
+                <td>{{ambiente.id}}</td><td>{{ambiente.pnf.nombre}}</td> <td>{{turno}}</td><td>{{ambiente.nombre}}</td>
+                <td>{{ambiente.promocion}}</td><td>{{ambiente.condicion}}</td>
+            </tr><!-- Table Row -->
+    </table>    
+
+            {{ form_label(form._periodoacademico) }}
+            <div class="styled">
+            {{ form_widget(form._periodoacademico) }}
+            </div>
+            <div class="error">
+                    {{ form_errors(form._periodoacademico) }}
+            </div>
+            
+            <div>
+            {{ form_label(form.trayecto) }}
+            <div class="styled">
+            {{ form_widget(form.trayecto) }}
+            </div>
+            <div class="error">
+                    {{ form_errors(form.trayecto) }}
+            </div>
+            
+            {{ form_label(form.periodo) }}
+            <div class="styled">
+            {{ form_widget(form.periodo) }}
+            </div>
+            <div class="error">
+                    {{ form_errors(form.periodo) }}
+            </div>
+        
+		{{ form_widget(form.save) }}
+	</div>
+		{{ form_end(form) }}		
+</div>
+
+{% endblock %}
+

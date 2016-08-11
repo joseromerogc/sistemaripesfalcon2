@@ -1,0 +1,80 @@
+{% extends 'MisionSucreRipesBundle::layout.html.twig' %}
+{% block stylesheets %}
+{{ parent() }}
+	<link rel="stylesheet" type="text/css" href="{{asset('css/demo_table.css')}}">
+	<link rel="stylesheet" type="text/css" href="{{asset('css/demo_page.css')}}">
+	<link rel="stylesheet" type="text/css" href="{{asset('css/botones.css')}}">
+	<link rel="stylesheet" type="text/css" href="{{asset('css/dataTables.tableTools.css')}}">	
+        <link rel="stylesheet" type="text/css" href="{{asset('css/table/littletable.css')}}">
+{% endblock %}
+
+{% block content %}
+
+{% if aldea %}    
+<h1 class="sub_heading_style">Información de Aldea</h1> 
+    <table cellspacing='0'> <!-- cellspacing='0' is important, must stay -->
+            <tr><th>ID</th><th>Nombre de la Aldea</th><th>Dirreción</th><th>Eje</th><th>Municipio</th><th>Parroquia</th></tr><!-- Table Header -->
+
+
+        <tr><td>{{aldea.id}}</td><td>{{aldea.nombre}}</td><td>{{aldea.direccion}}</td><td>{{aldea.parroquia.eje.nombre}}</td><td>{{aldea.parroquia.municipio.municipio}}</td><td>{{aldea.parroquia.parroquia}}</td>
+            
+        </tr><!-- Table Row -->
+    </table>
+{% endif %}    
+        
+<h1 class="heading_style">Coordinadores no Vinculados</h1> 
+
+<h1 class="sub_heading_style">Buscar por: </h1> 
+Cédula: <input type="search" class="cedula" />
+Apellido: <input type="search" class="apellido" />
+<input type="button" value="Buscar" id="b_buscar"/>
+
+<div class="error">
+</div>
+
+<div class="tabla_coordinadores">
+    
+</div>
+
+<script>    
+    
+$(document).ready(function(){
+
+
+$('#b_buscar').click( function () {
+
+if($('.cedula').val()=="" && $('.apellido').val()==""){
+    $('.error').html("Parámetros de Busqueda Vacios.");
+}
+else{
+
+$('.error').html("");
+
+$('.tabla_coordinadores').html('<img src="{{asset('img/ajax-loader.gif')}}" width="16" height="16" alt="cargando" />');
+
+var cedula=$('.cedula').val();
+var apellido=$('.apellido').val();
+
+var query='{"query":{"cedula":"'+cedula+'","apellido":"'+apellido+'","idaldea":"'+{{idaldea}}+'"}}';
+
+$.ajax({
+        url: "busquedaasignaraldea/"+query+"",
+        success: function (html) {$('.tabla_coordinadores').html(html);}
+    });
+
+}
+
+});
+
+
+$('.buscar_cedula').keypress( function (event) {
+
+    return event.charCode >= 48 && event.charCode <= 57  || event.charCode ==0  ||event.charCode ==45;
+});
+
+});
+
+</script>
+
+
+{% endblock %}

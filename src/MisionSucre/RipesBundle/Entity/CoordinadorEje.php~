@@ -1,0 +1,34 @@
+<?php
+
+namespace MisionSucre\RipesBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * @ORM\Table(name="coordinador_eje")
+ * @ORM\Entity()
+ * @ORM\Entity(repositoryClass="MisionSucre\RipesBundle\Entity\CoordinadorEjeRepository")
+ */
+class CoordinadorEje
+{
+    /**
+     * @ORM\Column(type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="AUTO")
+     */
+    private $id;
+    
+    
+    /**
+     * @ORM\OneToOne(targetEntity="User")
+     * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
+     **/
+    private $user;
+    
+    /**
+     * @ORM\OneToOne(targetEntity="Eje")
+     * @ORM\JoinColumn(name="eje_id", referencedColumnName="id")
+     **/
+    private $eje;
+
+}

@@ -1,0 +1,42 @@
+{% extends 'MisionSucreRipesBundle::layout.html.twig' %}
+
+{% block stylesheets %}
+{{ parent() }}
+	<link rel="stylesheet" type="text/css" href="{{asset('css/table/littletable.css')}}">
+	<link rel="stylesheet" type="text/css" href="{{asset('css/blitzer/jquery-ui-1.10.4.custom.css')}}">
+	
+{% endblock %}
+
+{% block content %}
+	{{ parent() }}
+
+        
+{% for flashMessage in app.session.flashbag.get('notice') %}
+        <div class="flash-notice">
+        {{ flashMessage }}
+        </div>
+{% endfor %}
+
+  
+    <h1 class="heading_style">Programa Nacional de Formación</h1> 
+    <h1 class="heading_style"> {{pnf.nombre}}</h1>
+   
+    <table cellspacing='0'> <!-- cellspacing='0' is important, must stay -->
+        <tr><th>ID</th><th>Universidad que Acredita</th><th>Modalidad</th><th></th></tr><!-- Table Header -->
+            <tr><td>{{pnf.id}}</td>
+                <td>{{pnf.universidad}}</td><td>{{pnf.modalidad}}</td>
+                <td><a class="enlace" href="{{path('pnf_update',{'id':pnf.id})}}">Actualizar</a></td>
+        </tr><!-- Table Row -->
+    </table>
+    {% if is_granted('ROLE_ADMIN')%}
+    <h1 class="sub_heading_style"> Estadística</h1>    
+    <table cellspacing='0'> <!-- cellspacing='0' is important, must stay -->
+        <tr><th>Cantidad de Ambientes</th><th>Cantidad de Triunfadores</th></tr><!-- Table Header -->
+            <tr><td>{{cantidadambientes.c}}</td><td>{{cantidadtriunfadores.c}}</td>
+                
+        </tr><!-- Table Row -->
+    </table>
+    {% endif %}
+    
+{% endblock%}
+       

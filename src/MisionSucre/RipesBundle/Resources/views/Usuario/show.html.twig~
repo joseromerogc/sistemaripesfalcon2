@@ -1,0 +1,29 @@
+{% extends 'MisionSucreRipesBundle:layout.html.twig' %}
+
+{% block stylesheets %}
+{{ parent() }}
+	<link rel="stylesheet" type="text/css" href="{{asset('css/table/littletable.css')}}">
+	
+{% endblock %}
+
+
+{% block body %}
+	{{ parent() }}
+
+{% for flashMessage in app.session.flashbag.get('notice') %}
+        <div class="flash-notice">
+        {{ flashMessage }}
+        </div>
+ {% endfor %}
+
+<table cellspacing='0'> <!-- cellspacing='0' is important, must stay -->
+	<tr><th>ID</th><th>Nombre de Usuario</th><th>Tipo de Usuario</th><th></th><th></th></tr><!-- Table Header -->
+        
+    
+    <tr><td>{{usuario.id}}</td><td>{{usuario.username}}</td><td>{{usuario.name}}</td>
+        <td><a class="enlace" href="../update/{{usuario.id}}">Actualizar</a></td><td><a class="enlace" onclick="return confirm('******Confirmar Borrar******')" href="../delete/{{usuario.id}}">Borrar</a></td>
+    </tr><!-- Table Row -->
+</table>
+	
+{% endblock %}
+

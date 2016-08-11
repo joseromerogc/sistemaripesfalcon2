@@ -1,0 +1,56 @@
+{% extends 'layout.html.twig' %}
+
+{% block stylesheets %}
+{{ parent() }}
+	<link rel="stylesheet" type="text/css" href="{{asset('css/form/responsiveform.css')}}">
+	<link rel="stylesheet" media="screen and (max-width: 1200px) and (min-width: 601px)" href="{{asset('css/form/responsiveform1.css')}}" />
+	<link rel="stylesheet" media="screen and (max-width: 600px) and (min-width: 351px)" href="{{asset('css/form/responsiveform2.css')}}" />
+	<link rel="stylesheet" media="screen and (max-width: 350px)" href="{{asset('css/form/responsiveform3.css')}}" />
+{% endblock %}
+
+{% block content %}
+
+	<div id="envelope">
+	<header>
+	    <h2>Nuevo Usuario</h2>
+	    <p>Registro de Nuevo Usuario</p>
+	</header>
+	<hr>
+	{{ form_start(form) }}
+	<div>
+		{{ form_label(form.username) }}
+		{{ form_widget(form.username) }}
+                <div class="error">
+                    {{ form_errors(form.username) }}
+                </div>
+	</div>
+	
+	<div>   
+                {{ form_label(form.password.password) }}
+		{{ form_widget(form.password.password) }}
+                <div class="error">
+                    {{ form_errors(form.password.password) }}
+                </div>
+	</div>  
+        <div>   
+                {{ form_label(form.password.confirm) }}
+		{{ form_widget(form.password.confirm) }}
+                <div class="error">
+                    {{ form_errors(form.password.confirm) }}
+                </div>
+	</div>         
+        
+	<div class="styled">
+		{{ form_widget(form.tip_usr) }}
+	</div>
+            <div class="error">
+                    {{ form_errors(form.tip_usr) }}
+            </div>
+	<div>
+		{{ form_widget(form.save) }}
+	</div>
+		{{ form_end(form) }}		
+</div>
+		
+{% endblock %}
+

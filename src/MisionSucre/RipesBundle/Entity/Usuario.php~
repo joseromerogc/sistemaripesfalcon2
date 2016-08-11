@@ -1,0 +1,292 @@
+<?php
+namespace MisionSucre\RipesBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Security\Core\User\AdvancedUserInterface;
+
+/**
+* @ORM\Entity
+* @ORM\Table(name="usuario")
+* @ORM\Entity(repositoryClass="MisionSucre\RipesBundle\Entity\UserRepository")
+*/
+class Usuario implements AdvancedUserInterface, \Serializable
+{
+/**
+* @ORM\Column(type="integer")
+* @ORM\Id
+* @ORM\GeneratedValue(strategy="AUTO")
+*/
+protected $id;
+
+/**
+* @ORM\Column(type="string", length=40, unique=true)
+*/
+protected $username;
+
+/**
+* @ORM\Column(type="string", length=255)
+*/
+
+protected $password;
+
+/**
+* @ORM\Column(type="string", length=20)
+*/
+
+protected $tip_usr;
+
+/**
+* @ORM\Column(name="is_active", type="boolean")
+*/
+private $isActive;
+private $salt;
+
+public function __construct()
+{
+    $this->isActive = true;
+    // may not be needed, see section on salt below
+    $this->salt = md5(uniqid(null, true));
+}
+
+
+//**********************GETTER Y SETTER******************************************
+
+    /**
+     * Get id
+     *
+     * @return integer 
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * Set username
+     *
+     * @param string $username
+     * @return Usuario
+     */
+    public function setUsername($username)
+    {
+        $this->username = $username;
+
+        return $this;
+    }
+     
+    
+    /**
+     * Get username
+     *
+     * @return string 
+     */
+    /*
+    public function getUsername()
+    {
+        return $this->username;
+    }
+    */
+    
+    /**
+     * Set tip_usr
+     *
+     * @param string $tipUsr
+     * @return Usuario
+     */
+    
+    public function setTipUsr($tipUsr)
+    {
+        $this->tip_usr = $tipUsr;
+
+        return $this;
+    }
+
+    /**
+     * Get tip_usr
+     *
+     * @return string 
+     */
+    
+    public function getTipUsr()
+    {
+        return $this->tip_usr;
+    }
+    
+    
+    /**
+     * Set password
+     *
+     * @param string $password
+     * @return Usuario
+     */
+    public function setPassword($password)
+    {
+        $this->password = $password;
+
+        return $this;
+    }
+
+    /**
+     * Get password
+     *
+     * @return string 
+     */
+    /*
+    public function getPassword()
+    {
+        return $this->password;
+    }*/
+
+    /**
+     * Set isActive
+     *
+     * @param boolean $isActive
+     * @return Usuario
+     */
+    public function setIsActive($isActive)
+    {
+        $this->isActive = $isActive;
+
+        return $this;
+    }
+
+    /**
+     * Get isActive
+     *
+     * @return boolean 
+     */
+    public function getIsActive()
+    {
+        return $this->isActive;
+    }
+    
+    /**
+     * @inheritDoc
+     */
+    public function getUsername()
+    {
+        return $this->username;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getSalt()
+    {
+        // you *may* need a real salt depending on your encoder
+        // see section on salt below
+        return $this->salt;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getPassword()
+    {
+        return $this->password;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function eraseCredentials()
+    {
+    }
+
+    /**
+     * @see \Serializable::serialize()
+     */
+    public function serialize()
+    {
+        return serialize(array(
+            $this->id,
+            $this->username,
+            $this->password,
+            // see section on salt below
+            // $this->salt,
+        ));
+    }
+
+    /**
+     * @see \Serializable::unserialize()
+     */
+    public function unserialize($serialized)
+    {
+        list (
+            $this->id,
+            $this->username,
+            $this->password,
+            // see section on salt below
+            // $this->salt
+        ) = unserialize($serialized);
+    }
+    
+    public function isAccountNonExpired()
+    {
+        return true;
+    }
+
+    public function isAccountNonLocked()
+    {
+        return true;
+    }
+
+    public function isCredentialsNonExpired()
+    {
+        return true;
+    }
+
+    public function isEnabled()
+    {
+        return $this->isActive;
+    }
+    
+    /**
+     * @ORM\ManyToMany(targetEntity="Role", inversedBy="usuarios")
+     *
+     */
+    private $roles;
+    
+    public function getRoles()
+    {
+        return $this->roles->toArray();
+    }
+    /**
+     * @var \Doctrine\Common\Collections\Collection
+     */
+    private $role;
+
+
+    /**
+     * Add role
+     *
+     * @param \MisionSucre\RipesBundle\Entity\Role $role
+     * @return Usuario
+     */
+    public function addRole(\MisionSucre\RipesBundle\Entity\Role $role)
+    {
+        $this->role[] = $role;
+
+        return $this;
+    }
+
+    /**
+     * Remove role
+     *
+     * @param \MisionSucre\RipesBundle\Entity\Role $role
+     */
+    public function removeRole(\MisionSucre\RipesBundle\Entity\Role $role)
+    {
+        $this->role->removeElement($role);
+    }
+
+    /**
+     * Get role
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getRole()
+    {
+        return $this->role;
+    }
+}

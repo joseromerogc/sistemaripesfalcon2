@@ -1,0 +1,33 @@
+{% extends 'MisionSucreRipesBundle::layout.html.twig' %}
+
+{% block stylesheets %}
+{{ parent() }}
+	<link rel="stylesheet" type="text/css" href="{{asset('css/table/littletable.css')}}">
+	<link rel="stylesheet" type="text/css" href="{{asset('css/blitzer/jquery-ui-1.10.4.custom.css')}}">
+	
+{% endblock %}
+
+{% block content %}
+	{{ parent() }}
+
+        
+{% for flashMessage in app.session.flashbag.get('notice') %}
+        <div class="flash-notice">
+        {{ flashMessage }}
+        </div>
+{% endfor %}
+
+  
+    <h1 class="heading_style">Periodo Académico</h1> 
+    <h1 class="heading_style"> {{periodoacademico.nombre}}</h1>
+   
+    <table cellspacing='0'> <!-- cellspacing='0' is important, must stay -->
+        <tr><th>ID</th><th>Nombre</th><th>Fecha de Inicio</th><th>Fecha Fin</th><th>Actual</th><th>Cantidad de Ambientes en este Periodo</th><th></th></tr><!-- Table Header -->
+            <tr><td>{{periodoacademico.id}}</td><td>{{periodoacademico.nombre}}</td><td>{{periodoacademico.fechainicio|date("d/m/Y")}}</td><td>{{periodoacademico.fechafin|date("d/m/Y")}}</td>
+                <td>{{periodoacademico.actual}}</td><td>{{cantidadambiente.total}}</td>
+                <td><a class="enlace" href="{{path('periodo_academico_update',{'id':periodoacademico.id})}}">Actualizar</a></td>
+        </tr><!-- Table Row -->
+    </table>
+    
+{% endblock%}
+       

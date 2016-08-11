@@ -1,0 +1,508 @@
+{% extends 'MisionSucreRipesBundle::layout.html.twig' %}
+
+{% block stylesheets %}
+{{ parent() }}
+	<link rel="stylesheet" type="text/css" href="{{asset('css/table/littletable.css')}}">
+	<link rel="stylesheet" type="text/css" href="{{asset('css/blitzer/jquery-ui-1.10.4.custom.css')}}">
+        <link rel="stylesheet" type="text/css" href="{{asset('css/demo_table.css')}}">
+	<link rel="stylesheet" type="text/css" href="{{asset('css/demo_page.css')}}">
+        <link rel="stylesheet" type="text/css" href="{{asset('css/dataTables.tableTools.css')}}">	
+        <link rel="stylesheet" type="text/css" href="{{asset('css/maps.css')}}">
+{% endblock %}
+
+{% block js %}
+        {{ parent() }}
+	<script src="{{asset('js/jquery-ui-1.10.4.custom.js')}}"></script>
+{% endblock %}    
+
+{% block content %}
+	{{ parent() }}
+
+{% for flashMessage in app.session.flashbag.get('notice') %}
+        <div class="flash-notice">
+        {{ flashMessage }}
+        </div>
+{% endfor %}
+
+<div id="tabs">
+    <ul>
+		<li><a href="#info">Información General</a></li>
+		<li><a href="#anexos">Ambientes Comunales</a></li>
+		 {% if is_granted('ROLE_COORD')%}
+                 <li><a href="#ambientes">Ambientes</a></li>
+                <li><a href="#docentes">Docentes</a></li>
+                <li><a href="#operarios">Personal Operativo</a></li>
+                <li><a href="#estructuras">Estructuras</a></li>
+                {% endif%}
+    </ul>
+<div id="info">    
+    <h1 class="heading_style">Información de Aldea</h1> 
+    <table cellspacing='0'> <!-- cellspacing='0' is important, must stay -->
+            <tr><th>ID</th><th>Código</th><th>Nombre de la Aldea</th><th>Dirreción</th><th>Eje</th><th>Municipio</th><th>Parroquia</th><th></th><th></th></tr><!-- Table Header -->
+
+
+        <tr><td>{{aldea.id}}</td><td>{{aldea.codigo}}</td><td>{{aldea.nombre}}</td><td>{{aldea.direccion}}</td><td>{{aldea.parroquia.eje.nombre}}</td><td>{{aldea.parroquia.municipio.municipio}}</td><td>{{aldea.parroquia.parroquia}}</td>
+        
+        {% if is_granted('ROLE_EJE')%}        
+        <td><a class="enlace" href="{{path('aldea_update',{'id':aldea.id})}}">Actualizar</a></td><td><a class="enlace" onclick="return confirm('******Confirmar Borrar******')" href="{{path('aldea_delete',{'id': aldea.id})}}">Borrar</a></td>
+        </tr><!-- Table Row -->
+        {% endif%}           
+    </table>
+    
+    {% if coordenadas%}    
+        <div id="lienzoMapa" ></div>
+        <a style='margin-left: 12px;' class="enlace" href="{{path('coordenadas_aldea_update',{'id':coordenadas.id})}}"> 
+                   <span class='icon'><img src="{{asset('img/Actions-edit-redo-icon')}}"/></span> Actualizar Coordenadas</a>
+    {% else%}        
+        <a style='margin-left: 12px;' class="enlace" href="{{path('coordenadas_aldea_new',{'id':aldea.id})}}"> 
+                   <span class='icon'><img src="{{asset('img/add-1-icon.png')}}"/></span> Registrar Coordenadas</a>
+    {% endif%}    
+    {% if coord%}    
+        
+    <h1 class="heading_style">Coordinadores</h1> 
+    <table cellspacing='0'> <!-- cellspacing='0' is important, must stay -->
+            <tr><th>ID</th><th>Nombres</th><th>Apellido</th><th>Cédula</th><th>Celular/Télefono</th><th></th><th></th></tr><!-- Table Header -->          
+    {% for c in coord%}               
+        <tr><td>{{c.cid}}</td><td>{{c.priNom|capitalize}} {{c.segNom|capitalize}}</td><td>{{c.priApe|capitalize}} {{c.segApe|capitalize}}</td>
+        <td>{% if c.codCed %} {% set cod='E'%} {% else %}{% set cod='V'%}{% endif %}{{cod}}.-{{c.cedPer}}</td>
+        <td>{{c.celPer}}/{{c.telPer}}</td>
+        {% if is_granted('ROLE_EJE')%}                
+            <td><a class="enlace" href="{{path('usuario_show',{'id':c.id})}}">Mostrar</a></td>
+            <td><a class="enlace" href="{{path('coordinador_turno_new',{'id':c.cid})}}">Asignar Turno</a></td>
+        </tr><!-- Table Row -->
+        {% endif%}        
+{% endfor%}            
+    </table>
+
+{% else %}        
+    {% if is_granted('ROLE_EJE')%}        
+    <a style='margin-left: 12px;' class="enlace" href="{{path('asignar_coordinador',{'idaldea':aldea.id})}}"> 
+                   <span class='icon'><img src="{{asset('img/add-1-icon.png')}}"/></span> Asignar Coordinador(a)</a>
+    {% endif %}
+{% endif%}    
+
+{% if is_granted('ROLE_COORD')%}    
+ {% if turnos %}
+     <h1 class="heading_style">Turnos</h1> 
+     <table cellspacing='0'> <!-- cellspacing='0' is important, must stay -->
+            <tr><th>ID</th><th>Nombres</th><th>Apellido</th><th>Turno</th><th></th></tr><!-- Table Header -->          
+    {% for t in turnos%}               
+        <tr><td>{{t.id}}</td><td>{{t.priNom|capitalize}} {{t.segNom|capitalize}}</td><td>{{t.priApe|capitalize}} {{t.segApe|capitalize}}</td>
+            <td>{{t.turno}}</td>
+            {% if is_granted('ROLE_EJE')%}
+            <td><a class="enlace" href="{{path('coordinador_turno_update',{'idturno':t.id})}}">Actualizar</a></td>
+            <td><a class="enlace" onclick="return confirm('******Confirmar Borrar******')" href="{{path('coordinador_turno_delete',{'idturno': t.id})}}">Borrar</a></td>
+             {% endif%}     
+        </tr>
+{% endfor%}            
+    </table>                   
+ {% endif%} 
+ 
+ {% endif%}     
+</div>
+
+        
+<div id="anexos" >
+    <h1 class="heading_style">Ambientes Comunales</h1> 
+    
+    {% if anexos %}
+    
+    <table cellspacing='0'> <!-- cellspacing='0' is important, must stay --> 
+             <tr><th>ID</th><th>Nombre</th><th>Dirreción</th><th>Parroquia</th><th>Sector</th><th></th></tr><!-- Table Header -->
+    {% for a in anexos %}
+                 <tr><td>{{a.id}}</td><td>{{a.nombre}}</td><td>{{a.direccion}}</td><td>{% if  a.sector %}{{a.sector.parroquia.parroquia}}</td><td>{{a.sector.nombre}}</td>{% else %}<td></td><td></td>{% endif %}
+            {% if is_granted('ROLE_COORD')%}        
+            <td><a class="enlace" href="{{path('anexo_aldea_show',{'id':a.id})}}">Mostrar</a></td>    
+            <td><a class="enlace" href="{{path('anexo_aldea_update',{'id':a.id})}}">Actualizar</a></td>
+            <td><a class="enlace" onclick="return confirm('******Confirmar Borrar******')" 
+                   href="{{path('anexo_aldea_delete',{'id': a.id})}}">Borrar</a></td>
+            {% endif %}
+        </tr><!-- Table Row -->
+    {% endfor %}
+    </table>
+    {% endif %}
+    {% if is_granted('ROLE_COORD')%}        
+    <a style='margin-left: 12px;' class="enlace" href="{{path('anexo_aldea_new',{'id':aldea.id})}}"> 
+                   <span class='icon'><img src="{{asset('img/add-1-icon.png')}}"/></span> Agregar</a> 
+    {% endif %}
+    
+</div>
+
+{% if is_granted('ROLE_COORD')%}        
+<div id="ambientes">
+  
+  <div id="accordionambientes">
+    <h3>TI</h3>
+      <div>  
+          {% if  ambientesti %} 
+            <table cellspacing='0' style='margin-top: 0px; margin-bottom: 0px;margin-left: 0px;'> <!-- cellspacing='0' is important, must stay -->
+                <tr><th>ID</th><th>P.N.F.</th><th>Turno</th><th>Anexo</th><th>Condición</th>
+                    <th>Trayecto</th><th>Periodo</th>
+                </tr><!-- Table Header -->  
+            <tr>
+                
+                {% for a in ambientesti %}
+                   
+                <td>{{a.ambiente.id}}</td><td>{{a.ambiente.pnf.nombre}}</td> <td>{{a.ambiente.turno}}</td><td>{{a.ambiente.anexo.nombre}}</td>
+                <td>{{a.ambiente.condicion}}</td><td>{{a.trayecto}}</td><td>{{a.periodo}}</td>
+                {% if is_granted('ROLE_COORD')%}        
+                    <td><a class="enlace" href="{{path('ambiente_show',{'idamb': a.ambiente.id})}}">Mostrar</a></td>
+                    <td><a class="enlace" href="{{path('ambiente_update',{'idamb': a.ambiente.id})}}">Actualizar</a></td>
+                {% endif %}
+                
+            </tr><!-- Table Row -->
+            {% endfor %}
+            </table>    
+            {% endif %}    
+      </div>
+    <h3> TRIMESTRALES</h3>
+      <div>  
+          {% if  ambientescta.conperiodos %} 
+            <table cellspacing='0' style='margin-top: 0px; margin-bottom: 0px;margin-left: 0px;'> <!-- cellspacing='0' is important, must stay -->
+                <tr><th>ID</th><th>P.N.F.</th><th>Turno</th><th>Anexo</th><th>Condición</th>
+                    <th>Trayecto</th><th>Periodo</th>
+                </tr><!-- Table Header -->  
+            <tr>
+                
+                {% for a in ambientescta.conperiodos %}	
+
+                    
+                <td>{{a.ambiente.id}}</td><td>{{a.ambiente.pnf.nombre}}</td> <td>{{a.ambiente.turno}}</td><td>{{a.ambiente.anexo.nombre}}</td>
+                <td>{{a.ambiente.condicion}}</td><td>{{a.trayecto}}</td><td>{{a.periodo}}</td>
+                {% if is_granted('ROLE_COORD')%}        
+                    <td><a class="enlace" href="{{path('ambiente_show',{'idamb': a.ambiente.id})}}">Mostrar</a></td>
+                    <td><a class="enlace" href="{{path('ambiente_update',{'idamb': a.ambiente.id})}}">Actualizar</a></td>
+                {% endif %}
+                
+            </tr><!-- Table Row -->
+            {% endfor %}
+            </table>    
+            {% endif %}    
+           
+            <h3>Sin Periodo Académico Activo<h3>
+             {% if  ambientescta.sinperiodos %} 
+            <table cellspacing='0' style='margin-top: 0px; margin-bottom: 0px;margin-left: 0px;'> <!-- cellspacing='0' is important, must stay -->
+                <tr><th>ID</th><th>P.N.F.</th><th>Turno</th><th>Anexo</th><th>Condición</th>
+                </tr><!-- Table Header -->  
+            <tr>
+                
+                {% for a in ambientescta.sinperiodos %}
+                
+                    
+                <td>{{a.id}}</td><td>{{a.pnf.nombre}}</td> <td>{{a.turno}}</td><td>{{a.anexo.nombre}}</td>
+                <td>{{a.condicion}}</td>
+                {% if is_granted('ROLE_COORD')%}        
+                    <td><a class="enlace" href="{{path('ambiente_show',{'idamb': a.id})}}">Mostrar</a></td>
+                    <td><a class="enlace" href="{{path('ambiente_update',{'idamb': a.id})}}">Actualizar</a></td>
+                {% endif %}
+                
+            </tr><!-- Table Row -->
+            {% endfor %}
+            </table>    
+            {% endif %}    
+      </div>
+    <h3>SEMESTRALES</h3>
+      <div>  
+          {% if  ambientesubv.conperiodos %} 
+            <table cellspacing='0' style='margin-top: 0px; margin-bottom: 0px;margin-left: 0px;'> <!-- cellspacing='0' is important, must stay -->
+                <tr><th>ID</th><th>P.N.F.</th><th>Turno</th><th>Anexo</th><th>Promoción</th><th>Condición</th>
+                    <th>Trayecto</th><th>Tramo</th>
+                </tr><!-- Table Header -->  
+            <tr>
+                
+                {% for a in ambientesubv.conperiodos %}
+                	 
+                <td>{{a.ambiente.id}}</td><td>{{a.ambiente.pnf.nombre}}</td> <td>{{a.ambiente.turno}}</td><td>{{a.ambiente.anexo.nombre}}</td>
+                <td>{{a.ambiente.condicion}}</td><td>{{a.trayecto}}</td><td>{{a.periodo}}</td>
+                {% if is_granted('ROLE_COORD')%}        
+                    <td><a class="enlace" href="{{path('ambiente_show',{'idamb': a.ambiente.id})}}">Mostrar</a></td>
+                    <td><a class="enlace" href="{{path('ambiente_update',{'idamb': a.ambiente.id})}}">Actualizar</a></td>
+                {% endif %}
+            </tr><!-- Table Row -->
+            {% endfor %}
+            </table>    
+            {% endif %} 
+            <h3>Sin Periodo Académico Activo<h3>
+             {% if  ambientesubv.sinperiodos %} 
+            <table cellspacing='0' style='margin-top: 0px; margin-bottom: 0px;margin-left: 0px;'> <!-- cellspacing='0' is important, must stay -->
+                <tr><th>ID</th><th>P.N.F.</th><th>Turno</th><th>Anexo</th><th>Condición</th>
+                </tr><!-- Table Header -->  
+            <tr>
+                
+                {% for a in ambientesubv.sinperiodos %}
+                 
+                <td>{{a.id}}</td><td>{{a.pnf.nombre}}</td> <td>{{a.turno}}</td><td>{{a.anexo.nombre}}</td>
+                <td>{{a.condicion}}</td>
+                {% if is_granted('ROLE_COORD')%}        
+                    <td><a class="enlace" href="{{path('ambiente_show',{'idamb': a.id})}}">Mostrar</a></td>
+                    <td><a class="enlace" href="{{path('ambiente_update',{'idamb': a.id})}}">Actualizar</a></td>
+                {% endif %}
+                
+            </tr><!-- Table Row -->
+            {% endfor %}
+            </table>    
+            {% endif %} 
+            
+            
+      </div>      
+  </div>
+            {% if is_granted('ROLE_COORD')%}            
+            <a style='margin-left: 12px;' class="enlace" href="{{path('ambiente_new',{'idaldea':aldea.id})}}"> 
+                   <span class='icon'><img src="{{asset('img/add-1-icon.png')}}"/></span> Agregar Ambiente</a> 
+            
+            <h1 class="heading_style">Resumen de Ambientes</h1> 
+            <table cellspacing='0'> <!-- cellspacing='0' is important, must stay -->
+                <tr>
+                    {% for a in datosambientes %}
+                    <th>Ambientes {{a.modalidad}}</th>
+                    {% endfor%}
+                    <th>Ambientes No Vinculados Al Sistema Sucre</th>
+                    <th>Total</th>
+                </tr>
+
+            <tr>
+                {%set total=0%}
+                {% for a in datosambientes %}
+                <td>{{a.cantidadambiente}}</td>
+                {%set total=total+a.cantidadambiente%}
+                {% endfor%}
+                <td> {{ambientesnovinculados.cantidadambiente}}</td>
+                <td class='total'>{{total}}</td>
+                
+            </tr><!-- Table Row -->          
+        </table>
+                <h1 class="heading_style">Resumen de Triunfadores</h1> 
+            <table cellspacing='0'> <!-- cellspacing='0' is important, must stay -->
+                <tr>
+                    
+                    <th>Cantidad de Triunfadores</th>
+                    <th>No Vinculados al Sistema Sucre</th>
+                </tr>
+
+            <tr>
+                
+                <td>
+                   {{cantidadtriunfadores.cantidadtriunfadores}}
+                </td>
+                <td>
+                   {{triunfadoresnovinculados.cantidadtriunfadores}}
+                </td>
+                
+            </tr><!-- Table Row -->          
+        </table>
+       
+</div>
+{% endif %}
+
+<div id="operarios" >
+    <h1 class="heading_style">Operarios</h1> 
+    
+    {% if operarios %}
+    
+    <table cellspacing='0' style='margin-top: 0px; margin-bottom: 20px;margin-left: 0px;'> <!-- cellspacing='0' is important, must stay -->
+		<tr>
+			<th>#</th><th>Cédula</th><th>Nombres y Apellidos</th>
+                        <th>Celular/Telefono</th>
+                        <th>Turno</th>   <th>cargo</th>   
+		</tr>
+    <tbody>
+    	
+{% set i = 1 %}
+
+{% for o in operarios %}
+
+
+		<tr >
+    <td>{{i}}</td><td>{{ o.cedPer}}</td>
+    <td>{{ o.priNom |upper}} {{ o.segNom |upper}}
+    {{ o.priApe |upper}} {{ o.segApe |upper}}</td>
+    <td>{{o.celPer}}/{{o.telPer}}</td>
+    <td>{{o.o.turno}}</td>
+    <td>{{o.o.cargo}}</td>
+    {% if is_granted('ROLE_COORD')%}        
+        <td><a class="enlace" href="{{path('usuario_show',{'id': o.idusr})}}">Mostrar</a></td>
+        <td><a class="enlace" onclick="return confirm('******Confirmar Borrar******')" href="{{path('operario_delete',{'idop': o.id})}}">Borrar</a></td>
+    {% endif %}
+{% set i = i+1 %}
+{% endfor %}    
+    </tr>
+</tbody>
+    </table>
+        
+    {% endif %}
+    {% if is_granted('ROLE_COORD')%}        
+        <a style='margin-left: 12px;' class="enlace" href="{{path('operario_asignar',{'idaldea':aldea.id})}}"> 
+                   <span class='icon'><img src="{{asset('img/add-1-icon.png')}}"/></span> Agregar Operario</a> 
+    {% endif %}
+</div>
+                   
+<div id="docentes" >
+    <h1 class="heading_style">Docentes</h1> 
+      
+    </table>
+            <table cellspacing='0'> <!-- cellspacing='0' is important, must stay -->
+                <tr>
+                    
+                    <th>Cantidad de Docentes</th>
+                </tr>
+
+            <tr>
+                
+                <td>
+                   {{cantidaddocentes.cantidaddocentes}}
+                </td>
+            </tr><!-- Table Row -->          
+        </table>
+                
+    {% if is_granted('ROLE_COORD')%}        
+        <a style='margin-left: 12px;margin-bottom: 20px;' class="enlace" href="{{path('docente_asignar',{'idaldea':aldea.id})}}"> 
+        <span class='icon'><img src="{{asset('img/add-1-icon.png')}}"/></span> Agregar Docente</a> 
+    {% endif %}
+    
+    {% if docentes %}
+    <div id="dt_example">
+    <div id="container"  style="width: 100%">    
+    <table class="display" id="example" cellpadding="0" cellspacing="0" border="0" >
+                <thead>
+		<tr>
+			<th>#</th><th>Nombres y Apellidos</th>
+                        <th>Celular/Telefono</th>
+                        <th>Exclusividad</th><th>Horas</th>
+                        {% if is_granted('ROLE_COORD')%}  
+                        <th></th>
+                        {% endif %}
+		</tr>
+                <thead>
+    <tbody>
+    	
+{% set i = 1 %}
+{% for d in docentes %}
+{% if d.sexPer == 'm' %}
+            {% set class = 'gradeA' %}
+        {% else %}	 
+            {% set class = 'gradeC' %}
+{% endif %}
+        	
+		<tr class="{{class}}">
+    <td>{{i}}</td>
+    <td>{{ d.priNom |upper}} {{ d.segNom |upper}}
+    {{ d.priApe |upper}} {{ d.segApe |upper}}</td>
+    <td>{{d.celPer}}/</br>{{d.telPer}}</td>
+    <td>{{d.exclusividad}}</td>
+    <td>{{d.horas}}</td>
+    {% if is_granted('ROLE_COORD')%}        
+        <td><a class="enlace" href="{{path('usuario_show',{'id': d.idusr})}}">Mostrar</a></td>
+        <td><a class="enlace" href="{{path('docente_update',{'iddoc': d.id})}}">Actualizar</a></td>
+        <td><a class="enlace" href="{{path('docente_delete',{'iddoc': d.id})}}">Desvincular</a></td>
+    {% endif %}
+{% set i = i+1 %}
+{% endfor %}    
+    </tr>
+    </tbody>
+</table>
+    </div>
+    </div>
+    {% endif %}
+</div>
+
+<div id="estructuras" >
+    <h1 class="heading_style">Estructuras</h1> 
+                 
+    {% if is_granted('ROLE_COORD')%}        
+        <a style='margin-left: 12px;margin-bottom: 20px;' class="enlace" href="{{path('estructura_new',{'idaldea':aldea.id})}}"> 
+        <span class='icon'><img src="{{asset('img/add-1-icon.png')}}"/></span> Agregar Estructura</a> 
+    {% endif %}
+    
+    {% if estructuras %}
+    <div id="dt_example">
+    <div id="container"  style="width: 100%">    
+    <table class="display" id="example" cellpadding="0" cellspacing="0" border="0" >
+                <thead>
+		<tr>
+			<th>#</th><th>Nombres</th>
+                        <th>Tipo</th>
+                        {% if is_granted('ROLE_COORD')%}  
+                        <th></th><th></th><th></th>
+                        {% endif %}
+		</tr>
+                <thead>
+    <tbody>
+    	
+{% set i = 1 %}
+{% for e in estructuras %}
+{% if e.tipo == 'Cátedra BMC' %}
+            {% set class = 'gradeA' %}
+        {% else %}	 
+            {% set class = 'gradeC' %}
+{% endif %}
+        	
+		<tr class="{{class}}">
+    <td>{{i}}</td>
+    <td>{{e.tipo}}</td>
+    <td>{{e.nombre}}</td>
+    {% if is_granted('ROLE_COORD')%}        
+        <td><a class="enlace" href="{{path('estructura_show',{'id': e.id})}}">Mostrar</a></td>
+        <td><a class="enlace" href="{{path('estructura_update',{'id': e.id})}}">Actualizar</a></td>
+        <td><a class="enlace" onclick="return confirm('******Confirmar Borrar******')" 
+                   href="{{path('estructura_delete',{'id': e.id})}}">Borrar</a></td>
+    {% endif %}
+{% set i = i+1 %}
+{% endfor %}    
+    </tr>
+    </tbody>
+</table>
+    </div>
+    </div>
+    {% endif %}
+</div>
+ {% endif %}
+</div>
+<script src="https://maps.googleapis.com/maps/api/js?v=3.exp"></script>
+  
+{% endblock %}
+
+{% block javascripts %}
+{{parent()}}
+$(function() {
+                $( "#tabs" ).tabs();
+                $( "#accordionambientes" ).accordion({
+                heightStyle: "content",        
+                collapsible: true,
+                active: false
+                });
+                $('#example').dataTable( {
+        "oLanguage": {
+            "sLengthMenu": "Mostrar _MENU_ Usuarios por Página",
+            "sZeroRecords": "No se encontraron Resultados",
+            "sSearch": "Filtro: ",
+            "sInfo": "Mostrando _START_ a _END_  de un Total de _TOTAL_ Usuarios",
+            "sInfoEmpty": "Mostrando 0 de 0 de 0 Usuarios",
+            "sInfoFiltered": "(Filtrado de un _MAX_ total de Usuarios)",
+            "oPaginate": {
+                "sNext": "Página Siguiente",
+                "sPrevious": "Página Anterior"
+                }
+        },
+        dom: 'T<"clear">lfrtip'
+        ,
+         "bLengthChange": true,
+        tableTools:{
+        		"sSwfPath": "{{asset('swf/copy_csv_xls_pdf.swf')}}",
+        }
+    } );
+            });
+{% if coordenadas %}
+        var map;
+        function initialize() {
+          var mapOptions = {
+            zoom: 15,
+            center: new google.maps.LatLng({{coordenadas.norte}}, {{coordenadas.oeste}})
+          };
+          map = new google.maps.Map(document.getElementById('lienzoMapa'), mapOptions);
+        }
+        google.maps.event.addDomListener(window, 'load', initialize);
+    
+    {% endif %}            
+{% endblock %}
+
+

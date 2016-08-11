@@ -1,0 +1,146 @@
+{% extends 'MisionSucreRipesBundle::layout.html.twig' %}
+
+{% block stylesheets %}
+{{ parent() }}
+	<link rel="stylesheet" type="text/css" href="{{asset('css/form/responsiveform.css')}}">
+	<link rel="stylesheet" media="screen and (max-width: 1200px) and (min-width: 601px)" href="{{asset('css/form/responsiveform1.css')}}" />
+	<link rel="stylesheet" media="screen and (max-width: 600px) and (min-width: 351px)" href="{{asset('css/form/responsiveform2.css')}}" />
+	<link rel="stylesheet" media="screen and (max-width: 350px)" href="{{asset('css/form/responsiveform3.css')}}" />
+        <link rel="stylesheet" type="text/css" href="{{asset('css/table/littletable.css')}}">
+{% endblock %}
+
+{% block content %}
+
+{% for f in form %}
+                {% if f.vars.block_prefixes[0]!="button" %}
+                    <div class="flash-notice">
+                        {{f.vars.errors}}
+                    </div>
+                {% endif %}
+    {% endfor %}
+
+	<div id="envelope" style='width: 75%;'>
+	
+        <header>
+            <h2>{{mensaje_heading|raw}}</h2>
+            <p>{{sub_heading |raw}}</p>
+	</header>
+	<hr>
+        <h1 class="sub_heading_style">Usuario </h1> 
+        <table cellspacing='0' style='margin-left: 10%;' > <!-- cellspacing='0' is important, must stay -->
+            <tr><th>ID</th><th>Nombre de Usuario</th><th>Nombres</th><th>Apellido</th><th>Cédula</th></tr>
+            
+            <td>{{usr.id}}</td><td>{{usr.username}}</td>
+            <td>{{ per.priNom |upper}} {{ per.segNom |upper}}</td>
+            <td>{{ per.priApe |upper}} {{ per.segApe |upper}}</td>
+            <td>{{ per.cedPer}}</td>
+        </tr><!-- Table Row -->
+        </table>
+        <h1 class="sub_heading_style">Ambiente </h1> 
+        <table cellspacing='0' style='margin-top: 0px; margin-bottom: 0px;margin-left: 0px;'> <!-- cellspacing='0' is important, must stay -->
+                <tr><th>ID</th><th>P.N.F.</th><th>Turno</th><th>Nombre</th><th>Promoción</th><th>Condición</th>
+                    <th>Trayecto</th><th>Tramo</th>
+                </tr><!-- Table Header -->  
+            <tr>
+                    
+                {% if ambiente.ambiente.turno == 'n' %}
+                        {% set turno = 'Nocturno' %}
+
+                {% else%}	
+                        {% set turno = 'Fines de Semana' %}
+                {% endif %}	
+
+                    
+                <td>{{ambiente.ambiente.id}}</td><td>{{ambiente.ambiente.pnf.nombre}}</td> <td>{{turno}}</td><td>{{ambiente.ambiente.nombre}}</td>
+                <td>{{ambiente.ambiente.promocion}}</td><td>{{ambiente.ambiente.condicion}}</td><td>{{ambiente.trayecto}}</td><td>{{ambiente.periodo}}</td>
+            </tr><!-- Table Row -->
+    </table>    
+
+        
+        {{ form_start(form) }}
+	
+        <div>
+            {{ form_label(form.condicion) }}
+	<div class="styled">
+            {{ form_widget(form.condicion) }}
+	</div>
+            <div class="error">
+                    {{ form_errors(form.condicion) }}
+            </div>
+        </div>
+        
+        <div>
+            {{ form_label(form.sistema) }}
+	<div class="styled">
+            {{ form_widget(form.sistema) }}
+	</div>
+            <div class="error">
+                    {{ form_errors(form.sistema) }}
+            </div>
+        </div>
+            
+        <div>
+            {{ form_label(form.becamision) }}
+	<div class="styled">
+            {{ form_widget(form.becamision) }}
+	</div>
+            <div class="error">
+                    {{ form_errors(form.becamision) }}
+            </div>
+        </div>
+       
+        <div>
+            {{ form_label(form.periodoingreso) }}
+            {{ form_widget(form.periodoingreso) }}
+	
+            <div class="error">
+                    {{ form_errors(form.periodoingreso) }}
+            </div>
+        </div>
+        
+        
+                
+        <div>
+		{{ form_widget(form.save) }}
+	</div>
+		{{ form_end(form) }}
+</div>
+
+<script>    
+    
+$(document).ready(function(){
+
+
+if($('#form_modalidad').value!=""){
+    
+    $('#form_pnf').html('<option>Cargando........</option>');
+    
+    var id=$('#form_modalidad').val();
+    $.ajax({
+        url: "../modalidad/"+id+"",
+        success: function (html) {$('#form_pnf').html(html);}
+    });
+}
+
+ $('#form_modalidad').change( function () {
+
+$('#form_pnf').html('<option>Cargando........</option>');
+    
+    var id=$('#form_modalidad').val();
+    $.ajax({
+        url: "../modalidad/"+id+"",
+        success: function (html) {$('#form_pnf').html(html);}
+    });
+});
+
+$('#form_pnf').change( function () {    
+    document.getElementById("form_idpnf").value=$('#form_pnf').val();
+});
+
+});
+
+</script>
+
+                
+{% endblock %}
+

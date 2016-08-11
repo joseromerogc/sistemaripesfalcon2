@@ -1,0 +1,735 @@
+# *********************USUARIO****************************************#
+usuario_new:
+  path: coord/usuario/new
+  defaults: { _controller: MisionSucreRipesBundle:Usuario:new }
+usuario_lista:
+  path: usuarios/lista
+  defaults: { _controller: MisionSucreRipesBundle:Usuario:lista }
+usuario_update:
+  path: usuario/update/{id}
+  defaults: { _controller: MisionSucreRipesBundle:Usuario:update }
+usuario_show:
+  path: usuario/show/{id}
+  defaults: { _controller: MisionSucreRipesBundle:Usuario:show }
+usuario_show_admin:
+  path: admin/usuario/show/{id}
+  defaults: { _controller: MisionSucreRipesBundle:Usuario:show }
+usuario_info:
+  path: usuario/info
+  defaults: { _controller: MisionSucreRipesBundle:Usuario:info }
+usuario_buscar:
+  path: usuarios/buscar
+  defaults: { _controller: MisionSucreRipesBundle:Usuario:buscar }
+usuario_busqueda:
+  path: usuarios/busqueda/{param}
+  defaults: { _controller: MisionSucreRipesBundle:Usuario:busqueda }
+usuario_resumen:
+  path: usuarios/resumen
+  defaults: { _controller: MisionSucreRipesBundle:Usuario:resumen }
+usuario_delete:
+  path: admin/usuario/delete/{id}
+  defaults: { _controller: MisionSucreRipesBundle:Usuario:delete }
+usuario_novinculados:
+  path: coord/usuario/listanovinculados
+  defaults: { _controller: MisionSucreRipesBundle:Usuario:listanovinculado }
+usuario_password:
+  path: usuario/password
+  defaults: { _controller: MisionSucreRipesBundle:Usuario:password }
+nombreusuario:
+  path: nombreusuario
+  defaults: { _controller: MisionSucreRipesBundle:Usuario:nombreusuario }
+  
+# *********************PERSONA****************************************#
+persona_update:
+  path: persona/update/{id}
+  defaults: { _controller: MisionSucreRipesBundle:Persona:update }
+persona_new:
+  path: persona/new/{id}
+  defaults: { _controller: MisionSucreRipesBundle:Persona:new }
+  
+#######################################################################################################
+#                                      UBICACIÓN DE VIVIENDA                                          #
+#######################################################################################################
+ubicacion_vivienda_new:
+  path: persona/ubicacionvivienda/new/{id}
+  defaults: { _controller: MisionSucreRipesBundle:UbicacionVivienda:new }
+ubicacion_vivienda_update:
+  path: persona/ubicacionvivienda/update/{id}
+  defaults: { _controller: MisionSucreRipesBundle:UbicacionVivienda:update }
+datacne:
+  path: persona/datacne/{ced}
+  defaults: { _controller: MisionSucreRipesBundle:Persona:datacne }
+
+  
+  
+# *********************DATOS SOCIALES****************************************#
+persona_social_new:
+  path: persona/newsocial/{id}
+  defaults: { _controller: MisionSucreRipesBundle:Sociales:new }
+persona_social_update:
+  path: persona/updatesocial/{id}
+  defaults: { _controller: MisionSucreRipesBundle:Sociales:update }
+#ENFERMEDAD#
+persona_enfermedad_new:
+  path: persona/newenfermedad/{id}
+  defaults: { _controller: MisionSucreRipesBundle:Sociales:newenfermedad }
+persona_enfermedad_delete:
+  path: enfermedad/delete/{id}/{id_enf}
+  defaults: { _controller: MisionSucreRipesBundle:Sociales:deleteenfermedad }
+#DISCAPACIDAD#
+persona_discapacidad_new:
+  path: persona/newdiscapacidad/{id}
+  defaults: { _controller: MisionSucreRipesBundle:Sociales:newdiscapacidad }
+persona_discapacidad_delete:
+  path: persona/deletediscapacidad/{id}/{id_dis}
+  defaults: { _controller: MisionSucreRipesBundle:Sociales:deletediscapacidad }
+persona_discapacidad_update:
+  path: persona/updateenfermedad/{id}
+  defaults: { _controller: MisionSucreRipesBundle:Sociales:updatediscapacidad }
+#ARTE#
+persona_artes_new:
+  path: persona/newartes/{id}
+  defaults: { _controller: MisionSucreRipesBundle:Sociales:newartes }
+persona_artes_delete:
+  path: persona/deleteartes/{id}/{id_art}
+  defaults: { _controller: MisionSucreRipesBundle:Sociales:deleteartes }
+persona_artes_update:
+  path: persona/updateartes/{id}
+  defaults: { _controller: MisionSucreRipesBundle:Sociales:updateartes }
+#DEPORTE#
+persona_deporte_new:
+  path: persona/newdeporte/{id}
+  defaults: { _controller: MisionSucreRipesBundle:Sociales:newdeporte }
+persona_deporte_delete:
+  path: persona/deletedeporte/{id}/{id_dep}
+  defaults: { _controller: MisionSucreRipesBundle:Sociales:deletedeporte }
+persona_deporte_update:
+  path: persona/updatedeporte/{id}
+  defaults: { _controller: MisionSucreRipesBundle:Sociales:updatedeporte }
+#TRABAJO#
+persona_trabajo_new:
+  path: persona/newtrabajo/{id}
+  defaults: { _controller: MisionSucreRipesBundle:Sociales:newtrabajo }
+persona_trabajo_delete:
+  path: persona/deletetrabajo/{id}/{id_dep}
+  defaults: { _controller: MisionSucreRipesBundle:Sociales:deletetrabajo }
+persona_trabajo_update:
+  path: persona/updatetrabajo/{id}
+  defaults: { _controller: MisionSucreRipesBundle:Sociales:updatetrabajo }
+#ACADEMICOS#
+academico_new:
+  path: academico/new/{id}
+  defaults: { _controller: MisionSucreRipesBundle:Academico:new }
+academico_update:
+  path: academico/update/{idaca}
+  defaults: { _controller: MisionSucreRipesBundle:Academico:update }
+
+###################################################################################
+############################PARTICIPACIÓN POLITICA-COMUNITARIA#################################
+persona_comunitaria_new:
+  path: persona/newcomunitaria/{id}
+  defaults: { _controller: MisionSucreRipesBundle:Participacion:newcomunitaria }
+persona_comunitaria_delete:
+  path: persona/deletecomunitaria/{id}/{id_com}
+  defaults: { _controller: MisionSucreRipesBundle:Participacion:deletecomunitaria }
+persona_comunitaria_update:
+  path: persona/updatecomunitaria/{id}
+  defaults: { _controller: MisionSucreRipesBundle:Participacion:updatecomunitaria }
+persona_politica_new:
+  path: persona/newpolitica/{id}
+  defaults: { _controller: MisionSucreRipesBundle:Participacion:newpolitica }
+persona_politica_delete:
+  path: persona/deletepolitica/{id}/{id_pol}
+  defaults: { _controller: MisionSucreRipesBundle:Participacion:deletepolitica }
+persona_politica_update:
+  path: persona/updatepolitica/{id}
+  defaults: { _controller: MisionSucreRipesBundle:Participacion:updatepolitica }
+persona_ubch:
+  path: persona/ubch/{id}
+  defaults: { _controller: MisionSucreRipesBundle:Participacion:cambiarubch }
+comunitaria_lista:
+  path: coord/comunitaria/lista
+  defaults: { _controller: MisionSucreRipesBundle:Participacion:ListaComunidad }
+comunitaria_resumen:
+  path: coord/comunitaria/resumen
+  defaults: { _controller: MisionSucreRipesBundle:Participacion:ResumenComunitarios }
+comunitaria_consejocomunal_resumen:
+  path: coord/consejocomunal/resumen
+  defaults: { _controller: MisionSucreRipesBundle:ConsejoComunal:resumen }
+comunitaria_consejocomunal_lista:
+  path: coord/consejocomunal/lista
+  defaults: { _controller: MisionSucreRipesBundle:ConsejoComunal:lista }
+politica_resumen:
+  path: coord/comunitaria/politica
+  defaults: { _controller: MisionSucreRipesBundle:Participacion:ResumenPolitica }
+politica_lista:
+  path: coord/politica/lista
+  defaults: { _controller: MisionSucreRipesBundle:Participacion:ListaPolitica }
+  
+####################################### UBCH   #########################################################
+politica_ubch_resumen:
+  path: coord/ubch/resumen
+  defaults: { _controller: MisionSucreRipesBundle:Ubch:Resumen }
+ubch_cambiar_parroquia:
+  path: persona/parroquias/{id}
+  defaults: { _controller: MisionSucreRipesBundle:UbicacionVivienda:cambiarparroquia } 
+politica_ubch_show:
+  path: coord/ubch/show/{id}
+  defaults: { _controller: MisionSucreRipesBundle:Ubch:show }
+politica_ubch_lista:
+  path: coord/ubch/lista
+  defaults: { _controller: MisionSucreRipesBundle:Ubch:Lista}
+
+########################### CONTROL DE PARROQUIAS Y SECTORES#######################################
+
+cambiar_parroquia:
+  path: persona/ubicacionvivienda/parroquias/{id}
+  defaults: { _controller: MisionSucreRipesBundle:UbicacionVivienda:cambiarparroquia }  
+cambiar_sector:
+  path: persona/ubicacionvivienda/sector/{id}
+  defaults: { _controller: MisionSucreRipesBundle:UbicacionVivienda:cambiarsector }
+enfermedades:
+  path: enfermedades/{tip}
+  defaults: { _controller: MisionSucreRipesBundle:Sociales:enfermedades }  
+
+#######################################################################################################
+#                                      EJE                                                            #
+#######################################################################################################
+
+eje_new:
+  path: admin/eje/new/{id}
+  defaults: { _controller: MisionSucreRipesBundle:Eje:new, id: 0}  
+eje_lista:
+  path: eje/lista
+  defaults: { _controller: MisionSucreRipesBundle:Eje:lista }  
+eje_update:
+  path: admin/eje/update/{id}
+  defaults: { _controller: MisionSucreRipesBundle:Eje:update }  
+eje_delete:
+  path: admin/eje/delete/{id}/{id_coord}
+  defaults: { _controller: MisionSucreRipesBundle:Eje:delete }  
+eje_show:
+  path: admin/eje/show/{id}
+  defaults: { _controller: MisionSucreRipesBundle:Eje:show }  
+usuario_eje_info:
+  path: eje/info
+  defaults: { _controller: MisionSucreRipesBundle:Eje:info }  
+
+#######################################################################################################
+#                                      ALDEA                                                            #
+#######################################################################################################
+
+aldea_new:
+  path: eje/aldea/new
+  defaults: { _controller: MisionSucreRipesBundle:Aldea:new }
+aldea_show:
+  path: coord/aldea/show/{id}
+  defaults: { _controller: MisionSucreRipesBundle:Aldea:show }
+docente_aldeas_show:
+  path: docente/aldeas/show/{id}
+  defaults: { _controller: MisionSucreRipesBundle:Aldea:showdoc }  
+aldea_info:
+  path: aldea/info
+  defaults: { _controller: MisionSucreRipesBundle:Aldea:info }
+aldea_buscar:
+  path: eje/aldea/buscar
+  defaults: { _controller: MisionSucreRipesBundle:Aldea:buscar }
+aldea_busqueda:
+  path: eje/aldea/busqueda/{param}
+  defaults: { _controller: MisionSucreRipesBundle:Aldea:busqueda }
+aldea_update:
+  path: eje/aldea/update/{id}
+  defaults: { _controller: MisionSucreRipesBundle:Aldea:update }
+aldea_delete:
+  path: admin/aldea/delete/{id}
+  defaults: { _controller: MisionSucreRipesBundle:Aldea:delete }
+aldea_update_parroquia:
+  path: eje/aldea/update/parroquia/{id}
+  defaults: { _controller: MisionSucreRipesBundle:Aldea:cambiarparroquia }
+aldea_lista:
+  path: eje/aldea/lista
+  defaults: { _controller: MisionSucreRipesBundle:Aldea:lista }
+aldea_resumen:
+  path: eje/aldea/resumen
+  defaults: { _controller: MisionSucreRipesBundle:Aldea:resumen}
+aldea_parroquia:
+  path: eje/aldea/parroquia/{id}
+  defaults: { _controller: MisionSucreRipesBundle:Aldea:cambiarparroquia }
+
+#######################################################################################################
+#                                      Anexo-Aldea                                                  #
+#######################################################################################################
+
+anexo_aldea_new:
+  path: coord/anexoaldea/new/{id}
+  defaults: { _controller: MisionSucreRipesBundle:AnexoAldea:new }
+anexo_aldea_update:
+  path: coord/anexoaldea/update/{id}
+  defaults: { _controller: MisionSucreRipesBundle:AnexoAldea:update }
+anexo_aldea_delete:
+  path: coord/anexoaldea/delete/{id}
+  defaults: { _controller: MisionSucreRipesBundle:AnexoAldea:delete }
+anexo_aldea_show:
+  path: coord/anexoaldea/show/{id}
+  defaults: { _controller: MisionSucreRipesBundle:AnexoAldea:show }
+choices_anexo:
+  path: coord/anexoaldea/{aldea}
+  defaults: { _controller: MisionSucreRipesBundle:AnexoAldea:choicesanexo }
+choices_anexo_triunfador:
+  path: triunfador/anexoaldea/{aldea}
+  defaults: { _controller: MisionSucreRipesBundle:AnexoAldea:choicesanexo }
+
+#######################################################################################################
+#                                      ALDEA-COMUNAL                                                  #
+#######################################################################################################
+
+aldea_comunal_new:
+  path: eje/aldeacomunal/new/{id}
+  defaults: { _controller: MisionSucreRipesBundle:AldeaComunal:new }
+aldea_comunal_update:
+  path: eje/aldeacomunal/update/{id}
+  defaults: { _controller: MisionSucreRipesBundle:AldeaComunal:update }
+aldea_comunal_delete:
+  path: eje/aldeacomunal/delete/{id}
+  defaults: { _controller: MisionSucreRipesBundle:AldeaComunal:delete }
+
+#######################################################################################################
+#                                      COORDENADAS-ALDEA                                              #
+#######################################################################################################
+
+coordenadas_aldea_new:
+  path: coord/coordenadas/aldea/new/{id}
+  defaults: { _controller: MisionSucreRipesBundle:CoordenadasAldea:new }
+coordenadas_aldea_update:
+  path: coord/coordenadas/aldea/update/{id}
+  defaults: { _controller: MisionSucreRipesBundle:CoordenadasAldea:update }
+
+#######################################################################################################
+#                                      COORDINADOR_ALDEA                                              #
+#######################################################################################################
+
+aldea_coordinador_new:
+  path: eje/aldea/coordinador/new/{id}
+  defaults: { _controller: MisionSucreRipesBundle:Coordinador:new,id:0 }
+aldea_coordinadorid_new:
+  path: eje/aldea/coordinadorid/new/{idc}/{idaldea}
+  defaults: { _controller: MisionSucreRipesBundle:Coordinador:newid }
+aldea_coordinador_update:
+  path: eje/aldea/coordinador/update/{id}
+  defaults: { _controller: MisionSucreRipesBundle:Coordinador:update }
+aldea_coordinador_delete:
+  path: eje/aldea/coordinador/delete/{id}
+  defaults: { _controller: MisionSucreRipesBundle:Coordinador:delete }
+aldea_coordinador_show:
+  path: aldea/coordinador/show/{id}
+  defaults: { _controller: MisionSucreRipesBundle:Coordinador:show }
+usuario_aldea_coordinador_info:
+  path: aldea/coordinador/info
+  defaults: { _controller: MisionSucreRipesBundle:Coordinador:info }
+aldea_parroquia_coordinadores:
+  path: eje/aldea/coordinador/parroquiaaldea/{id}
+  defaults: { _controller: MisionSucreRipesBundle:Aldea:cambiarparroquia }
+aldea_parroquia_coordinadores_id:
+  path: parroquiaaldea/{id}
+  defaults: { _controller: MisionSucreRipesBundle:Aldea:cambiarparroquia }
+choices_aldeas:
+  path: eje/aldea/coordinador/aldeas/{prq}
+  defaults: { _controller: MisionSucreRipesBundle:Coordinador:choicesaldea }
+cambiar_aldeas:
+  path: aldea/coordinador/aldeas/{prq}
+  defaults: { _controller: MisionSucreRipesBundle:Coordinador:choicesaldea }
+choices_aldeas_id:
+  path: eje/aldeas/{prq}
+  defaults: { _controller: MisionSucreRipesBundle:Coordinador:choicesaldea }
+turno:
+  path: eje/aldea/coordinador/turno/{aldea}
+  defaults: { _controller: MisionSucreRipesBundle:Coordinador:choicesturno }
+turno_aldea:
+  path: eje/aldea/coordinadorid/turno/{aldea}
+  defaults: { _controller: MisionSucreRipesBundle:Coordinador:choicesturno }
+turno_id:
+  path: eje/turno/{aldea}
+  defaults: { _controller: MisionSucreRipesBundle:Coordinador:choicesturno }
+asignar_coordinador:
+  path: eje/aldea/coordinador/asignaraldea/{idaldea}
+  defaults: { _controller: MisionSucreRipesBundle:Coordinador:asignaraldea,idaldea:0 }
+busqueda_asignar_aldea:
+  path: eje/aldea/coordinador/busquedaasignaraldea/{param}
+  defaults: { _controller: MisionSucreRipesBundle:Coordinador:busquedaasignaraldea }
+busqueda_asignarid_aldea:
+  path: eje/aldea/coordinador/asignaraldea/busquedaasignaraldea/{param}
+  defaults: { _controller: MisionSucreRipesBundle:Coordinador:busquedaasignaraldea }
+aldea_coordinador_lista:
+  path: eje/aldea/coordinador/lista
+  defaults: { _controller: MisionSucreRipesBundle:Coordinador:lista }  
+
+#######################################################################################################
+#                                    TURNO-COORDINADOR                                                #
+#######################################################################################################
+
+coordinador_turno_new:
+  path: eje/coordinador/turno/new/{id}
+  defaults: { _controller: MisionSucreRipesBundle:CoordinadorTurno:new}
+coordinador_turno_update:
+  path: eje/coordinador/turno/update/{idturno}
+  defaults: { _controller: MisionSucreRipesBundle:CoordinadorTurno:update}
+coordinador_turno_delete:
+  path: eje/coordinador/turno/delete/{idturno}
+  defaults: { _controller: MisionSucreRipesBundle:CoordinadorTurno:delete}
+
+
+#######################################################################################################
+#                                      ESTRUCTURAS                                                    #
+#######################################################################################################
+
+ 
+  
+estructura_miembro_new:
+  path: coord/estructuramiembro/new/{idstr}
+  defaults: { _controller: MisionSucreRipesBundle:EstructuraMiembro:new }  
+estructura_miembro_update:
+  path: coord/estructuramiembro/update/{idm}
+  defaults: { _controller: MisionSucreRipesBundle:EstructuraMiembro:update }  
+estructura_miembro_delete:
+  path: coord/estructuramiembro/delete/{idm}
+  defaults: { _controller: MisionSucreRipesBundle:EstructuraMiembro:delete }  
+estructura_miembro_data:
+  path: coord/estructuramiembro/data/{ced}/{aldea}/{str}
+  defaults: { _controller: MisionSucreRipesBundle:EstructuraMiembro:datapersona, str:0}  
+
+estructura_new:
+  path: coord/estructura/new/{idaldea}
+  defaults: { _controller: MisionSucreRipesBundle:Estructura:new } 
+estructura_update:
+  path: coord/estructura/update/{id}
+  defaults: { _controller: MisionSucreRipesBundle:Estructura:update }  
+estructura_delete:
+  path: coord/estructura/delete/{id}
+  defaults: { _controller: MisionSucreRipesBundle:Estructura:delete }  
+estructura_show:
+  path: coord/estructura/show/{id}
+  defaults: { _controller: MisionSucreRipesBundle:Estructura:show }  
+estructura_lista:
+  path: admin/estructura/lista
+  defaults: { _controller: MisionSucreRipesBundle:Estructura:new }  
+
+estructura_actividad_new:
+  path: coord/estructuraactividad/new/{idstr}
+  defaults: { _controller: MisionSucreRipesBundle:EstructuraActividad:new } 
+estructura_actividad_update:
+  path: coord/estructuraactividad/update/{id}
+  defaults: { _controller: MisionSucreRipesBundle:EstructuraActividad:update } 
+estructura_actividad_delete:
+  path: coord/estructuraactividad/delete/{id}
+  defaults: { _controller: MisionSucreRipesBundle:EstructuraActividad:delete } 
+
+#######################################################################################################
+#                                      AMBIENTES                                                      #
+#######################################################################################################
+
+ambiente_new:
+  path: coord/ambiente/new/{idaldea}
+  defaults: { _controller: MisionSucreRipesBundle:Ambiente:new }  
+ambiente_lista_new:
+  path: coord/ambiente/lista/new
+  defaults: { _controller: MisionSucreRipesBundle:Ambiente:listanew }   
+ambiente_update:
+  path: coord/ambiente/update/{idamb}
+  defaults: { _controller: MisionSucreRipesBundle:Ambiente:update }  
+ambiente_lista:
+  path: coord/ambiente/lista
+  defaults: { _controller: MisionSucreRipesBundle:Ambiente:lista }  
+ambiente_buscar:
+  path: coord/ambiente/buscar
+  defaults: { _controller: MisionSucreRipesBundle:Ambiente:buscar }  
+ambiente_busqueda:
+  path: coord/ambiente/busqueda
+  defaults: { _controller: MisionSucreRipesBundle:Ambiente:busqueda }
+ambiente_show:
+  path: coord/ambiente/show/{idamb}
+  defaults: { _controller: MisionSucreRipesBundle:Ambiente:show }
+ambiente_info:
+  path: triunfadorinfo/ambiente/info
+  defaults: { _controller: MisionSucreRipesBundle:Ambiente:info }
+ambiente_resumen:
+  path: coord/ambiente/resumen
+  defaults: { _controller: MisionSucreRipesBundle:Ambiente:resumen }
+ambiente_modalidad:
+  path: coord/ambiente/modalidad/{modalidad}
+  defaults: { _controller: MisionSucreRipesBundle:Ambiente:modalidad }  
+ambiente_modalidad_2:
+  path: ambiente/modalidad/{modalidad}
+  defaults: { _controller: MisionSucreRipesBundle:Ambiente:modalidad }  
+ambiente_modalidad_triunfador:
+  path: triunfador/modalidad/{modalidad}
+  defaults: { _controller: MisionSucreRipesBundle:Ambiente:modalidad }  
+
+#######################################################################################################
+#                                      TRIUNFADORES                                                   #
+#######################################################################################################
+
+triunfador_new:
+  path: triunfador/new/{idamb}/{idtrf}
+  defaults: { _controller: MisionSucreRipesBundle:Triunfador:new }  
+triunfador_update:
+  path: triunfador/update/{idtrf}
+  defaults: { _controller: MisionSucreRipesBundle:Triunfador:update }
+triunfador_delete:
+  path: triunfador/delete/{idtrf}
+  defaults: { _controller: MisionSucreRipesBundle:Triunfador:delete }
+triunfador_show:
+  path: coord/triunfador/show/{id}/
+  defaults: { _controller: MisionSucreRipesBundle:Triunfador:show }  
+triunfador_lista:
+  path: coord/triunfador/lista
+  defaults: { _controller: MisionSucreRipesBundle:Triunfador:lista }  
+usuario_triunfador_info:
+  path: triunfadorinfo
+  defaults: { _controller: MisionSucreRipesBundle:Triunfador:info }  
+triunfador_info_academica:
+  path: triunfadorinfo/infoacademica
+  defaults: { _controller: MisionSucreRipesBundle:Triunfador:infoacademica }  
+triunfador_buscar:
+  path: triunfador/buscar
+  defaults: { _controller: MisionSucreRipesBundle:Triunfador:buscar }  
+triunfador_busqueda:
+  path: triunfador/busqueda
+  defaults: { _controller: MisionSucreRipesBundle:Triunfador:busqueda }  
+triunfador_resumen:
+  path: triunfador/resumen
+  defaults: { _controller: MisionSucreRipesBundle:Triunfador:resumen }    
+triunfador_vincular:
+  path: triunfador/vincular/{idamb}
+  defaults: { _controller: MisionSucreRipesBundle:Triunfador:asignartriunfador   }    
+asignar_triunfador_ambiente:
+  path: triunfador/asignarambiente/{idtrf}
+  defaults: { _controller: MisionSucreRipesBundle:Triunfador:asignarambiente   }    
+vincular_triunfador:
+  path: triunfador/vincular
+  defaults: { _controller: MisionSucreRipesBundle:Triunfador:vinculartriunfador   }    
+vincular_triunfadores:
+  path: triunfador/vinculartriunfadores/{json}
+  defaults: { _controller: MisionSucreRipesBundle:Triunfador:vinculartriunfadores   }    
+busqueda_vincular_triunfador:
+  path: triunfador/vincular/busqueda/{param}
+  defaults: { _controller: MisionSucreRipesBundle:Triunfador:busquedatriunfadorvincular   }    
+busqueda_vincular:
+  path: triunfador/busquedatriunfador/{param}
+  defaults: { _controller: MisionSucreRipesBundle:Triunfador:busquedatriunfador   }    
+busqueda_ambiente:
+  path: triunfador/busquedaambiente
+  defaults: { _controller: MisionSucreRipesBundle:Triunfador:busquedaambiente   } 
+
+ 
+
+#######################################################################################################
+#                                      CARGA DE USUARIO                                               #
+#######################################################################################################
+triunfador_carga:
+  path: triunfador/cargar
+  defaults: { _controller: MisionSucreRipesBundle:Triunfador:cargar   } 
+usuario_tablacarga:
+  path: usuario/tablacarga
+  defaults: { _controller: MisionSucreRipesBundle:Usuario:tablacarga   } 
+usuario_registrarcarga:
+  path: usuario/registrarcarga
+  defaults: { _controller: MisionSucreRipesBundle:Usuario:registrarcarga   }
+docente_carga:
+  path: docente/carga
+  defaults: { _controller: MisionSucreRipesBundle:Docente:cargar   }
+
+#######################################################################################################
+#                                      EGRESADOS                                                   #
+#######################################################################################################
+
+triunfador_egresado_lista:
+  path: coord/egresado/lista
+  defaults: { _controller: MisionSucreRipesBundle:Egresado:lista } 
+triunfador_egresado_resumen:
+  path: coord/egresado/resumen
+  defaults: { _controller: MisionSucreRipesBundle:Egresado:resumen } 
+
+#######################################################################################################
+#                                     VOCEROS                                                  #
+#######################################################################################################
+
+asignar_vocero:
+  path: coord/vocero/seleccionarvocero/{idamb}
+  defaults: { _controller: MisionSucreRipesBundle:Vocero:asignarvocero }
+asignar_vocero_update:
+  path: coord/vocero/seleccionarvoceroupdate/{idamb}
+  defaults: { _controller: MisionSucreRipesBundle:Vocero:asignarvoceroupdate }
+vocero_new:
+  path: coord/vocero/new/{idtrf}
+  defaults: { _controller: MisionSucreRipesBundle:Vocero:new }
+vocero_update:
+  path: coord/vocero/update/{idtrf}
+  defaults: { _controller: MisionSucreRipesBundle:Vocero:update }  
+ambiente_vocero_lista:
+  path: coord/vocero/lista
+  defaults: { _controller: MisionSucreRipesBundle:Vocero:lista }  
+
+#######################################################################################################
+#                                      OPERARIOS                                                      #
+#######################################################################################################
+
+operario_new:
+  path: operario/new/{idaldea}/{idusr}
+  defaults: { _controller: MisionSucreRipesBundle:Operario:new }  
+operario_delete:
+  path: operario/delete/{idop}
+  defaults: { _controller: MisionSucreRipesBundle:Operario:delete }  
+operario_show:
+  path: coord/operario/show/{id}
+  defaults: { _controller: MisionSucreRipesBundle:Operario:show }  
+operario_lista:
+  path: operario/lista
+  defaults: { _controller: MisionSucreRipesBundle:Operario:lista }  
+operario_buscar:
+  path: operario/buscar
+  defaults: { _controller: MisionSucreRipesBundle:Operario:buscar }  
+operario_busquedaoperario:
+  path: operario/busquedaoperario/{param}
+  defaults: { _controller: MisionSucreRipesBundle:Operario:busqueda } 
+usuario_operario_info:
+  path: operario/info
+  defaults: { _controller: MisionSucreRipesBundle:Operario:info }
+operario_asignar:
+  path: operario/asignar/{idaldea}
+  defaults: { _controller: MisionSucreRipesBundle:Operario:asignaroperario   }    
+operario_busqueda:
+  path: operario/busqueda/{param}
+  defaults: { _controller: MisionSucreRipesBundle:Operario:busquedaoperario   }    
+operario_resumen:
+  path: operario/resumen
+  defaults: { _controller: MisionSucreRipesBundle:Operario:resumen   }
+#######################################################################################################
+#                                      DOCENTE                                                        #
+#######################################################################################################
+
+docente_new:
+  path: docente/new/{idaldea}/{idusr}
+  defaults: { _controller: MisionSucreRipesBundle:Docente:new }  
+docente_update:
+  path: docente/update/{iddoc}
+  defaults: { _controller: MisionSucreRipesBundle:Docente:update }  
+docente_delete:
+  path: docente/delete/{iddoc}
+  defaults: { _controller: MisionSucreRipesBundle:Docente:delete }  
+docente_show:
+  path: docente/show/{id}
+  defaults: { _controller: MisionSucreRipesBundle:Docente:show }  
+docente_lista:
+  path: docente/lista
+  defaults: { _controller: MisionSucreRipesBundle:Docente:lista }  
+docente_buscar:
+  path: docente/buscar
+  defaults: { _controller: MisionSucreRipesBundle:Docente:buscar }  
+docente_busquedadocente:
+  path: docente/busquedadocente/{param}
+  defaults: { _controller: MisionSucreRipesBundle:Docente:busqueda }  
+docente_parroquias:
+  path: docente/parroquias/{id}
+  defaults: { _controller: MisionSucreRipesBundle:Aldea:cambiarparroquia }  
+usuario_docente_info:
+  path: docenteinfo/info
+  defaults: { _controller: MisionSucreRipesBundle:Docente:info }  
+docente_info:
+  path: docenteinfo/infoacademica
+  defaults: { _controller: MisionSucreRipesBundle:Docente:infoacademica }  
+docente_asignar:
+  path: docente/asignar
+  defaults: { _controller: MisionSucreRipesBundle:Docente:asignardocente   }    
+docente_resumen:
+  path: docente/resumen
+  defaults: { _controller: MisionSucreRipesBundle:Docente:resumen   }    
+docente_busqueda:
+  path: docente/busqueda/{param}
+  defaults: { _controller: MisionSucreRipesBundle:Docente:busquedadocente   }    
+
+#######################################################################################################
+#                                   PERIODO ACADEMICO                                                 #
+#######################################################################################################
+periodo_academico_new:
+  path: admin/periodoacademico/new
+  defaults: { _controller: MisionSucreRipesBundle:PeriodoAcademico:new }  
+periodo_academico_lista:
+  path: admin/periodoacademico/lista
+  defaults: { _controller: MisionSucreRipesBundle:PeriodoAcademico:lista }  
+periodo_academico_modalidad:
+  path: coord/periodoacademico/modalidad/{modalidad}
+  defaults: { _controller: MisionSucreRipesBundle:PeriodoAcademico:modalidad }  
+periodo_academico_modalidad_":
+  path: periodoacademico/modalidad/{modalidad}
+  defaults: { _controller: MisionSucreRipesBundle:PeriodoAcademico:modalidad }  
+periodo_academico_modalidad_triunfador":
+  path: triunfador/periodoacademico/modalidad/{modalidad}
+  defaults: { _controller: MisionSucreRipesBundle:PeriodoAcademico:modalidad }  
+periodo_academico_show:
+  path: admin/periodoacademico/show/{id}
+  defaults: { _controller: MisionSucreRipesBundle:PeriodoAcademico:show }  
+periodo_academico_update:
+  path: admin/periodoacademico/update/{id}
+  defaults: { _controller: MisionSucreRipesBundle:PeriodoAcademico:update }  
+  
+############################################### PERIDODO ACADEMICO-AMBIENTE #################################################
+
+periodo_academico_new_ambiente:
+  path: coord/periodoacademicoambiente/new/{idamb}
+  defaults: { _controller: MisionSucreRipesBundle:PeriodoAcademicoAmbiente:new }  
+periodo_academico_update_ambiente:
+  path: coord/periodoacademicoambiente/update/{idper}
+  defaults: { _controller: MisionSucreRipesBundle:PeriodoAcademicoAmbiente:update }  
+  
+############################################### PNF ###########################################################################
+
+pnf_new:
+  path: admin/pnf/new
+  defaults: { _controller: MisionSucreRipesBundle:Pnf:new }  
+pnf_lista:
+  path: coord/pnf/lista
+  defaults: { _controller: MisionSucreRipesBundle:Pnf:lista }  
+pnf_show:
+  path: coord/pnf/show/{id}
+  defaults: { _controller: MisionSucreRipesBundle:Pnf:show }  
+pnf_update:
+  path: admin/pnf/update/{id}
+  defaults: { _controller: MisionSucreRipesBundle:Pnf:update }  
+pnf_resumen:
+  path: coord/pnf/resumen
+  defaults: { _controller: MisionSucreRipesBundle:Pnf:resumen }  
+  
+############################################### UNIVERSIDAD ###########################################################################
+
+universidad_new:
+  path: admin/universidad/new
+  defaults: { _controller: MisionSucreRipesBundle:Universidad:new }  
+universidad_lista:
+  path: coord/universidad/lista
+  defaults: { _controller: MisionSucreRipesBundle:Universidad:lista }  
+universidad_show:
+  path: coord/universidad/show/{id}
+  defaults: { _controller: MisionSucreRipesBundle:Universidad:show }  
+universidad_update:
+  path: admin/universidad/update/{id}
+  defaults: { _controller: MisionSucreRipesBundle:Universidad:update }  
+
+############################################### GUIA ###########################################################################
+guia:
+  path: guia
+  defaults: { _controller: MisionSucreRipesBundle:Guia:index } 
+guia_ingreso:
+  path: guia/ingreso
+  defaults: { _controller: MisionSucreRipesBundle:Guia:ingreso } 
+guia_ingreso_recuperarpass:
+  path: guia/recuperarpass
+  defaults: { _controller: MisionSucreRipesBundle:Guia:ingresorecuperarpass } 
+guia_ingreso_cambiarpass:
+  path: guia/cambiarpass
+  defaults: { _controller: MisionSucreRipesBundle:Guia:cambiarpass }
+guia_usuario_nuevo:
+  path: guia/usuario_nuevo
+  defaults: { _controller: MisionSucreRipesBundle:Guia:usuario_nuevo } 
+guia_usuario_carga:
+  path: guia/usuario_carga
+  defaults: { _controller: MisionSucreRipesBundle:Guia:usuario_carga } 

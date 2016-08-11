@@ -1,0 +1,43 @@
+<?php
+
+namespace MisionSucre\RipesBundle\Entity;
+use Doctrine\Common\Collections\ArrayCollection;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * Municipio
+ *
+ * @ORM\Table(name="municipio")
+ * @ORM\Entity
+ */
+class Municipio
+{
+    
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="municipio", type="string", length=100, nullable=false)
+     */
+    private $municipio;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="id", type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    private $id;
+    
+     /**
+     * @ORM\OneToMany(targetEntity="Parroquia", mappedBy="municipio")
+     */
+    protected $parroquias;
+    
+    public function __construct()
+    {
+        $this->parroquias = new ArrayCollection();
+    }
+
+}

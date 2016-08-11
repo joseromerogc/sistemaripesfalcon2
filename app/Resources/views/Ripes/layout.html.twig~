@@ -1,0 +1,26 @@
+{% extends 'base.html.twig' %}
+
+{% block stylesheets %}
+{{ parent() }}
+<link href="{{ asset('css/nav.css') }}" rel="stylesheet" />
+{% endblock %}
+
+{% block body %}
+	
+	{% block menu %}
+   {% endblock %}
+<div id="contenedor">
+	<div id="contenidos">
+		<div id="menulateral">
+				{% block menulateral %}
+				{% endblock %}
+		</div>
+		
+		<div id="contenido">
+		{% block content %}
+		{% endblock %}
+		</div>
+	</div>
+</div>
+
+{% endblock %}

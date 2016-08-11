@@ -1,0 +1,205 @@
+{% extends 'MisionSucreRipesBundle::layout.html.twig' %}
+
+{% block stylesheets %}
+{{ parent() }}
+	<link rel="stylesheet" type="text/css" href="{{asset('css/table/littletable.css')}}">
+	<link rel="stylesheet" type="text/css" href="{{asset('css/blitzer/jquery-ui-1.10.4.custom.css')}}">
+	
+{% endblock %}
+
+{% block js %}
+        {{ parent() }}
+	<script src="{{asset('js/jquery-ui-1.10.4.custom.js')}}"></script>
+        <script>
+            
+            $(function() {
+                $( "#tabs" ).tabs();
+            });            
+            
+        </script>
+{% endblock %}    
+
+{% block content %}
+	{{ parent() }}
+
+{% for flashMessage in app.session.flashbag.get('notice') %}
+        <div class="flash-notice">
+        {{ flashMessage }}
+        </div>
+{% endfor %}
+
+<div id="tabs">
+    <ul>
+		<li><a href="#info">Información General</a></li>
+		<li><a href="#miembros">Miembros</a></li>
+		<li><a href="#actividades">Actividades</a></li>
+                
+    </ul>
+<div id="info">    
+    <h1 class="heading_style">Información de Estructura</h1> 
+    <table cellspacing='0' style='margin-top: 0px; margin-bottom: 0px;margin-left: 0px;'> <!-- cellspacing='0' is important, must stay -->
+                <tr><th>ID</th><th>Tipo</th><th>Nombre</th><th></th>
+                    <th></th>
+                </tr><!-- Table Header -->  
+            <tr>
+                <td>{{estructura.id}}</td><td>{{estructura.tipo}}</td> <td>{{estructura.nombre}}</td>
+                
+                {% if is_granted('ROLE_COORD') %}
+                <td><a class="enlace" href="{{path('estructura_update',{'id': estructura.id})}}">Actualizar</a></td>
+                {% endif%}
+            </tr><!-- Table Row -->
+    </table>    
+      
+</div>
+
+      
+<div id="miembros" >
+   <h1 class="heading_style">Miembros</h1> 
+    {% if is_granted('ROLE_COORD') %}
+    <a style='margin-left: 12px;' class="enlace" href="{{path('estructura_miembro_new',{'idstr':estructura.id})}}"> 
+    <span class='icon'><img src="{{asset('img/add-1-icon.png')}}"/></span> Agregar Miembro</a> 
+    {% endif%}
+   {% if  miembros %}
+    <table cellspacing='0' style='margin-top: 0px; margin-bottom: 0px;margin-left: 0px;'> <!-- cellspacing='0' is important, must stay -->
+		<tr>
+			<th >#</th>
+                        <th >Cédula</th><th>Nombres y Apellidos</th>
+                        <th>Cargo</th>
+                        <th>Perfil</th>
+		</tr>
+                
+	<tbody>
+    {% endif %}
+	
+{% set i = 1 %}
+
+{% for m in miembros %}
+
+	{% if i %2== 0 %}
+			{% set class = 'gradeA' %}
+	{% else %}	
+			{% set class = 'gradeU' %}		
+        {% endif %}	
+        	
+		<tr class="{{class}}">
+    <td>{{i}}</td>  <td>{{ m.cedPer}}</td>
+    <td>{{ m.priNom |upper}} 
+    {{ m.priApe |upper}}</td>
+    <td>{{m.cargo}}</td>
+    <td>
+        {% if m.tipo== 6 %}
+            Triunfador
+        {% else %}	
+            {% if m.tipo== 7 %}		
+                Docente
+            {% else %}	    
+                Operario
+            {% endif %}
+                
+        {% endif %}
+        
+    </td>
+        
+   
+    {% if is_granted('ROLE_COORD') %}
+        <td><a class="enlace" href="{{path('usuario_show',{'id': m.idusr})}}">Mostrar</a></td>
+        <td><a class="enlace" href="{{path('estructura_miembro_update',{'idm': m.idmbr})}}">Actualizar </a></td>
+        <td><a class="enlace" onclick="return confirm('******Confirmar Borrar******')" href="{{path('estructura_miembro_delete',{'idm': m.idmbr})}}">Borrar</a></td>
+    {% endif %} 
+{% set i = i+1 %}
+{% endfor %}    
+		</tr>
+      </tbody>
+</table>
+</div>
+
+<div id="actividades">    
+    <h1 class="heading_style">Actividades</h1> 
+    
+    <form name="form" method="post" action="">
+	
+        <div>
+            <label for="mes" ><h3>Mes:</h3></label>
+	<div class="styled">
+            <select id="mes" name="mes"><option value="" selected="selected">Seleccione una</option>
+                <option value="1">Enero</option>
+                <option value="2">Febrero</option>
+            </select>
+	</div>
+            <div class="error">
+                    
+            </div>
+        </div>
+        <div>
+            <label for="mes" ><h3>Año:</h3></label>
+	<div class="styled">
+            <select id="mes" name="mes"><option value="" selected="selected">Seleccione una</option>
+                <option value="2016">2016</option>
+                <option value="2017">2017</option>
+            </select>
+	</div>
+            <div class="error">
+                    
+            </div>
+        </div>
+    </form>
+    
+    {% if actividades %}
+        
+        <h1 class="heading_style">Actividades</h1> 
+    
+   {% if  actividades %}
+    <table cellspacing='0' style='margin-top: 0px; margin-bottom: 0px;margin-left: 0px;'> <!-- cellspacing='0' is important, must stay -->
+		<tr>
+			<th >#</th>
+                        <th >Fecha</th><th>Nombre de la Actividad</th><th>Lugar</th><th>Responsable</th><th>Objetivo</th>
+                        <th>Observacion</th>
+                        <th></th>
+                        <th></th>
+		</tr>
+                
+	<tbody>
+    {% endif %}
+	
+{% set i = 1 %}
+
+{% for a in actividades %}
+
+	{% if i %2== 0 %}
+			{% set class = 'gradeA' %}
+	{% else %}	
+			{% set class = 'gradeU' %}		
+        {% endif %}	
+        	
+		<tr class="{{class}}">
+    <td>{{i}}</td>  
+    <td>{{a.fecha |date('d/m/Y')}}</td>
+    <td>{{a.nombre}}</td>
+    <td>{{a.lugar}}</td>
+    <td>({{ a.cedPer}})
+    {{ a.priNom |upper}} 
+    {{ a.priApe |upper}}({{a.tipo}})<a class="enlace" href="{{path('usuario_show',{'id': a.idusr})}}">Ver</a></td>   
+    <td>{{a.objetivo}}</td>    
+    <td>{{a.observacion}}</td>    
+   
+    {% if is_granted('ROLE_COORD') %}
+        <td> <a class="enlace" href="{{path('estructura_actividad_update',{'id': a.id})}}">Actualizar</a></td>
+        <td><a class="enlace" onclick="return confirm('******Confirmar Borrar******')" href="{{path('estructura_actividad_delete',{'id': a.id})}}">Borrar</a></td>
+    {% endif %} 
+{% set i = i+1 %}
+{% endfor %}    
+		</tr>
+      </tbody>
+</table>
+    {% endif%}   
+    
+    {% if is_granted('ROLE_COORD') %}
+    <a style='margin-left: 12px;' class="enlace" href="{{path('estructura_actividad_new',{'idstr':estructura.id})}}"> 
+    <span class='icon'><img src="{{asset('img/add-1-icon.png')}}"/></span> Agregar Actividad</a> 
+    {% endif%}
+      
+</div>
+  
+</div>
+{% endblock %}
+

@@ -1,0 +1,23 @@
+{% extends 'MisionSucreRipesBundle::layout.html.twig' %}
+
+{% block stylesheets %}
+{{ parent() }}
+<link href="{{ asset('css/botones.css') }}" rel="stylesheet" />
+{% endblock %}
+
+{% block content %}
+{{ parent() }}	
+        
+<div>
+<button   class="styled-button-10" id="green" onclick="window.location.href='{{path('vincular_triunfador')}}'"> <span ><img src="{{asset('img/Natural-Link-icon-32.png')}}"/></span>Vincular Triunfador</button>
+<button class="styled-button-10" id="blue" onclick="window.location.href='{{path('triunfador_lista')}}'"> <span ><img src="{{asset('img/Actions-view-list-details-icon.png')}}"/></span>Lista de Triunfadores</button>
+</div>
+        
+<div> 
+<button id="purple" class="styled-button-10" onclick="window.location.href='{{path('triunfador_buscar')}}'"> <span ><img src="{{asset('img/search-icon.png')}}"/></span>Buscar Triunfador</button> 
+<button  id="red" class="styled-button-10" onclick="window.location.href='{{path('triunfador_resumen')}}'"> <span ><img src="{{asset('img/Resume-icon.png')}}"/></span>Resumen de Triunfador</button> 
+</div>
+
+        
+{% endblock %}
+

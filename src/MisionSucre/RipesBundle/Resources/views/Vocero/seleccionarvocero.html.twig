@@ -1,0 +1,116 @@
+{% extends 'MisionSucreRipesBundle::layout.html.twig' %}
+{% block stylesheets %}
+{{ parent() }}
+	<link rel="stylesheet" type="text/css" href="{{asset('css/demo_table.css')}}">
+	<link rel="stylesheet" type="text/css" href="{{asset('css/demo_page.css')}}">
+	<link rel="stylesheet" type="text/css" href="{{asset('css/botones.css')}}">
+	<link rel="stylesheet" type="text/css" href="{{asset('css/dataTables.tableTools.css')}}">	
+        <link rel="stylesheet" type="text/css" href="{{asset('css/table/littletable.css')}}">
+{% endblock %}
+
+{% block content %}
+<h1 class="heading_style">Registrar Vocero</h1> 
+
+<h1 class="sub_heading_style">Información de Aldea</h1> 
+    <table cellspacing='0'> <!-- cellspacing='0' is important, must stay -->
+            <tr><th>ID</th><th>Nombre de la Aldea</th><th>Dirreción</th><th>Eje</th><th>Municipio</th><th>Parroquia</th></tr><!-- Table Header -->
+
+
+        <tr><td>{{aldea.id}}</td><td>{{aldea.nombre}}</td><td>{{aldea.direccion}}</td><td>{{aldea.parroquia.eje.nombre}}</td><td>{{aldea.parroquia.municipio.municipio}}</td><td>{{aldea.parroquia.parroquia}}</td>
+            
+        </tr><!-- Table Row -->
+    </table>
+
+<h1 class="sub_heading_style">Información de Ambiente</h1> 
+    <table cellspacing='0' style='margin-top: 0px; margin-bottom: 0px;margin-left: 0px;'> <!-- cellspacing='0' is important, must stay -->
+                <tr><th>ID</th><th>P.N.F.</th><th>Turno</th><th>Nombre</th><th>Promoción</th><th>Condición</th>
+                </tr><!-- Table Header -->  
+            <tr>
+                    
+                {% if ambiente.turno == 'n' %}
+                        {% set turno = 'Nocturno' %}
+
+                {% else%}	
+                        {% set turno = 'Fines de Semana' %}
+                {% endif %}	
+
+                    
+                <td>{{ambiente.id}}</td><td>{{ambiente.pnf.nombre}}</td> <td>{{turno}}</td><td>{{ambiente.nombre}}</td>
+                <td>{{ambiente.promocion}}</td><td>{{ambiente.condicion}}</td>
+            </tr><!-- Table Row -->
+    </table>
+
+<h1 class="heading_style">Triunfadores del Ambiente</h1> 
+
+{% if  triunfadores %}
+    <table cellpadding="0" cellspacing="0" border="0" class="display" id="example">
+	<thead>
+		<tr>
+			<th>#</th><th>Nombre de Usuario</th><th>Cédula</th><th>Nombres y Apellidos</th><th>Condición</th>
+                        
+		</tr>
+	</thead>
+	<tbody>
+{% else %}
+    Ambiente Sin Triunfadores. Vincular Triunfador
+    <a style='margin-left: 12px;' class="enlace" href="{{path('triunfador_asignar',{'idamb':ambiente.id})}}"> 
+    <span class='icon'><img src="{{asset('img/add-1-icon.png')}}"/></span> Nuevo Triunfador</a> 
+    {% endif %}
+
+	
+{% set i = 1 %}
+
+{% for t in triunfadores %}
+
+	{% if t.sexPer == 'm' %}
+			{% set class = 'gradeA' %}
+	{% else %}	
+			{% set class = 'gradeU' %}		
+        {% endif %}	
+
+{% set turno = '' %}        
+        	
+		<tr class="{{class}}">
+    <td>{{i}}</td><td>{{ t.username}}</td><td>{{ t.cedPer}}</td>
+    <td>{{ t.priNom |upper}} {{ t.segNom |upper}}
+    {{ t.priApe |upper}} {{ t.segApe |upper}}</td>
+    <td>{{t.condicion}}</td>
+    <td><a class="enlace" onclick="return confirm('******Confirmar Selección ******')" href="{{path('vocero_new',{'idtrf': t.id})}}">Seleccionar</a></td>
+{% set i = i+1 %}
+{% endfor %}    
+		</tr>
+      </tbody>
+</table>
+
+
+<script>    
+    
+$(document).ready(function(){
+
+$(document).ready(function() {
+$('#example').dataTable( {
+        "oLanguage": {
+            "sLengthMenu": "Mostrar _MENU_ Registros por Página",
+            "sZeroRecords": "No se encontraron Resultados",
+            "sSearch": "Filtro: ",
+            "sInfo": "Mostrando _START_ a _END_  de un Total de _TOTAL_ Usuarios",
+            "sInfoEmpty": "Mostrando 0 de 0 de 0 Usuarios",
+            "sInfoFiltered": "(Filtrado de un _MAX_ total de Usuarios)",
+            "oPaginate": {
+                "sNext": "Página Siguiente",
+                "sPrevious": "Página Anterior"
+                }
+        },
+        dom: 'T<"clear">lfrtip'
+        ,
+        tableTools:{
+        		"sSwfPath": "{{asset('swf/copy_csv_xls_pdf.swf')}}",
+        }
+    } );
+} );
+});
+
+</script>
+
+
+{% endblock %}

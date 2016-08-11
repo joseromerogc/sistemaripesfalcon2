@@ -1,0 +1,43 @@
+{% extends 'MisionSucreRipesBundle::layout.html.twig' %}
+{% block stylesheets %}
+{{ parent() }}
+        <link rel="stylesheet" type="text/css" href="{{asset('css/table/littletable.css')}}">
+	
+{% endblock %}
+
+{% block content %}
+
+<h1 class="heading_style">Aldeas Vinculadas</h1> 
+
+
+<table cellpadding="0" cellspacing="0" border="0">
+	
+		<tr>
+                    <th>ID</th><th>Nombre de la Aldea</th><th>Dirreción</th><th>Eje</th><th>Municipio</th><th>Parroquia</th><th>          
+		</tr>
+	
+{% set i = 1 %}
+
+{% for aldea in aldeas %}
+
+	{% if aldea.parroquia.eje.id == 1 %}
+			{% set class = 'gradeA' %}
+        {% elseif  aldea.parroquia.eje.id == 7 %}	
+			{% set class = 'gradeB' %}
+	{% elseif  aldea.parroquia.eje.id == 4 %}	
+			{% set class = 'gradeC' %}
+	{% elseif  aldea.parroquia.eje.id == 5 %}	
+			{% set class = 'gradeX' %}
+	{% else %}	
+			{% set class = 'gradeU' %}		
+        {% endif %}	
+        <tr class="{{class}}">   
+	<td>{{aldea.id}}</td><td>{{aldea.nombre}}</td><td>{{aldea.direccion}}</td><td>{{aldea.parroquia.eje.nombre}}</td><td>{{aldea.parroquia.municipio.municipio}}</td><td>{{aldea.parroquia.parroquia}}</td>
+            <td><a class="enlace" href="{{path('docente_aldeas_show',{'id':aldea.id})}}">Mostrar</a></td>
+        </tr><!-- Table Row -->
+    
+{% set i = i+1 %}
+{% endfor %}    
+</table>
+
+{% endblock %}

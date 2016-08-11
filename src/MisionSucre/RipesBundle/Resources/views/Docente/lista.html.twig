@@ -1,0 +1,86 @@
+{% extends 'MisionSucreRipesBundle::layout.html.twig' %}
+{% block stylesheets %}
+{{ parent() }}
+	<link rel="stylesheet" type="text/css" href="{{asset('css/demo_table.css')}}">
+	<link rel="stylesheet" type="text/css" href="{{asset('css/demo_page.css')}}">
+	<link rel="stylesheet" type="text/css" href="{{asset('css/botones.css')}}">
+	<link rel="stylesheet" type="text/css" href="{{asset('css/dataTables.tableTools.css')}}">
+	
+	
+{% endblock %}
+
+{% block content %}
+
+<h1 class="heading_style">Lista de Docente</h1> 
+<div id="dt_example">
+<div id="container" style="width: 100%">
+    
+<table cellpadding="0" cellspacing="0" border="0" class="display" id="example">
+	<thead>
+	<tr>
+            <th>ID</th><th>Cédula</th><th>Nombres</th><th>Apellidos</th><th>Aldea</th>
+            <th>Horas</th><th>Componente Docente</th><th>PNFs</th><th>Periodo Ingreso</th>
+            <th>Exclusividad</th><th></th><th></th>
+        </tr><!-- Table Header -->  
+	</thead>
+	<tbody>
+	
+{% set i = 1 %}
+
+
+{% for doc in docentes %}
+	{% if doc.sexPer == 'm' %}
+			{% set class = 'gradeA' %}
+	{% else %}	
+			{% set class = 'gradeU' %}		
+{% endif %}	
+
+	
+		<tr class="{{class}}">
+    <td>{{i}}</td><td>{{ doc.cedPer}}</td>
+    <td>{{ doc.priNom |upper}} {{ doc.segNom |upper}}</td>
+    <td>{{ doc.priApe |upper}} {{ doc.segApe |upper}}</td>
+            <td><a class="enlace" href="{{path('aldea_info',{'id':doc.d.aldea.id})}}">{{doc.d.aldea.nombre}}</a></td>
+            <td>{{doc.d.horas}}</td>
+            <td>{{doc.d.componentedocente}}</td>
+            <td>{{doc.d.pnfs}}</td>
+            <td>{{doc.d.periodoIngreso}}</td>
+            <td>{{doc.d.exclusividad}}</td>
+            
+    <td><a class="enlace" href="{{path('usuario_show',{'id': doc.u})}}">Mostrar</a></td>
+    <td><a class="enlace" href="{{path('docente_delete',{'iddoc': doc.d.id})}}">Desvincular</a></td>
+{% set i = i+1 %}
+		</tr>
+{% endfor %}            
+        </tbody>	
+</table>
+</div>
+</div>
+</div>
+<script src="{{asset('js/jquery.dataTables.js')}}" type="text/javascript" type="text/javascript"></script>
+<script src="{{asset('js/dataTables.tableTools.js')}}" type="text/javascript" type="text/javascript"></script>
+
+<script>
+$(document).ready(function() {
+$('#example').dataTable( {
+        "oLanguage": {
+            "sLengthMenu": "Mostrar _MENU_ Usuarios por Página",
+            "sZeroRecords": "No se encontraron Resultados",
+            "sSearch": "Filtro: ",
+            "sInfo": "Mostrando _START_ a _END_  de un Total de _TOTAL_ Usuarios",
+            "sInfoEmpty": "Mostrando 0 de 0 de 0 Usuarios",
+            "sInfoFiltered": "(Filtrado de un _MAX_ total de Usuarios)",
+            "oPaginate": {
+                "sNext": "Página Siguiente",
+                "sPrevious": "Página Anterior"
+                }
+        },
+        dom: 'T<"clear">lfrtip'
+        ,
+        tableTools:{
+        		"sSwfPath": "{{asset('swf/copy_csv_xls_pdf.swf')}}",
+        }
+    } );
+} );
+</script>
+{% endblock %}

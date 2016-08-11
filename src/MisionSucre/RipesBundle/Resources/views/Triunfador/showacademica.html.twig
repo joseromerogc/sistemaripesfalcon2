@@ -1,0 +1,86 @@
+{% extends 'MisionSucreRipesBundle::layout.html.twig' %}
+
+{% block stylesheets %}
+{{ parent() }}
+	<link rel="stylesheet" type="text/css" href="{{asset('css/table/littletable.css')}}">
+	<link rel="stylesheet" type="text/css" href="{{asset('css/blitzer/jquery-ui-1.10.4.custom.css')}}">
+	
+{% endblock %}
+
+{% block js %}
+        {{ parent() }}
+	<script src="{{asset('js/jquery-ui-1.10.4.custom.js')}}"></script>
+        <script>
+            $(function() {
+		$( "#accordion" ).accordion(
+                {
+                heightStyle: "content",        
+                collapsible: true,
+                active: false
+                }                
+                );
+                $( "#tabs" ).tabs(
+                        
+                        );
+            });            
+            
+        </script>
+{% endblock %}    
+
+{% block content %}
+	{{ parent() }}
+
+        
+{% for flashMessage in app.session.flashbag.get('notice') %}
+        <div class="flash-notice">
+        {{ flashMessage }}
+        </div>
+{% endfor %}
+
+<div id="tabs">
+    <ul>
+		<li><a href="#ambiente">Ambiente</a></li>
+		
+    </ul>
+<div id="ambiente">    
+    
+    
+  {% if  triunfador %}  
+    <h1 class="heading_style">Ambiente</h1>  
+    <table cellspacing='0' > <!-- cellspacing='0' is important, must stay -->
+        <tr><th>ID</th><th>Aldea</th><th>Ambiente</th><th>Condición</th><th>Vinculado Al Sistema</th><th>Becado</th><th></th>
+        </tr><!-- Table Header -->  
+    <tr>
+        <td>{{triunfador.id}}</td>
+        
+        {% if not is_granted('ROLE_COORD') and  is_granted('ROLE_TRF')%}
+        <td><a class="enlace" href="{{path('aldea_info',{'id':triunfador.ambiente.aldea.id})}}">{{triunfador.ambiente.aldea.nombre}}</a></td>
+        <td><a class="enlace" href="{{path('ambiente_info',{'idamb':triunfador.ambiente.id})}}">{{triunfador.ambiente.pnf.nombre}}<br/></a></td>
+        {% else %}
+        <td><a class="enlace" href="{{path('aldea_show',{'id':triunfador.ambiente.aldea.id})}}">{{triunfador.ambiente.aldea.nombre}}</a></td>
+        <td><a class="enlace" href="{{path('ambiente_show',{'idamb':triunfador.ambiente.id})}}">{{triunfador.ambiente.pnf.nombre}}<br/></a></td>
+        {% endif %}
+        <td>{{triunfador.condicion}}</td>
+        <td>{{triunfador.sistema}}</td>
+        <td>{{triunfador.becamision}}</td>
+        {% if is_granted('ROLE_COORD')  %}
+        <td><a class="enlace" href="{{path('triunfador_update',{'idtrf':triunfador.id})}}">Actualizar</a></td>
+        {% endif %}
+    </tr><!-- Table Row -->
+    </table>
+   {% else %}
+       <a style='margin-left: 12px;' class="enlace" href="{{path('asignar_triunfador_ambiente',{'idtrf':usuario.id})}}"> 
+                   <span class='icon'><img src="{{asset('img/add-1-icon.png')}}"/></span> Asignar Ambiente</a>
+       
+   {% endif %}
+</div>
+    
+</div>
+    
+</div>    
+    
+    
+</div>
+    
+{% endblock %}
+

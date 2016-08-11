@@ -1,0 +1,103 @@
+{% extends 'MisionSucreRipesBundle::layout.html.twig' %}
+{% block stylesheets %}
+{{ parent() }}
+	<link rel="stylesheet" type="text/css" href="{{asset('css/demo_table.css')}}">
+	<link rel="stylesheet" type="text/css" href="{{asset('css/demo_page.css')}}">
+	<link rel="stylesheet" type="text/css" href="{{asset('css/botones.css')}}">
+	<link rel="stylesheet" type="text/css" href="{{asset('css/dataTables.tableTools.css')}}">
+	
+	
+{% endblock %}
+
+{% block content %}
+
+
+    
+<h1 class="heading_style">Cuaderno Electoral de la Aldea</h1> 
+<h1 class="heading_style">{{aldea}}</h1> 
+
+<div id="dt_example">
+<div id="container" style="width: 100%">
+    
+<table cellpadding="0" cellspacing="0" border="0" class="display" id="example">
+	<thead>
+		<tr>
+			<th>#</th></th><th>Cédula</th><th>Nombres</th><th>Apellidos</th>
+                        <th>Estatus</th><th>Celular / Teléfono</th><th>Municipio</th><th>Parroquia</th><th>Centro Electoral</th>
+                        <th></th>
+		</tr>
+	</thead>
+	<tbody>
+	
+{% set i = 1 %}
+
+
+{% for t in electores %}
+    
+    
+	{% if t.sexPer == 'm' %}
+			{% set class = 'gradeA' %}
+	{% else %}	
+			{% set class = 'gradeU' %}
+                        
+        {% endif %}
+        
+        {% if t.tip_usr == 5 %}
+			{% set status = 'Coordinador(a) de Aldea' %}
+        {% elseif  t.tip_usr == 6 %}	
+			{% set status = 'Triunfador(a)' %}
+        {% elseif  t.tip_usr == 7 %}	
+			{% set status = 'Docente Colaborador' %}
+        {% elseif  t.tip_usr == 9 %}	
+			{% set status = 'Personal Operativo' %}
+        {% endif %}
+
+	
+		<tr class="{{class}}">
+    <td>{{i}}</td><td>{{ t.cedPer}}</td>
+    <td>{{ t.priNom |upper}} {{ t.segNom |upper}}</td>
+    <td>{{ t.priApe |upper}} {{ t.segApe |upper}}</td> 
+    <td>{{status}}</td> 
+    <td>{{t.celPer}} / {{t.telPer}}</td>
+    <td>{{t.municipio}}</td>
+    <td>{{t.parroquia}}</td>
+    <td>{{t.ubch}}</td>
+    <td><a class="enlace" href="{{path('usuario_show',{'id': t.idusr})}}">Mostrar</a></td>
+{% set i = i+1 %}
+
+{% endfor %}    
+
+		</tr>
+		
+</table>
+
+</div>
+</div>
+</div>
+<script src="{{asset('js/jquery.dataTables.js')}}" type="text/javascript" type="text/javascript"></script>
+<script src="{{asset('js/dataTables.tableTools.js')}}" type="text/javascript" type="text/javascript"></script>
+
+<script>
+$(document).ready(function() {
+$('#example').dataTable( {
+        "oLanguage": {
+            "sLengthMenu": "Mostrar _MENU_ Usuarios por Página",
+            "sZeroRecords": "No se encontraron Resultados",
+            "sSearch": "Filtro: ",
+            "sInfo": "Mostrando _START_ a _END_  de un Total de _TOTAL_ Usuarios",
+            "sInfoEmpty": "Mostrando 0 de 0 de 0 Usuarios",
+            "sInfoFiltered": "(Filtrado de un _MAX_ total de Usuarios)",
+            "oPaginate": {
+                "sNext": "Página Siguiente",
+                "sPrevious": "Página Anterior"
+                }
+        },
+        dom: 'T<"clear">lfrtip'
+        ,
+        tableTools:{
+        		"sSwfPath": "{{asset('swf/copy_csv_xls_pdf.swf')}}",
+        }
+    } );
+} );
+</script>
+{% endblock %}

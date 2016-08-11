@@ -1,0 +1,48 @@
+{% extends 'baseguia.html.twig' %}
+{% block head %}
+  <link rel="stylesheet" href="//code.jquery.com/ui/1.12.0/themes/base/jquery-ui.css">
+  <link rel="stylesheet" href="/resources/demos/style.css">
+  <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+  <script src="https://code.jquery.com/ui/1.12.0/jquery-ui.js"></script>
+  <script>
+  $( function() {
+    $( "#accordion" ).accordion({
+      collapsible: true,active:false
+    });
+  } );
+  </script>
+{% endblock %}
+           {% block body %} 
+               
+               <h1 style="text-align: center;">Contenido:</h1>
+                <div id="accordion">
+  <h3>¿Cómo Ingresar al Sistema?</h3>
+  <div>
+      <p>
+			<div id="lselect">
+				<ul>
+					<li><a href="{{path('guia_ingreso')}}" style="color:red;text-decoration: underline ">Ingresar</a></li>
+                                        <li><a href="{{path('guia_ingreso_recuperarpass')}}" style="color:red;text-decoration: underline ">Recuperar Contraseña</a></li>
+                                        <li><a href="{{path('guia_ingreso_cambiarpass')}}" style="color:red;text-decoration: underline ">Cambiar Contraseña</a></li>
+				</ul>
+			</div>		   
+      </p>
+  </div>
+
+                                <h3>¿Cómo Registrar Nuevos Usuarios?</h3>
+  <div>
+      <p>
+			<div id="lselect">
+				<ul>
+					<li><a href="{{path('guia_usuario_nuevo')}}" style="color:red;text-decoration: underline ">Nuevos Usuario</a></li>
+                                        <li><a href="{{path('guia_usuario_carga')}}" style="color:red;text-decoration: underline ">Carga de usuario</a></li>
+                                        <li><a href="{{path('guia_ingreso_cambiarpass')}}" style="color:red;text-decoration: underline ">Cambiar Contraseña</a></li>
+				</ul>
+			</div>		   
+      </p>
+  </div>
+  
+               </div>
+                    
+                
+            {% endblock  %}     

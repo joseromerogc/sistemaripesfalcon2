@@ -1,0 +1,191 @@
+{% extends 'MisionSucreRipesBundle::layout.html.twig' %}
+
+{% block stylesheets %}
+{{ parent() }}
+	<link rel="stylesheet" type="text/css" href="{{asset('css/form/responsiveform.css')}}">
+	<link rel="stylesheet" media="screen and (max-width: 1200px) and (min-width: 601px)" href="{{asset('css/form/responsiveform1.css')}}" />
+	<link rel="stylesheet" media="screen and (max-width: 600px) and (min-width: 351px)" href="{{asset('css/form/responsiveform2.css')}}" />
+	<link rel="stylesheet" media="screen and (max-width: 350px)" href="{{asset('css/form/responsiveform3.css')}}" />
+	<link rel="stylesheet"  href="{{asset('css/blitzer/jquery-ui-1.10.4.custom.css')}}" />
+{% endblock %}
+
+{% block content %}
+        
+    {% for f in form %}
+                {% if f.vars.block_prefixes[0]!="button" %}
+                    <div class="flash-notice">
+                        {{f.vars.errors}}
+                    </div>
+                {% endif %}
+    {% endfor %}
+	<div id="envelope">
+	<header>
+	    <h2>{{mensaje_heading}}</h2>
+	    <p>{{sub_heading}}</p>
+	</header>
+	<hr>
+	{{ form_start(form) }}
+        
+        
+        
+        
+        
+        <div class="error" style="margin-bottom: 15px">
+                    (*) Campos Obligatorios
+        </div>
+        
+        <div style="margin-bottom: 15px;">
+		{{ form_label(form.codCed) }}
+		{{ form_widget(form.codCed) }}
+                <div class="error" >
+                    {{ form_errors(form.codCed) }}
+                </div>
+	</div>
+        <div>
+		{{ form_widget(form.cedPer) }}
+                <div class="error" id="errorcedula">
+                    {{ form_errors(form.cedPer) }}
+                </div>
+        </div>
+        
+	<div>
+		{{ form_label(form.priNom) }}
+		{{ form_widget(form.priNom) }}
+                <div class="error">
+                    {{ form_errors(form.priNom) }}
+                </div>
+	</div>
+                
+	<div>
+		{{ form_label(form.segNom) }}
+		{{ form_widget(form.segNom) }}
+                <div class="error">
+                    {{ form_errors(form.segNom) }}
+                </div>
+	</div>
+                        
+	<div>
+		{{ form_label(form.priApe) }}
+		{{ form_widget(form.priApe) }}
+                <div class="error">
+                    {{ form_errors(form.priApe) }}
+                </div>
+	</div>
+	
+        <div>
+		{{ form_label(form.segApe) }}
+		{{ form_widget(form.segApe) }}
+                <div class="error">
+                    {{ form_errors(form.segApe) }}
+                </div>
+	</div>
+        
+	<div>   
+                {{ form_label(form.edadPer) }}
+		{{ form_widget(form.edadPer) }}
+                <div class="error">
+                    {{ form_errors(form.edadPer) }}
+                </div>
+	</div>  
+        
+        <div>   
+                {{ form_label(form.sexPer) }}
+                <div class="styled">
+                    {{ form_widget(form.sexPer) }}
+                </div>
+                <div class="error">
+                    {{ form_errors(form.sexPer) }}
+                </div>
+	</div>          
+                
+        <div>   
+                {{ form_label(form.edoCiv) }}
+                <div class="styled">
+                    {{ form_widget(form.edoCiv) }}
+                </div>
+                <div class="error">
+                    {{ form_errors(form.edoCiv) }}
+                </div>
+	</div>          
+                
+        <div>   
+                {{ form_label(form.celPer) }}
+                
+                    {{ form_widget(form.celPer) }}  
+                <div class="error">
+                    {{ form_errors(form.celPer) }}
+                </div>
+	</div>          
+        <div>   
+                {{ form_label(form.telPer) }}
+                
+                    {{ form_widget(form.telPer) }}  
+                <div class="error">
+                    {{ form_errors(form.telPer) }}
+                </div>
+	</div>          
+       
+        {{ form_label(form.fechPer) }}            
+	<div style="margin: 10px 20px 20px 40px; ">   
+                
+		{{ form_widget(form.fechPer) }}
+                
+                <div class="error">
+                    {{ form_errors(form.fechPer) }}
+                </div>
+	</div>  
+		{{ form_widget(form.save) }}
+	</div>
+		{{ form_end(form) }}
+</div>
+<script>    
+    
+$(document).ready(function(){
+
+$('#persona_cedPer').keypress( function (event) {
+
+    return event.charCode >= 48 && event.charCode <= 57  || event.charCode ==0  ||event.charCode ==45;
+});
+
+$('#persona_edadPer').keypress( function (event) {
+
+    return event.charCode >= 48 && event.charCode <= 57  || event.charCode ==0  ||event.charCode ==45;
+});
+
+$('#persona_cedPer').keypress( function () {
+
+    var ced=$('#persona_cedPer').val();    
+    $.ajax({
+        url: "../datacne/"+ced+"",
+        success: function (data) {
+         $('#persona_priNom').val(data['prinombre']);
+         $('#persona_segNom').val(data['segnombre']);
+         $('#persona_priApe').val(data['priapellido']);
+         $('#persona_segApe').val(data['segapellido']);
+         
+         $('#persona_fechPer_day').val(data['dia'].toString());
+         $('#persona_fechPer_month').val(data['mes'].toString());
+         $('#persona_fechPer_year').val(data['anyo']);
+         $('#persona_sexPer').val(data['sexo']);
+        
+         if(data['existe']==1){
+            $('#errorcedula').html("<p> <img src='{{asset('img/alerta.png')}}'>ATENCIÓN: Cédula ya Registrada</p>");
+         }
+         else
+         {
+             $('#errorcedula').html("");
+         }
+        }
+    });
+});
+
+});
+
+
+
+</script>
+
+{% endblock %}
+
+
+

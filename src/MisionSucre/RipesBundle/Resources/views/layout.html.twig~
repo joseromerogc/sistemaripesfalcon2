@@ -1,0 +1,88 @@
+{% extends 'Ripes/layout.html.twig' %}
+
+{% block stylesheets %}
+{{ parent() }}
+<link href="{{ asset('css/nav/vertical.css') }}" rel="stylesheet" />
+{% endblock %}
+
+{% block menu %}
+<nav>
+            <ul class="fancyNav">
+                <li id="home"><a href="{{path('admin')}}" class="homeIcon">Home</a></li>
+                <li id="usuario"><a href="{{path('usuario_lista')}}">Usuarios</a></li>
+                <li id="logout" ><a href="{{path('logout')}}" class="logoutIcon">Cerrar Sesión</a></li>
+            </ul>
+</nav>   
+{% endblock %}
+
+{% block menulateral %}
+
+<div id="accordian">
+	<ul>
+		<li class="active">
+			<h3><span ><img src="{{asset('img/user-icon_small.png')}}"/></span>Usuario</h3>
+			<ul>
+				<li><a href="{{path('usuario_new')}}">Registrar Nuevo</a></li>
+				<li><a href="{{path('usuario_lista')}}">Ver Lista</a></li>
+			</ul>
+		</li>
+		<!-- we will keep this LI open by default -->
+		<li >
+			<h3><span class="icon-tasks"></span>Tasks</h3>
+			<ul>
+				<li><a href="#">Today's tasks</a></li>
+				<li><a href="#">Urgent</a></li>
+				<li><a href="#">Overdues</a></li>
+				<li><a href="#">Recurring</a></li>
+				<li><a href="#">Settings</a></li>
+			</ul>
+		</li>
+		<li>
+			<h3><span class="icon-calendar"></span>Calendar</h3>
+			<ul>
+				<li><a href="#">Current Month</a></li>
+				<li><a href="#">Current Week</a></li>
+				<li><a href="#">Previous Month</a></li>
+				<li><a href="#">Previous Week</a></li>
+				<li><a href="#">Next Month</a></li>
+				<li><a href="#">Next Week</a></li>
+				<li><a href="#">Team Calendar</a></li>
+				<li><a href="#">Private Calendar</a></li>
+				<li><a href="#">Settings</a></li>
+			</ul>
+		</li>
+		<li>
+			<h3><span class="icon-heart"></span>Favourites</h3>
+			<ul>
+				<li><a href="#">Global favs</a></li>
+				<li><a href="#">My favs</a></li>
+				<li><a href="#">Team favs</a></li>
+				<li><a href="#">Settings</a></li>
+			</ul>
+		</li>
+	</ul>
+</div>
+
+{% block js %}
+<script src="{{asset('js/menu/prefixfree-1.0.7.js')}}" type="text/javascript" type="text/javascript"></script>
+<script src="{{asset('js/jquery-1.10.2.js')}}" type="text/javascript" type="text/javascript"></script>
+{% endblock %}
+			
+{% endblock %}
+
+{% block javascripts %}
+{{parent()}}
+
+/*jQuery time*/
+$(document).ready(function(){
+	$("#accordian h3").click(function(){
+		//slide up all the link lists
+		$("#accordian ul ul").slideUp();
+		//slide down the link list below the h3 clicked - only if its closed
+		if(!$(this).next().is(":visible"))
+		{
+			$(this).next().slideDown();
+		}
+	})
+});
+{% endblock %}

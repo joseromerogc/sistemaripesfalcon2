@@ -1,0 +1,32 @@
+{{tabla|raw}}
+
+<div class="error">
+Rechazados por cedula:
+{%for r in rechazadoscedulas%}
+   | {{r}} |
+{% endfor%}
+</div>
+<div class="error">
+Rechazados por correo:
+{%for r in rechazadoscorreo%}
+   | {{r}} |
+{% endfor%}
+</div>
+<div class="error">
+Rechazados por falta de datos:
+{%for r in rechazadosfaltadatos%}
+   | {{r}} |
+{% endfor%}
+</div>
+<div class="error">
+Rechazados por error de Fecha:
+{%for r in rechazadosfecha%}
+   | {{r}} |
+{% endfor%}
+</div>
+<div class="flash-notice" id="msg">
+    
+</div>  
+<div style="margin-top: 50px;" class="centrado">
+ <button onclick="registrar()" class="boton">Registrar Usuarios</button> 
+</div>

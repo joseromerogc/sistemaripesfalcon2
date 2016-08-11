@@ -1,0 +1,56 @@
+{% extends 'MisionSucreRipesBundle::layout.html.twig' %}
+{% block stylesheets %}
+{{ parent() }}
+	<link rel="stylesheet" type="text/css" href="{{asset('css/demo_table.css')}}">
+	<link rel="stylesheet" type="text/css" href="{{asset('css/demo_page.css')}}">
+	<link rel="stylesheet" type="text/css" href="{{asset('css/botones.css')}}">
+	<link rel="stylesheet" type="text/css" href="{{asset('css/dataTables.tableTools.css')}}">	
+        <link rel="stylesheet" type="text/css" href="{{asset('css/table/littletable.css')}}">
+{% endblock %}
+
+{% block content %}
+<h1 class="heading_style">Registrar Vocero</h1> 
+
+<h1 class="sub_heading_style">Información de Aldea</h1> 
+    <table cellspacing='0'> <!-- cellspacing='0' is important, must stay -->
+            <tr><th>ID</th><th>Nombre de la Aldea</th><th>Dirreción</th><th>Eje</th><th>Municipio</th><th>Parroquia</th></tr><!-- Table Header -->
+
+
+        <tr><td>{{aldea.id}}</td><td>{{aldea.nombre}}</td><td>{{aldea.direccion}}</td><td>{{aldea.parroquia.eje.nombre}}</td><td>{{aldea.parroquia.municipio.municipio}}</td><td>{{aldea.parroquia.parroquia}}</td>
+            
+        </tr><!-- Table Row -->
+    </table>
+
+<h1 class="sub_heading_style">Información de Ambiente</h1> 
+    <table cellspacing='0' style='margin-top: 0px; margin-bottom: 0px;margin-left: 0px;'> <!-- cellspacing='0' is important, must stay -->
+                <tr><th>ID</th><th>P.N.F.</th><th>Turno</th><th>Nombre</th><th>Promoción</th><th>Condición</th>
+                    <th>Trayecto</th><th>Tramo</th>
+                </tr><!-- Table Header -->  
+            <tr>
+                    
+                {% if ambiente.turno == 'n' %}
+                        {% set turno = 'Nocturno' %}
+
+                {% else%}	
+                        {% set turno = 'Fines de Semana' %}
+                {% endif %}	
+
+                    
+                <td>{{ambiente.id}}</td><td>{{ambiente.pnf.nombre}}</td> <td>{{turno}}</td><td>{{ambiente.nombre}}</td>
+                <td>{{ambiente.promocion}}</td><td>{{ambiente.condicion}}</td><td>{{ambiente.trayecto}}</td><td>{{ambiente.periodo}}</td>
+            </tr><!-- Table Row -->
+    </table>
+
+<h1 class="heading_style">Triundadores del Ambiente</h1> 
+
+
+<script>    
+    
+$(document).ready(function(){
+
+});
+
+</script>
+
+
+{% endblock %}

@@ -1,0 +1,71 @@
+{% extends 'MisionSucreRipesBundle::layout.html.twig' %}
+{% block stylesheets %}
+{{ parent() }}
+	<link rel="stylesheet" type="text/css" href="{{asset('css/demo_table.css')}}">
+	<link rel="stylesheet" type="text/css" href="{{asset('css/demo_page.css')}}">
+	<link rel="stylesheet" type="text/css" href="{{asset('css/botones.css')}}">
+	<link rel="stylesheet" type="text/css" href="{{asset('css/dataTables.tableTools.css')}}">	
+        <link rel="stylesheet" type="text/css" href="{{asset('css/table/littletable.css')}}">
+{% endblock %}
+
+{% block content %}
+    
+<h1 class="heading_style">Busqueda de Usuarios</h1> 
+
+<h1 class="sub_heading_style">Buscar por: </h1> 
+Nombre de Usuario: <input type="search" class="username" />
+
+Tipo Usuario: 
+<select id="form_parroquia" class="role" >
+                        <option value="" selected> Seleccione</option>
+                        {% for key, role in roles %}
+                            <option value="{{ key }}" >{{role}}</option>
+                        {% endfor %}
+</select>
+
+<input type="submit" value="Buscar" id="b_buscar" required/>
+
+<div class="error">
+</div>
+
+<div class="tabla_usuario">
+    
+</div>
+
+<script>    
+    
+$(document).ready(function(){
+
+
+$('#b_buscar').click( function () {
+
+if($('.username').val()=="" || $('.role').val()==""){
+    $('.error').html("Parámetros de Busqueda Vacios.");
+    $('.role').focus();
+}
+else{
+
+$('.error').html("");
+
+$('.tabla_usuario').html('<img src="{{asset('img/ajax-loader.gif')}}" width="16" height="16" alt="cargando" />');
+
+var username=$('.username').val();
+var role=$('.role').val();
+
+var query='{"query":{"username":"'+username+'","role":"'+role+'"}}';
+
+$.ajax({
+        url: "busqueda/"+query+"",
+        success: function (html) {$('.tabla_usuario').html(html);}
+    });
+$('html, body').animate({scrollTop:220});
+}
+
+});
+
+});
+
+</script>
+
+
+{% endblock %}

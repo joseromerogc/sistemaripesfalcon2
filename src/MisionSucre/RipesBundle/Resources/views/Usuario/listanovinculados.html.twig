@@ -1,0 +1,266 @@
+{% extends 'MisionSucreRipesBundle::layout.html.twig' %}
+
+{% block title %}
+    Usuario no Vinculados-
+{% endblock %}
+
+{% block stylesheets %}
+{{ parent() }}
+	<link rel="stylesheet" type="text/css" href="{{asset('css/demo_table.css')}}">
+	<link rel="stylesheet" type="text/css" href="{{asset('css/demo_page.css')}}">
+	<link rel="stylesheet" type="text/css" href="{{asset('css/botones.css')}}">
+	<link rel="stylesheet" type="text/css" href="{{asset('css/dataTables.tableTools.css')}}">	
+        <link rel="stylesheet" type="text/css" href="{{asset('css/blitzer/jquery-ui-1.10.4.custom.css')}}">
+{% endblock %}
+
+{% block js %}
+        {{ parent() }}
+	<script src="{{asset('js/jquery-ui-1.10.4.custom.js')}}"></script>
+        <script>
+            $(function() {
+                $( "#tabs" ).tabs();
+            });            
+            
+        </script>
+{% endblock %}    
+
+
+{% block content %}
+
+<div id="tabs">
+    <ul>        
+                {% if is_granted('ROLE_ADMIN') %}
+                    <li><a href="#eje">Coordinadores de Eje</a></li>    
+                {% endif %}
+                
+                {% if is_granted('ROLE_EJE') %}
+                    <li><a href="#caldea">Coordinadores de Aldea</a></li>    
+                {% endif %}
+		<li><a href="#triunfadores">Triunfadores</a></li>
+                <li><a href="#docentes">Docentes Colaboradores</a></li>
+                <li><a href="#operarios">Personal Operativo</a></li>
+    </ul>
+
+{% if is_granted('ROLE_ADMIN') %}
+<div id="eje">
+<h1 class="heading_style">Usuarios Coordinadores Eje no Vinculados</h1> 
+<div id="dt_example">
+<div id="container">
+    
+<table cellpadding="0" cellspacing="0" border="0" class="display" id="example">
+	<thead>
+		<tr>
+			<th>#</th><th>ID</th><th>Nombre de Usuario</th><th></th><th></th>
+		</tr>
+	</thead>
+	<tbody>
+	
+{% set i = 1 %}
+
+{% for user in cejes %}
+
+	{% if i/2 ==0  %}
+			{% set class = 'gradeA' %}
+	{% else %}	
+			{% set class = 'gradeU' %}		
+{% endif %}	
+	
+		<tr class="{{class}}">
+<td>{{i}}</td><td>{{user.id | lower}}</td><td>{{user.username | lower}}</td><td><a class="enlace" href="{{path('usuario_show',{'id':user.id})}}">Mostrar</a></td>
+    <td><a class="enlace" onclick="return confirm('******Confirmar Borrar******')" href="{{path('usuario_delete',{'id':user.id})}}">Borrar</a></td>
+    
+{% set i = i+1 %}
+{% endfor %}    
+    
+		</tr>
+        </tbody>        
+</table>
+</div>
+</div>
+</div>
+{% endif %}
+
+{% if is_granted('ROLE_EJE') %}
+<div id="caldea">
+<h1 class="heading_style">Usuarios Coordinadores de Aldea no Vinculados</h1> 
+<div id="dt_example">
+<div id="container">
+    
+<table cellpadding="0" cellspacing="0" border="0" class="display" id="caldeas">
+	<thead>
+		<tr>
+			<th>#</th><th>ID</th><th>Nombre de Usuario</th><th></th><th></th>
+		</tr>
+	</thead>
+	<tbody>
+	
+{% set i = 1 %}
+
+{% for user in caldeas %}
+
+	{% if i/2 ==0  %}
+			{% set class = 'gradeA' %}
+	{% else %}	
+			{% set class = 'gradeU' %}		
+{% endif %}	
+	
+		<tr class="{{class}}">
+<td>{{i}}</td><td>{{user.id | lower}}</td><td>{{user.username | lower}}</td><td><a class="enlace" href="{{path('usuario_show',{'id':user.id})}}">Mostrar</a></td>
+    <td><a class="enlace" onclick="return confirm('******Confirmar Borrar******')" href="{{path('usuario_delete',{'id':user.id})}}">Borrar</a></td>
+    
+{% set i = i+1 %}
+{% endfor %}    
+    
+		</tr>
+        </tbody>        
+</table>
+</div>
+</div>
+</div>
+{% endif %}
+
+<div id="triunfadores">
+<h1 class="heading_style">Usuarios Triunfadores no Vinculados</h1> 
+<div id="dt_example">
+<div id="container">
+    
+<table cellpadding="0" cellspacing="0" border="0" class="display" id="tabla-triunfadores">
+	<thead>
+		<tr>
+			<th>#</th><th>ID</th><th>Nombre de Usuario</th><th></th><th></th>
+		</tr>
+	</thead>
+	<tbody>
+	
+{% set i = 1 %}
+
+{% for user in triunfadores %}
+
+	{% if i/2 ==0  %}
+			{% set class = 'gradeA' %}
+	{% else %}	
+			{% set class = 'gradeU' %}		
+{% endif %}	
+	
+		<tr class="{{class}}">
+<td>{{i}}</td><td>{{user.id | lower}}</td><td>{{user.username | lower}}</td><td><a class="enlace" href="{{path('usuario_show',{'id':user.id})}}">Mostrar</a></td>
+    <td><a class="enlace" onclick="return confirm('******Confirmar Borrar******')" href="{{path('usuario_delete',{'id':user.id})}}">Borrar</a></td>
+    
+{% set i = i+1 %}
+{% endfor %}    
+    
+		</tr>
+        </tbody>        
+</table>
+</div>
+</div>
+</div>
+
+<div id="docentes">
+<h1 class="heading_style">Usuarios Docente Colaborador no Vinculados</h1> 
+<div id="dt_example">
+<div id="container">
+    
+<table cellpadding="0" cellspacing="0" border="0" class="display" id="tabla-docente">
+	<thead>
+		<tr>
+			<th>#</th><th>ID</th><th>Nombre de Usuario</th><th></th><th></th>
+		</tr>
+	</thead>
+	<tbody>
+	
+{% set i = 1 %}
+
+{% for user in docentes %}
+
+	{% if i/2 ==0  %}
+			{% set class = 'gradeA' %}
+	{% else %}	
+			{% set class = 'gradeU' %}		
+{% endif %}	
+	
+		<tr class="{{class}}">
+<td>{{i}}</td><td>{{user.id | lower}}</td><td>{{user.username | lower}}</td><td><a class="enlace" href="{{path('usuario_show',{'id':user.id})}}">Mostrar</a></td>
+    <td><a class="enlace" onclick="return confirm('******Confirmar Borrar******')" href="{{path('usuario_delete',{'id':user.id})}}">Borrar</a></td>
+    
+{% set i = i+1 %}
+{% endfor %}    
+    
+		</tr>
+        </tbody>        
+</table>
+</div>
+</div>
+</div>
+
+<div id="operarios">
+<h1 class="heading_style">Usuarios Operarios no Vinculados</h1> 
+<div id="dt_example">
+<div id="container">
+    
+<table cellpadding="0" cellspacing="0" border="0" class="display" id="tabla-operario">
+	<thead>
+		<tr>
+			<th>#</th><th>ID</th><th>Nombre de Usuario</th><th></th><th></th>
+		</tr>
+	</thead>
+	<tbody>
+	
+{% set i = 1 %}
+
+{% for user in operarios %}
+
+	{% if i/2 ==0  %}
+			{% set class = 'gradeA' %}
+	{% else %}	
+			{% set class = 'gradeU' %}		
+{% endif %}	
+	
+		<tr class="{{class}}">
+<td>{{i}}</td><td>{{user.id | lower}}</td><td>{{user.username | lower}}</td><td><a class="enlace" href="{{path('usuario_show',{'id':user.id})}}">Mostrar</a></td>
+    <td><a class="enlace" onclick="return confirm('******Confirmar Borrar******')" href="{{path('usuario_delete',{'id':user.id})}}">Borrar</a></td>
+    
+{% set i = i+1 %}
+{% endfor %}    
+    
+		</tr>
+        </tbody>        
+</table>
+</div>
+</div>
+</div>
+
+</div>
+
+<script src="{{asset('js/jquery.dataTables.js')}}" type="text/javascript" type="text/javascript"></script>
+<script src="{{asset('js/dataTables.tableTools.js')}}" type="text/javascript" type="text/javascript"></script>
+
+{% endblock %}
+
+{% block javascripts %}
+{{parent()}}
+
+
+$(document).ready(function() {
+$('#example,#caldeas,#tabla-triunfadores,#tabla-docente,#tabla-operario').dataTable( {
+        "oLanguage": {
+            "sLengthMenu": "Mostrar _MENU_ Usuarios por Página",
+            "sZeroRecords": "No se encontraron Resultados",
+            "sSearch": "Filtro: ",
+            "sInfo": "Mostrando _START_ a _END_  de un Total de _TOTAL_ Usuarios",
+            "sInfoEmpty": "Mostrando 0 de 0 de 0 Usuarios",
+            "sInfoFiltered": "(Filtrado de un _MAX_ total de Usuarios)",
+            "oPaginate": {
+                "sNext": "Página Siguiente",
+                "sPrevious": "Página Anterior"
+                }
+        },
+        dom: 'T<"clear">lfrtip'
+        ,
+        tableTools:{
+        		"sSwfPath": "{{asset('swf/copy_csv_xls_pdf.swf')}}",
+        }
+    } );
+} );
+
+{% endblock %}

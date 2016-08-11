@@ -1,0 +1,185 @@
+{% extends 'MisionSucreRipesBundle::layout.html.twig' %}
+
+{% block stylesheets %}
+{{ parent() }}
+	<link rel="stylesheet" type="text/css" href="{{asset('css/table/littletable.css')}}">
+	<link rel="stylesheet" type="text/css" href="{{asset('css/blitzer/jquery-ui-1.10.4.custom.css')}}">
+        <link rel="stylesheet" type="text/css" href="{{asset('css/demo_table.css')}}">
+	<link rel="stylesheet" type="text/css" href="{{asset('css/demo_page.css')}}">
+        <link rel="stylesheet" type="text/css" href="{{asset('css/dataTables.tableTools.css')}}">	
+        <link rel="stylesheet" type="text/css" href="{{asset('css/maps.css')}}">
+{% endblock %}
+
+ {% block js %}
+        {{ parent() }}
+	<script src="{{asset('js/jquery-ui-1.10.4.custom.js')}}"></script>
+        
+{% endblock %}    
+
+{% block content %}
+	{{ parent() }}
+
+{% for flashMessage in app.session.flashbag.get('notice') %}
+        <div class="flash-notice">
+        {{ flashMessage }}
+        </div>
+{% endfor %}
+
+<div id="tabs">
+    <ul>
+		<li><a href="#info">Información General</a></li>
+		<li><a href="#ambientes">Ambientes</a></li>
+    </ul>
+    
+<div id="info">    
+    <h1 class="heading_style">Información de Anexo</h1> 
+    
+    <table cellspacing='0'> <!-- cellspacing='0' is important, must stay --> 
+             <tr><th>ID</th><th>Nombre del Anexo</th><th>Dirreción</th><th>Parroquia</th><th>Sector</th><th></th></tr><!-- Table Header -->
+        <tr><td>{{anexo.id}}</td><td>{{anexo.nombre}}</td><td>{{anexo.direccion}}</td><td>{{anexo.sector.parroquia.parroquia}}</td><td>{{anexo.sector.nombre}}</td>
+            {% if is_granted('ROLE_COORD')%}        
+            <td><a class="enlace" href="{{path('anexo_aldea_show',{'id':anexo.id})}}">Mostrar</a></td>    
+            <td><a class="enlace" href="{{path('anexo_aldea_update',{'id':anexo.id})}}">Actualizar</a></td>
+            <td><a class="enlace" onclick="return confirm('******Confirmar Borrar******')" 
+                   href="{{path('anexo_aldea_delete',{'id': anexo.id})}}">Borrar</a></td>
+            {% endif %}
+        </tr><!-- Table Row -->
+    </table>
+    
+    <h1 class="heading_style">Información de Aldea</h1> 
+    <table cellspacing='0'> <!-- cellspacing='0' is important, must stay -->
+            <tr><th>ID</th><th>Nombre de la Aldea</th><th>Dirreción</th><th>Eje</th><th>Municipio</th><th>Parroquia</th><th></th><th></th></tr><!-- Table Header -->
+
+
+        <tr><td>{{aldea.id}}</td><td>{{aldea.nombre}}</td><td>{{aldea.direccion}}</td><td>{{aldea.parroquia.eje.nombre}}</td><td>{{aldea.parroquia.municipio.municipio}}</td><td>{{aldea.parroquia.parroquia}}</td>
+        
+        {% if is_granted('ROLE_EJE')%}        
+        <td><a class="enlace" href="{{path('aldea_update',{'id':aldea.id})}}">Actualizar</a></td><td><a class="enlace" onclick="return confirm('******Confirmar Borrar******')" href="{{path('aldea_delete',{'id': aldea.id})}}">Borrar</a></td>
+        </tr><!-- Table Row -->
+        {% endif%}           
+    </table>
+
+</div>
+  
+<div id="ambientes">
+  
+  <div id="accordionambientes">
+    <h3> <span class='icon'><img src="{{asset('img/Letter-T-blue-icon.png')}}"/><span>TI</h3>
+      <div>  
+          {% if  ambientesti %} 
+            <table cellspacing='0' style='margin-top: 0px; margin-bottom: 0px;margin-left: 0px;'> <!-- cellspacing='0' is important, must stay -->
+                <tr><th>ID</th><th>P.N.F.</th><th>Turno</th><th>Promoción</th><th>Condición</th>
+                    <th>Trayecto</th><th>Periodo</th>
+                </tr><!-- Table Header -->  
+            <tr>
+                
+                {% for a in ambientesti %}
+                    
+                {% if a.turno == 'n' %}
+                        {% set turno = 'Nocturno' %}
+
+                {% else%}	
+                        {% set turno = 'Fines de Semana' %}
+                {% endif %}	
+
+                    
+                <td>{{a.id}}</td><td>{{a.pnf.nombre}}</td> <td>{{turno}}</td>
+                <td>{{a.promocion}}</td><td>{{a.condicion}}</td><td>{{a.trayecto}}</td><td>{{a.periodo}}</td>
+                {% if is_granted('ROLE_COORD')%}        
+                    <td><a class="enlace" href="{{path('ambiente_show',{'idamb': a.id})}}">Mostrar</a></td>
+                    <td><a class="enlace" href="{{path('ambiente_update',{'idamb': a.id})}}">Actualizar</a></td>
+                {% endif %}
+                
+            </tr><!-- Table Row -->
+            {% endfor %}
+            </table>    
+            {% endif %}    
+      </div>
+    <h3> <span class='icon'><img src="{{asset('img/Letter-C-pink-icon.png')}}"/><span>CTA</h3>
+      <div>  
+          {% if  ambientescta %} 
+            <table cellspacing='0' style='margin-top: 0px; margin-bottom: 0px;margin-left: 0px;'> <!-- cellspacing='0' is important, must stay -->
+                <tr><th>ID</th><th>P.N.F.</th><th>Turno</th><th>Promoción</th><th>Condición</th>
+                    <th>Trayecto</th><th>Periodo</th>
+                </tr><!-- Table Header -->  
+            <tr>
+                
+                {% for a in ambientescta %}
+                    
+                {% if a.turno == 'n' %}
+                        {% set turno = 'Nocturno' %}
+
+                {% else%}	
+                        {% set turno = 'Fines de Semana' %}
+                {% endif %}	
+
+                    
+                <td>{{a.id}}</td><td>{{a.pnf.nombre}}</td> <td>{{turno}}</td>
+                <td>{{a.promocion}}</td><td>{{a.condicion}}</td><td>{{a.trayecto}}</td><td>{{a.periodo}}</td>
+                {% if is_granted('ROLE_COORD')%}        
+                    <td><a class="enlace" href="{{path('ambiente_show',{'idamb': a.id})}}">Mostrar</a></td>
+                    <td><a class="enlace" href="{{path('ambiente_update',{'idamb': a.id})}}">Actualizar</a></td>
+                {% endif %}
+                
+            </tr><!-- Table Row -->
+            {% endfor %}
+            </table>    
+            {% endif %}    
+            
+      </div>
+    <h3> <span class='icon'><img src="{{asset('img/U-icon.png')}}"/><span>UBV</h3>
+      <div>  
+          {% if  ambientesubv %} 
+            <table cellspacing='0' style='margin-top: 0px; margin-bottom: 0px;margin-left: 0px;'> <!-- cellspacing='0' is important, must stay -->
+                <tr><th>ID</th><th>P.N.F.</th><th>Turno</th><th>Promoción</th><th>Condición</th>
+                    <th>Trayecto</th><th>Tramo</th>
+                </tr><!-- Table Header -->  
+            <tr>
+                
+                {% for a in ambientesubv %}
+                    
+                {% if a.turno == 'n' %}
+                        {% set turno = 'Nocturno' %}
+
+                {% else%}	
+                        {% set turno = 'Fines de Semana' %}
+                {% endif %}	
+
+                    
+                <td>{{a.id}}</td><td>{{a.pnf.nombre}}</td> <td>{{turno}}</td>
+                <td>{{a.promocion}}</td><td>{{a.condicion}}</td><td>{{a.trayecto}}</td><td>{{a.periodo}}</td>
+                {% if is_granted('ROLE_COORD')%}        
+                    <td><a class="enlace" href="{{path('ambiente_show',{'idamb': a.id})}}">Mostrar</a></td>
+                    <td><a class="enlace" href="{{path('ambiente_update',{'idamb': a.id})}}">Actualizar</a></td>
+                {% endif %}
+            </tr><!-- Table Row -->
+            {% endfor %}
+            </table>    
+            {% endif %}    
+            
+      </div>      
+  </div>
+            {% if is_granted('ROLE_COORD')%}            
+            <a style='margin-left: 12px;' class="enlace" href="{{path('ambiente_new',{'idaldea':aldea.id})}}"> 
+                   <span class='icon'><img src="{{asset('img/add-1-icon.png')}}"/></span> Agregar Ambiente</a> 
+            {% endif %}
+</div>
+</div>
+
+<script>
+$(function() {
+                $( "#tabs" ).tabs();
+                $( "#accordionambientes" ).accordion({
+                heightStyle: "content",        
+                collapsible: true,
+                active: false
+                });
+                
+            });            
+</script>
+
+
+    
+{% endblock %}
+
+

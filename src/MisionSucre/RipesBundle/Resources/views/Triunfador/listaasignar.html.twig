@@ -1,0 +1,117 @@
+<div class="cajacasos">
+{% if noregistrados %}  
+{% for it in noregistrados %}
+    {{it}},
+{% endfor %}
+No Registrado(s) en el Sistema Ripes<br/>
+{% endif %}
+{% for item in noperfil %}
+    {{item.ced}} [{{item.msg}}] <br/>
+{% endfor %}
+
+{% for item in vinculados %}
+        {{item.ced}} [{{item.pnf}}][{{item.aldea}}]<br/>
+{% endfor %}
+
+</div>
+<div id="dt_example">
+<div id="container" style="width: 100%">
+    
+<table cellpadding="0" cellspacing="0" border="0" class="display" id="example">
+	<thead>
+		<tr>
+			<th>#</th><th>Nombre de Usuario</th><th>Cédula</th><th>Nombres</th><th>Apellidos</th><th>Registrado en el Sistema</th>
+                        <th>Becado Sucre</th><th></th>
+		</tr>
+	</thead>
+	<tbody id="cuerpotabla">
+	
+
+{% set i = 1 %}
+{% for f in filas %}
+
+		<tr >
+    <td>{{i}}</td><td>{{ f.username}}</td><td>{{ f.cedPer}}</td>
+    <td>{{ f.priNom |upper}} {{ f.segNom |upper}}</td>
+    <td>{{ f.priApe |upper}} {{ f.segApe |upper}}</td>
+    <td><div class="center">
+        <input type="radio" name="sistema{{i}}" value="Si"  checked>Si<input type="radio" name="sistema{{i}}" value="No">No
+        </div>
+
+    </td>
+    <td><div class="center">
+        <input type="radio" name="becado{{i}}" value="Si"  >Si<input type="radio" name="becado{{i}}" value="No" checked>No
+        </div>
+
+    </td>
+    <td class="eliminar">Quitar</td>
+    </tr>
+ {% set i = i+1 %}   
+{% endfor %}    
+        <tbody>		
+</table>
+</div>
+</div>
+<input type="button" value="Vincular" class="botonmediano purple" id="vincular"/>
+
+<style>
+    .eliminar{
+        color: red; text-decoration: underline;
+        cursor: pointer;
+    }
+   {% if noregistrados or noperfil or vinculados %} 
+    .cajacasos{
+        background-color: #A4A4A4;
+        padding: 10px 30px 10px 30px;
+        font-size: 0.9em;
+    }
+    {% endif %}
+</style>
+
+<script>    
+    
+$(document).ready(function(){
+
+$('#vincular').click( function () {
+
+var cedulas=[];
+var sistemas=[];
+var becados=[];
+var i=0;
+$('#example tbody tr').each(function() {
+    cedulas[i]=$(this).find("td").eq(2).html();    
+    j=i+1;
+    sistemas[i]=$('input:radio[name=sistema'+j+ ']:checked').val();
+    becados[i]=$('input:radio[name=becado'+j+ ']:checked').val();
+    i++;
+});
+
+var data=[] ;
+data[0]=cedulas;
+data[1]=sistemas;
+data[2]=becados;
+data[3]={{ambiente}};
+
+data= JSON.stringify(data);
+
+var urlajax = '../vinculartriunfadores/'+data;
+
+$.ajax({
+        url: urlajax,
+        success: function (html) {
+       
+        if(html=="good"){
+        alert("Trinfador(es) Vinculados con Éxitos")
+        location.reload();    
+        }
+        else{
+        $('.flash-notice').html(html);
+        }
+        }
+    });
+
+
+});
+
+});
+</script>

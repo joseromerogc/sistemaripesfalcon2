@@ -1,0 +1,225 @@
+{% extends 'MisionSucreRipesBundle::layout.html.twig' %}
+{% block stylesheets %}
+{{ parent() }}
+	<link rel="stylesheet" type="text/css" href="{{asset('css/demo_table.css')}}">
+	<link rel="stylesheet" type="text/css" href="{{asset('css/demo_page.css')}}">
+	<link rel="stylesheet" type="text/css" href="{{asset('css/botones.css')}}">
+	<link rel="stylesheet" type="text/css" href="{{asset('css/dataTables.tableTools.css')}}">	
+        <link rel="stylesheet" type="text/css" href="{{asset('css/table/littletable.css')}}">
+        <link rel="stylesheet" type="text/css" href="{{asset('css/color.css')}}">
+        
+{% endblock %}
+
+{% block content %}
+    
+<h1 class="heading_style">Busqueda de Docentes</h1> 
+
+<h1 class="sub_heading_style">Buscar por Aldea: </h1> 
+
+
+ <table style="width:100%;">
+  <tr>
+       
+      <td>
+         
+            Municipio Aldea: 
+            <select id="form_municipio" class="municipio" >
+                        <option value="" selected> Seleccione</option>
+                        {% for key, m in municipios %}
+                            <option value="{{ key }}" >{{m}}</option>
+                        {% endfor %}
+            </select>
+      </td>
+      <td>
+          Parroquia Aldea:
+        <select id="form_parroquia" required="required" class ="parroquia">
+                                <option value=""> Seleccione</option>
+        </select>
+      </td>
+    <td>
+        Aldea:
+        <select id="form_aldea" required="required" class ="aldea">
+                                <option value=""> Seleccione</option>
+        </select>
+    </td>
+      <tr >
+          <td colspan="3" style="background-color: gray">Datos Académicos</td>
+      </tr>
+    <tr>
+      <td >
+          Programas Nacionales de Formación: <input type="search" class="pnfs" />
+      </td>
+         <td>
+          Unidades Curriculares: <input type="search" class="ucs" />
+         </td>
+          <td>
+          Exclusividad: 
+          <select id="form_aldea" required="required" class ="exclusividad">
+                                <option value="" selected>Seleccione</option>
+                                <option value="SI">SI</option>
+                                <option value="NO">NO</option>
+          </select>
+          </td>
+  </tr>
+</tr>   
+      
+      
+</table> 
+
+<h1 class="sub_heading_style">Buscar por Datos Personales: </h1> 
+
+<table style="width:100%;">
+  <tr>
+      <td>
+          Cédula: <input type="search" class="cedula" />
+      </td>
+         <td>
+          Nombre: <input type="search" class="nombre" />
+         </td>
+          <td>
+          Apellido: <input type="search" class="apellido" />
+          </td>
+  </tr>
+  <tr>
+      <td>
+          Sexo: 
+          <select required="required" class ="sexo">
+                        <option value=""> Seleccione</option>
+                        <option value="f"> Femenino</option>
+                        <option value="m"> Masculino</option>
+                        
+        </select>
+      </td>
+         <td>
+          Edad: <input type="search" class="edad" />
+         </td>
+         
+  </tr>
+</table>
+  
+<input type="submit" value="Buscar" id="b_buscar" required/>
+
+<div class="error">
+</div>
+
+<div class="tabla_docente">    
+</div>
+
+<script>    
+    
+$(document).ready(function(){
+    
+if($('#form_municipio').value!=""){
+    
+    $('#form_parroquia').html('<option value="" >Seleccione</option>');
+    
+    var id=$('#form_municipio').val();
+    $.ajax({
+        url: "parroquias/"+id+"",
+        success: function (html) {$('#form_parroquia').html(html);}
+    });
+}
+
+$('#form_municipio').change( function () {
+
+    $('#form_parroquia').html('<option value="">Cargando........</option>');
+    
+    var id=$('#form_municipio').val();
+    $.ajax({
+        url: "parroquias/"+id+"",
+        success: function (html) {$('#form_parroquia').html(html);}
+    });
+});
+
+
+if($('#form_parroquia').value!=""){
+    
+    $('#form_aldea').html('<option value="" >Seleccione</option>');
+    
+    var id=$('#form_parroquia').val();
+    $.ajax({
+        url: "../aldea/coordinador/aldeas/"+id+"",
+        success: function (html) {$('#form_aldea').html(html);}
+    });
+}
+
+
+ $('#form_parroquia').change( function () {
+
+    $('#form_aldea').html('<option value="" >Cargando........</option>');
+    
+    var id=$('#form_parroquia').val();
+    $.ajax({
+        url: "../aldea/coordinador/aldeas/"+id+"",
+        success: function (html) {$('#form_aldea').html(html);}
+    });
+        
+});
+
+
+if($('#form_aldea').value!=""){
+    $('#form_anexo').html('<option value="" >Seleccione</option>');
+    
+    var id=$('#form_aldea').val();
+    $.ajax({
+       url: "../aldea/anexoaldea/"+id+"",
+        success: function (html) {$('#form_anexo').html(html);}
+    });
+}
+
+ $('#form_aldea').change( function () {
+
+    $('#form_anexo').html('<option value="" >Seleccione</option>');
+    
+    var id=$('#form_aldea').val();
+    $.ajax({
+        url: "../aldea/anexoaldea/"+id+"",
+        success: function (html) {$('#form_anexo').html(html);}
+    });
+});
+
+
+$('#b_buscar').click( function () {
+
+$('.error').html("");
+
+$('.tabla_docente').html('<img src="{{asset('img/ajax-loader.gif')}}" width="16" height="16" alt="cargando" />');
+
+
+var aldea=$('.aldea').val();
+var municipio=$('.municipio').val();
+var parroquia=$('.parroquia').val();
+
+var pnfs=$('.pnfs').val();
+var ucs=$('.ucs').val();
+var exclusividad=$('.exclusividad').val();
+
+var cedula=$('.cedula').val();
+var nombre=$('.nombre').val();
+var apellido=$('.apellido').val();
+var sexo=$('.sexo').val();
+var edad=$('.edad').val();
+
+var query='{"query":{"aldea":"'+aldea+'","municipio":"'+municipio+'","parroquia":"'+parroquia+'","pnfs":"'+pnfs+'","ucs":"'+ucs+'","exclusividad":"'+exclusividad+'"';
+query+= ',"cedula":"'+cedula+'","apellido":"'+apellido+'","nombre":"'+nombre+'","sexo":"'+sexo+'","edad":"'+edad+'"}}';
+
+
+    $.ajax({
+        url: "busquedadocente/"+query+"",
+        success: function (html) {$('.tabla_docente').html(html);}
+    });
+$('html, body').animate({scrollTop:220});
+
+});
+
+$('.cedula').keypress( function (event) {
+
+    return event.charCode >= 48 && event.charCode <= 57  || event.charCode ==0  ||event.charCode ==45;
+});
+ 
+});
+
+</script>
+
+
+{% endblock %}

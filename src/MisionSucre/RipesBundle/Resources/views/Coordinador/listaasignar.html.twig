@@ -1,0 +1,66 @@
+<div id="dt_example">
+<div id="container">
+    
+<table cellpadding="0" cellspacing="0" border="0" class="display" id="example">
+	<thead>
+		<tr>
+			<th>#</th><th>Nombre de Usuario</th><th>Cédula</th><th>Nombres</th><th>Apellidos</th><th></th><th></th>
+		</tr>
+	</thead>
+	<tbody>
+	
+{% set i = 1 %}
+
+{% for f in filas %}
+
+	{% if f.sexPer == 'm' %}
+			{% set class = 'gradeA' %}
+	{% else %}	
+			{% set class = 'gradeU' %}		
+{% endif %}	
+	
+		<tr class="{{class}}">
+    <td>{{i}}</td><td>{{ f.username}}</td><td>{{ f.cedPer}}</td>
+    <td>{{ f.priNom |upper}} {{ f.segNom |upper}}</td>
+    <td>{{ f.priApe |upper}} {{ f.segApe |upper}}</td>
+    <td><a class="enlace" href="{{path('usuario_show',{'id': f.id})}}">Mostrar</a></td>
+    {% if idaldea %}
+    <td><a class="enlace" href="{{path('aldea_coordinadorid_new',{'idc': f.id,'idaldea': idaldea})}}">Asignar Aldea</a></td> 
+    {% else %}    
+    <td><a class="enlace" href="{{path('aldea_coordinador_new',{'id': f.id})}}">Asignar Aldea</a></td>
+    {% endif %}    
+{% set i = i+1 %}
+{% endfor %}    
+    
+		</tr>
+		
+</table>
+</div>
+</div>
+</div>
+<script src="{{asset('js/jquery.dataTables.js')}}" type="text/javascript" type="text/javascript"></script>
+<script src="{{asset('js/dataTables.tableTools.js')}}" type="text/javascript" type="text/javascript"></script>
+
+<script>
+$(document).ready(function() {
+$('#example').dataTable( {
+        "oLanguage": {
+            "sLengthMenu": "Mostrar _MENU_ Usuarios por Página",
+            "sZeroRecords": "No se encontraron Resultados",
+            "sSearch": "Filtro: ",
+            "sInfo": "Mostrando _START_ a _END_  de un Total de _TOTAL_ Usuarios",
+            "sInfoEmpty": "Mostrando 0 de 0 de 0 Usuarios",
+            "sInfoFiltered": "(Filtrado de un _MAX_ total de Usuarios)",
+            "oPaginate": {
+                "sNext": "Página Siguiente",
+                "sPrevious": "Página Anterior"
+                }
+        },
+        dom: 'T<"clear">lfrtip'
+        ,
+        tableTools:{
+        		"sSwfPath": "{{asset('swf/copy_csv_xls_pdf.swf')}}",
+        }
+    } );
+} );
+</script>

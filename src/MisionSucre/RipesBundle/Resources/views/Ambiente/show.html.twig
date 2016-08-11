@@ -1,0 +1,174 @@
+{% extends 'MisionSucreRipesBundle::layout.html.twig' %}
+
+{% block stylesheets %}
+{{ parent() }}
+	<link rel="stylesheet" type="text/css" href="{{asset('css/table/littletable.css')}}">
+	<link rel="stylesheet" type="text/css" href="{{asset('css/blitzer/jquery-ui-1.10.4.custom.css')}}">
+	
+{% endblock %}
+
+{% block js %}
+        {{ parent() }}
+	<script src="{{asset('js/jquery-ui-1.10.4.custom.js')}}"></script>
+        <script>
+            
+            $(function() {
+                $( "#tabs" ).tabs();
+            });            
+            
+        </script>
+{% endblock %}    
+
+{% block content %}
+	{{ parent() }}
+
+{% for flashMessage in app.session.flashbag.get('notice') %}
+        <div class="flash-notice">
+        {{ flashMessage }}
+        </div>
+{% endfor %}
+
+<div id="tabs">
+    <ul>
+		<li><a href="#info">Información General</a></li>
+		<li><a href="#triunfadores">Triunfadores</a></li>
+		<li><a href="#periodosacademicos">Periodos Académicos</a></li>
+                <li><a href="#vocero">Vocero</a></li>
+                
+    </ul>
+<div id="info">    
+    <h1 class="heading_style">Información de Ambiente</h1> 
+    <table cellspacing='0' style='margin-top: 0px; margin-bottom: 0px;margin-left: 0px;'> <!-- cellspacing='0' is important, must stay -->
+                <tr><th>ID</th><th>P.N.F.</th><th>Turno</th><th>Anexo</th><th>Nombre</th><th>Promoción</th><th>Condición</th>
+                    <th></th>
+                </tr><!-- Table Header -->  
+            <tr>
+                    
+                {% if ambiente.turno == 'n' %}
+                        {% set turno = 'Nocturno' %}
+
+                {% else%}	
+                        {% set turno = 'Fines de Semana' %}
+                {% endif %}	
+
+                    
+                <td>{{ambiente.id}}</td><td>{{ambiente.pnf.nombre}}</td> <td>{{turno}}</td><td>{%if ambiente.anexo %} {{ambiente.anexo.nombre}} {%endif%}</td>
+                <td>{{ambiente.nombre}}</td>
+                <td>{{ambiente.promocion}}</td><td>{{ambiente.condicion}}</td>
+                {% if is_granted('ROLE_COORD') %}
+                <td><a class="enlace" href="{{path('ambiente_update',{'idamb': ambiente.id})}}">Actualizar</a></td>
+                {% endif%}
+                
+            </tr><!-- Table Row -->
+    </table>    
+      
+</div>
+            
+<div id="periodosacademicos">    
+    <h1 class="heading_style">Histórico Periodos Académicos</h1> 
+    <table cellspacing='0' style='margin-top: 0px; margin-bottom: 0px;margin-left: 0px;'> <!-- cellspacing='0' is important, must stay -->
+        <tr><th>ID</th><th>Nombre</th><th>Trayecto</th><th>Periodo/Tramo</th><th>Actual</th>
+                </tr><!-- Table Header -->  
+            <tr>
+            {% for p in periodosacademicos %}   
+                <td>{{p.id}}</td>
+                <td>{{p.periodoacademico.nombre}}</td>
+                <td>{{p.trayecto}}</td><td>{{p.periodo}}</td>
+                <td>{{p.periodoacademico.actual}}</td>
+                {% if is_granted('ROLE_COORD') %}
+                <td><a class="enlace" href="{{path('periodo_academico_update_ambiente',{'idper': p.id})}}">Actualizar</a></td>
+                {% endif%}
+            {% endfor%}
+            </tr><!-- Table Row -->
+    </table>  
+            <a style='margin-left: 12px;' class="enlace" href="{{path('periodo_academico_new_ambiente',{'idamb':ambiente.id})}}"> 
+                   <span class='icon'><img src="{{asset('img/add-1-icon.png')}}"/></span> Agregar</a> 
+            
+            
+      
+</div>
+
+        
+<div id="triunfadores" >
+    <h1 class="heading_style">Triunfadores</h1> 
+    {% if is_granted('ROLE_COORD') %}
+    <a style='margin-left: 12px;' class="enlace" href="{{path('triunfador_vincular',{'idamb':ambiente.id})}}"> 
+    <span class='icon'><img src="{{asset('img/add-1-icon.png')}}"/></span> Vincular Triunfadores</a> 
+    {% endif%}
+   {% if  triunfadores %}
+    <table cellspacing='0' style='margin-top: 0px; margin-bottom: 0px;margin-left: 0px;'> <!-- cellspacing='0' is important, must stay -->
+		<tr>
+			<th >#</th>
+                        <th >Cédula</th><th>Nombres y Apellidos</th>
+                        <th >Celular</th>
+                        <th>Teléfono</th>
+                        <th >Vinculado al </br> Sistema Sucre</th>
+                        <th >Becado</th>
+                        <th >Condición</th>
+		</tr>
+                
+	<tbody>
+    {% endif %}
+	
+{% set i = 1 %}
+
+{% for t in triunfadores %}
+
+	{% if t.sexPer == 'm' %}
+			{% set class = 'gradeA' %}
+	{% else %}	
+			{% set class = 'gradeU' %}		
+        {% endif %}	
+        	
+		<tr class="{{class}}">
+    <td>{{i}}</td>  <td>{{ t.cedPer}}</td>
+    <td>{{ t.priNom |upper}} 
+    {{ t.priApe |upper}}</td>
+    <td>{{t.celPer}}</td>
+        <td>{{t.telPer}}</td>
+         <td>{{t.sistema}}</td>
+    <td>{{t.becamision}}</td>
+    <td>{{t.condicion}}</td>
+   
+    {% if is_granted('ROLE_COORD') %}
+        <td><a class="enlace" href="{{path('usuario_show',{'id': t.idusr})}}">Mostrar</a></td>
+        <td><a class="enlace" onclick="return confirm('******Confirmar Borrar******')" href="{{path('triunfador_delete',{'idtrf': t.id})}}">Borrar</a></td>
+    {% endif %} 
+{% set i = i+1 %}
+{% endfor %}    
+		</tr>
+      </tbody>
+</table>
+</div>
+  
+<div id="vocero">
+    <h1 class="heading_style">Vocero</h1> 
+    
+    
+    {% if  vocero %}
+    <table cellspacing='0' style='margin-top: 0px; margin-bottom: 0px;margin-left: 0px;'> <!-- cellspacing='0' is important, must stay -->
+		<tr>
+			<th>Id</th><th>Nombre de Usuario</th><th>Cédula</th><th>Nombres y Apellidos</th>
+		</tr>
+    <tr>
+    <td>{{vocero.id}}</td><td>{{ vocero.username}}</td><td>{{ vocero.cedPer}}</td>
+    <td>{{ vocero.priNom |upper}} {{ vocero.segNom |upper}}
+    {{ vocero.priApe |upper}} {{ vocero.segApe |upper}}</td>
+        {% if is_granted('ROLE_COORD') %}
+            <td><a class="enlace" href="{{path('usuario_show',{'id': vocero.idusr})}}">Mostrar</a></td>
+            <td><a class="enlace" href="{{path('asignar_vocero_update',{'idamb': ambiente.id})}}">Actualizar</a></td>
+        {% endif %}
+    </tr><!-- Table Row -->
+    </table>
+    {% else %}
+        {% if is_granted('ROLE_COORD') %}
+        <a style='margin-left: 12px;' class="enlace" href="{{path('asignar_vocero',{'idamb':ambiente.id})}}"> 
+    <span class='icon'><img src="{{asset('img/add-1-icon.png')}}"/></span> Registrar Vocero</a> 
+        {% endif %}
+    {% endif %}
+    
+</div>
+  
+</div>
+{% endblock %}
+

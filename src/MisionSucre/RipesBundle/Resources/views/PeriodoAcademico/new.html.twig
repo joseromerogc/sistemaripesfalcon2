@@ -1,0 +1,79 @@
+{% extends 'MisionSucreRipesBundle::layout.html.twig' %}
+
+{% block stylesheets %}
+{{ parent() }}
+	<link rel="stylesheet" type="text/css" href="{{asset('css/form/responsiveform.css')}}">
+	<link rel="stylesheet" media="screen and (max-width: 1200px) and (min-width: 601px)" href="{{asset('css/form/responsiveform1.css')}}" />
+	<link rel="stylesheet" media="screen and (max-width: 600px) and (min-width: 351px)" href="{{asset('css/form/responsiveform2.css')}}" />
+	<link rel="stylesheet" media="screen and (max-width: 350px)" href="{{asset('css/form/responsiveform3.css')}}" />
+        <link rel="stylesheet" type="text/css" href="{{asset('css/table/littletable.css')}}">
+{% endblock %}
+
+{% block content %}
+
+{% for f in form %}
+                {% if f.vars.block_prefixes[0]!="button" %}
+                    <div class="flash-notice">
+                        {{f.vars.errors}}
+                    </div>
+                {% endif %}
+    {% endfor %}
+
+	<div id="envelope" style='width: 75%;'>
+	
+        <header>
+            <h2>{{mensaje_heading|raw}}</h2>
+	</header>
+            {{ form_start(form) }}
+            
+            <div>
+            {{ form_label(form.nombre) }}
+            {{ form_widget(form.nombre) }}
+            <div class="error">
+                    {{ form_errors(form.nombre) }}
+            </div>
+            <div>
+            {{ form_label(form.modalidad) }}
+            <div class="styled">
+            {{ form_widget(form.modalidad) }}
+            </div>
+            <div class="error">
+                    {{ form_errors(form.modalidad) }}
+            </div>
+        </div> 
+            {{ form_label(form.fechainicio) }}            
+	<div style="margin: 10px 20px 20px 40px; ">   
+                
+		{{ form_widget(form.fechainicio) }}
+                
+                <div class="error">
+                    {{ form_errors(form.fechainicio) }}
+                </div>
+	</div> 
+            {{ form_label(form.fechafin) }}            
+	<div style="margin: 10px 20px 20px 40px; ">   
+                
+		{{ form_widget(form.fechafin) }}
+                
+                <div class="error">
+                    {{ form_errors(form.fechafin) }}
+                </div>
+	</div> 
+        
+        <div>
+            {{ form_label(form.actual) }}
+            <div class="styled">
+            {{ form_widget(form.actual) }}
+            </div>
+            <div class="error">
+                    {{ form_errors(form.actual) }}
+            </div>
+                 
+        <div>
+		{{ form_widget(form.save) }}
+	</div>
+		{{ form_end(form) }}		
+</div>
+
+{% endblock %}
+

@@ -1,0 +1,335 @@
+{% extends 'MisionSucreRipesBundle::layout.html.twig' %}
+
+{% block stylesheets %}
+{{ parent() }}
+	<link rel="stylesheet" type="text/css" href="{{asset('css/table/littletable.css')}}">
+	<link rel="stylesheet" type="text/css" href="{{asset('css/blitzer/jquery-ui-1.10.4.custom.css')}}">
+	
+{% endblock %}
+
+{% block js %}
+        {{ parent() }}
+	<script src="{{asset('js/jquery-ui-1.10.4.custom.js')}}"></script>
+        <script>
+            $(function() {
+		$( "#accordion" ).accordion({
+                heightStyle: "content",        
+                collapsible: true,
+                active: false
+                }        );
+                $( "#tabs" ).tabs(
+                        );
+            });            
+            
+        </script>
+{% endblock %}    
+
+{% block content %}
+	{{ parent() }}
+
+        
+{% for flashMessage in app.session.flashbag.get('notice') %}
+        <div class="flash-notice">
+        {{ flashMessage }}
+        </div>
+{% endfor %}
+
+<div id="tabs">
+    <ul>
+		<li><a href="#usuario">Usuario</a></li>
+		<li><a href="#personales">Personales</a></li>
+		<li><a href="#sociales">Sociales, Comunitarios y Politicos</a></li>
+                <li><a href="#academico">Académico</a></li>
+    </ul>
+<div id="usuario">    
+    <h1 class="heading_style">Información de Usuario</h1> 
+    <table cellspacing='0'> <!-- cellspacing='0' is important, must stay -->
+            <tr><th>ID</th><th>Nombre de Usuario</th><th>Tipo de Usuario</th><th></th><th></th></tr><!-- Table Header -->
+
+
+        <tr><td>{{usuario.id}}</td><td>{{usuario.username}}</td><td>{{usuario.name}}</td>
+            <td><a class="enlace" href="{{path('usuario_update',{'id':usuario.id})}}">Actualizar</a></td>
+            {% if is_granted('ROLE_COORD')  %}
+            <td><a class="enlace" onclick="return confirm('******Confirmar Borrar******')" href="{{path('usuario_delete',{'id':usuario.id})}}">Borrar</a></td>
+            {% endif%}
+        </tr><!-- Table Row -->
+    </table>
+     
+  {% if  coordinadoreje %}  
+      <h1 class="heading_style">Coordinador de Eje</h1>  
+    <table cellspacing='0' > <!-- cellspacing='0' is important, must stay -->
+	<tr><th>ID</th><th>Eje</th><th>Municipios</th><th>Parroquias</th>
+        </tr><!-- Table Header -->  
+    <tr>
+        <td>{{coordinadoreje.id}}</td><td>{{coordinadoreje.Eje.nombre}}</td>
+        <td>
+            {% for m in municipioseje %}
+               {{m.municipio}},
+            {% endfor %} 
+        </td> 
+        <td>
+            {% for p in parroquiaseje %}
+               {{p.parroquia}},
+            {% endfor %} 
+        </td> 
+        <td><a class="enlace" href="{{path('eje_update',{'id':usuario.id})}}">Actualizar</a></td>
+        <td><a class="enlace" onclick="return confirm('******Confirmar Borrar******')" href="{{path('eje_delete',{'id': usuario.id,'id_coord': coordinadoreje.id})}}">Borrar</a></td>
+    </tr><!-- Table Row -->
+    </table>
+  {% else %}    
+      <a style='margin-left: 12px;' class="enlace" href="{{path('eje_new',{'id':usuario.id})}}"> 
+                   <span class='icon'><img src="{{asset('img/add-1-icon.png')}}"/></span> Vincular al Eje</a> 
+  {% endif %}
+  
+</div>
+
+        
+<div id="personales" >
+<h1 class="heading_style">Datos Personales</h1> 
+  
+  {% if  persona %}  
+    <table cellspacing='0' > <!-- cellspacing='0' is important, must stay -->
+	<tr><th>ID</th><th>Nombres</th><th>Apellidos</th><th>Cédula</th><th>Fecha de Nacimiento</th><th>Edad</th>
+	<th>Sexo</th><th>Estado Civil</th><th>Teléfono</th><th>Celular</th>
+        </tr><!-- Table Header -->  
+    <tr>
+        <td>{{persona.id}}</td><td>{{persona.priNom|capitalize}} {{persona.segNom|capitalize}}</td><td>{{persona.priApe|capitalize}} {{persona.segApe|capitalize}}</td>
+        <td>{% if persona.codCed %} {% set c='E'%} {% else %}{% set c='V'%}{% endif %}{{c}}.-{{persona.cedPer}}</td>
+        <td> {{ persona.fechPer|date("d/m/Y")}}</td> <td> {{ persona.edadPer}}</td>
+        <td>{% if persona.sexPer =='m'%} {% set s='Masculino'%} {% else %}{% set s='Femenino'%}{% endif %}{{s}}</td>
+        <td> {{ persona.edoCiv}}</td>
+        <td> {{ persona.celPer}}</td><td> {{ persona.telPer}}</td>
+        <td><a class="enlace" href="{{path('persona_update',{'id':usuario.id})}}">Actualizar</a></td>
+    </tr><!-- Table Row -->
+    </table>
+    
+  {% else %}    
+    <a style='margin-left: 12px;' class="enlace" href="{{path('persona_new',{'id':usuario.id})}}"> <span class='icon'>
+    <img src="{{asset('img/add-1-icon.png')}}"/></span> Agregar Datos Personales</a> 
+  {% endif %}    
+  <h1 class="heading_style">Ubicación de Vivienda</h1> 
+  {% if ubicacionvivienda %}  
+  <table cellspacing='0'> <!-- cellspacing='0' is important, must stay -->
+	<tr><th>Municipio</th><th>Parroquia</th><th>Sector</th><th colspan="2">Dirrección</th>
+        </tr><!-- Table Header -->  
+    <tr>
+        <td>{{ubicacionvivienda.sector.parroquia.municipio.municipio}}</td><td>{{ubicacionvivienda.sector.parroquia.parroquia}}</td><td>{{ubicacionvivienda.sector.nombre}}</td>
+        <td colspan="2">{{ubicacionvivienda.direccion}}</td>
+    </tr><!-- Table Row -->
+   </table>
+   {% else %}    
+    <a style='margin-left: 12px;' class="enlace" href="{{path('persona_new',{'id':usuario.id})}}"> <span class='icon'>
+    <img src="{{asset('img/add-1-icon.png')}}"/></span> Agregar Datos Personales</a> 
+  {% endif %}     
+</div>
+  
+<div id="sociales">
+    <h1 class="heading_style">Datos Sociales, Comunitarios y Politicos</h1> 
+  
+<div id="accordion">
+    <h3> <span class='icon'><img src="{{asset('img/home-icon.png')}}"/><span> Sociales</h3>
+      <div>  
+          {% if  sociales %}  
+            <table cellspacing='0' style='margin-top: 0px; margin-bottom: 0px;'> <!-- cellspacing='0' is important, must stay -->
+                <tr><th>Cantidad de Hijos</th><th>Tipo de Vivienda</th><th>Ingreso Familiar</th><th>Religion</th>
+                </tr><!-- Table Header -->  
+            <tr>
+                <td>{{sociales.cantHij}}</td><td>{{sociales.tipoViv}}</td> <td>{{sociales.ingFam}}</td><td>{{sociales.religion}}</td>
+                <td><a class="enlace" href="{{path('persona_social_update',{'id':usuario.id})}}">Actualizar</a></td>
+            </tr><!-- Table Row -->
+            </table>
+            {% else %}    
+                <h2 class="sub_heading_style"><span class='icon'><img src="{{asset('img/Actions-edit-delete-icon.png')}}"/><span>Sin Datos</h2>
+               <a style='margin-left: 12px;' class="enlace" href="{{path('persona_social_new',{'id':usuario.id})}}"> 
+                   <span class='icon'><img src="{{asset('img/add-1-icon.png')}}"/></span> Agregar Datos Sociales</a> 
+            {% endif %}    
+      </div>
+      <h3> <span class='icon'><img src="{{asset('img/health-icon.png')}}"/><span> Enfermedades</h3>
+        <div>
+            {% if  enfermedades %}     
+                <table cellspacing='0' style='margin-top: 0px; margin-bottom: 0px;'> <!-- cellspacing='0' is important, must stay -->
+                <tr><th>Enfermedades</th>
+                </tr><!-- Table Header -->  
+                <tr>
+                <td>    
+                {% for e in enfermedades %}     
+                {{e.nombre}}<a class="enlace" href="{{path('persona_enfermedad_delete',{'id':usuario.id,'id_enf':e.id})}}"
+                onclick="return confirm('******Confirmar Borrar******')">Borrar</a><br>
+                {% endfor%}
+                </td>
+                </tr><!-- Table Row -->
+                </table>
+            {% endif %}     
+            <h2 class="sub_heading_style"><span class='icon'><img src="{{asset('img/Actions-edit-delete-icon.png')}}"/><span>Sin Datos</h2>
+            <a style='margin-left: 12px;' class="enlace" href="{{path('persona_enfermedad_new',{'id':usuario.id})}}"> 
+            <span class='icon'><img src="{{asset('img/add-1-icon.png')}}"/></span> Agregar Enfermedad</a>
+        </div>    
+        
+    <h3> <span class='icon'><img src="{{asset('img/Apps-wheelchair-icon.png')}}"/><span> Discapacidad</h3>
+    <div>
+    {% if  discapacidad %}     
+        <table cellspacing='0' style='margin-top: 0px; margin-bottom: 0px;'> <!-- cellspacing='0' is important, must stay -->
+        <tr><th>Discapacidad</th>
+        </tr><!-- Table Header -->  
+        <tr>
+            <td>{{discapacidad.nombre}}</td><td>
+                <a class="enlace" href="{{path('persona_discapacidad_update',{'id':usuario.id})}}">Actualizar</a>
+            </td> 
+            <td><a class="enlace" href="{{path('persona_discapacidad_delete',{'id':usuario.id,'id_dis':discapacidad.id})}}"
+        onclick="return confirm('******Confirmar Borrar******')">Borrar</a></td>
+        </tr><!-- Table Row -->    
+        </table>
+    {% else %}          
+    
+    <h2 class="sub_heading_style"><span class='icon'><img src="{{asset('img/Actions-edit-delete-icon.png')}}"/><span>Sin Datos</h2>
+            <a style='margin-left: 12px;' class="enlace" href="{{path('persona_discapacidad_new',{'id':usuario.id})}}">
+    <span class='icon'><img src="{{asset('img/add-1-icon.png')}}"/></span> Agregar Discapacidad</a>        
+    {% endif %} 
+    </div>
+    
+    <h3> <span class='icon'><img src="{{asset('img/Art-icon.png')}}"/><span> Habilidades Artisticas</h3>
+    <div>
+    {% if  arte %}     
+        <table cellspacing='0' style='margin-top: 0px; margin-bottom: 0px;'> <!-- cellspacing='0' is important, must stay -->
+        <tr><th>Habilidad Artistica</th>
+        </tr><!-- Table Header -->  
+        <tr>
+            <td>{{arte.nombre}}</td><td>
+                <a class="enlace" href="{{path('persona_artes_update',{'id':usuario.id})}}">Actualizar</a>
+            </td> 
+            <td><a class="enlace" href="{{path('persona_artes_delete',{'id':usuario.id,'id_art':arte.id})}}"
+        onclick="return confirm('******Confirmar Borrar******')">Borrar</a></td>
+        </tr><!-- Table Row -->    
+        </table>
+    {% else %}
+    <h2 class="sub_heading_style"><span class='icon'><img src="{{asset('img/Actions-edit-delete-icon.png')}}"/><span>Sin Datos</h2>
+            <a style='margin-left: 12px;' class="enlace" href="{{path('persona_artes_new',{'id':usuario.id})}}"> 
+    <span class='icon'><img src="{{asset('img/add-1-icon.png')}}"/></span> Agregar Artes</a>        
+    {% endif %} 
+    </div>
+    
+    <h3> <span class='icon'><img src="{{asset('img/Sports-Baseball-icon.png')}}"/><span> Deporte</h3>
+    <div>
+    {% if  deporte %}     
+        <table cellspacing='0' style='margin-top: 0px; margin-bottom: 0px;'> <!-- cellspacing='0' is important, must stay -->
+        <tr><th>Deporte</th>
+        </tr><!-- Table Header -->  
+        <tr>
+            <td>{{deporte.nombre}}</td><td>
+                <a class="enlace" href="{{path('persona_deporte_update',{'id':usuario.id})}}">Actualizar</a>
+            </td> 
+            <td><a class="enlace" href="{{path('persona_deporte_delete',{'id':usuario.id,'id_dep':deporte.id})}}"
+        onclick="return confirm('******Confirmar Borrar******')">Borrar</a></td>
+        </tr><!-- Table Row -->    
+        </table>
+    {% else %}          
+    <h2 class="sub_heading_style"><span class='icon'><img src="{{asset('img/Actions-edit-delete-icon.png')}}"/><span>Sin Datos</h2>    
+    <a style='margin-left: 12px;' class="enlace" href="{{path('persona_deporte_new',{'id':usuario.id})}}"> <span class='icon'>
+    <img src="{{asset('img/add-1-icon.png')}}"/></span> Agregar Deporte</a>
+    {% endif %} 
+    </div>
+    <h3> <span class='icon'><img src="{{asset('img/Household-Shovel-icon.png')}}"/><span> Trabajo</h3>
+    <div>
+    {% if  trabajo %}     
+        <table cellspacing='0' style='margin-top: 0px; margin-bottom: 0px;'> <!-- cellspacing='0' is important, must stay -->
+        <tr><th>Cargo</th><th>Institución</th><th>Turno</th>
+        </tr><!-- Table Header -->  
+        <tr>
+            <td>{{trabajo.cargo}}</td><td>{{trabajo.institucion}}</td><td>{{trabajo.turno}}</td>
+            <td>
+                <a class="enlace" href="{{path('persona_trabajo_update',{'id':usuario.id})}}">Actualizar</a>
+            </td> 
+            <td><a class="enlace" href="{{path('persona_trabajo_delete',{'id':usuario.id,'id_dep':trabajo.id})}}"
+        onclick="return confirm('******Confirmar Borrar******')">Borrar</a></td>
+        </tr><!-- Table Row -->    
+        </table>
+    {% else %}          
+    <h2 class="sub_heading_style"><span class='icon'><img src="{{asset('img/Actions-edit-delete-icon.png')}}"/><span>Sin Datos</h2>        
+    <a style='margin-left: 12px;' class="enlace" href="{{path('persona_trabajo_new',{'id':usuario.id})}}">
+    <img src="{{asset('img/add-1-icon.png')}}"/></span> Agregar Trabajo</a>
+    {% endif %} 
+    </div>
+    <h3> <span class='icon'><img src="{{asset('img/community-users-icon.png')}}"/><span> Participación Comunitaria</h3>
+    <div>
+    {% if  comunitaria %}     
+        <table cellspacing='0' style='margin-top: 0px; margin-bottom: 0px;'> <!-- cellspacing='0' is important, must stay -->
+        <tr><th>Consejo Comunal</th><th>Voceria</th><th>Organización Social</th><th>Misión</th>
+        </tr><!-- Table Header -->  
+        <tr>
+            <td>{{comunitaria.cc.nombre}}</td><td>{{comunitaria.voceria}}</td><td>{{comunitaria.organizacionSocial}}</td>
+            <td>{{comunitaria.mision.nombre}}</td>
+            <td>
+                <a class="enlace" href="{{path('persona_comunitaria_update',{'id':usuario.id})}}">Actualizar</a>
+            </td> 
+            <td><a class="enlace" href="{{path('persona_comunitaria_delete',{'id':usuario.id,'id_com':comunitaria.id})}}"
+        onclick="return confirm('******Confirmar Borrar******')">Borrar</a></td>
+        </tr><!-- Table Row -->    
+        </table>
+    {% else %}          
+    <h2 class="sub_heading_style"><span class='icon'><img src="{{asset('img/Actions-edit-delete-icon.png')}}"/><span>Sin Datos</h2>            
+    <a style='margin-left: 12px;' class="enlace" href="{{path('persona_comunitaria_new',{'id':usuario.id})}}">
+    <img src="{{asset('img/add-1-icon.png')}}"/></span> Agregar Participación Comunitaria</a>
+    {% endif %} 
+    </div>
+    
+    <h3> <span class='icon'><img src="{{asset('img/Travel-Us-Capitol-icon.png')}}"/><span> Participación Politica</h3>
+    <div>
+    {% if  politica %}     
+        <table cellspacing='0' style='margin-top: 0px; margin-bottom: 0px;'> <!-- cellspacing='0' is important, must stay -->
+        <tr><th>Afilición Politica</th><th>Cargo</th><th>Ubch</th><th>Mesa</th>
+        </tr><!-- Table Header -->  
+        <tr>
+            <td>{{politica.afiliacion}}</td><td>{{politica.cargo}}</td><td>{{politica.Ubch.nombre}}</td>
+            <td>{{politica.mesa}}</td>
+            <td>
+                <a class="enlace" href="{{path('persona_politica_update',{'id':usuario.id})}}">Actualizar</a>
+            </td> 
+            <td><a class="enlace" href="{{path('persona_politica_delete',{'id':usuario.id,'id_pol':politica.id})}}"
+        onclick="return confirm('******Confirmar Borrar******')">Borrar</a></td>
+        </tr><!-- Table Row -->    
+        </table>
+    {% else %}          
+    <h2 class="sub_heading_style"><span class='icon'><img src="{{asset('img/Actions-edit-delete-icon.png')}}"/><span>Sin Datos</h2>            
+    <a style='margin-left: 12px;' class="enlace" href="{{path('persona_politica_new',{'id':usuario.id})}}">
+    <img src="{{asset('img/add-1-icon.png')}}"/></span> Agregar Participación Politica</a>
+    {% endif %} 
+    </div>
+</div>
+  
+    
+</div>
+
+<div id="academico">
+    <h1 class="heading_style">Datos Académico</h1> 
+    
+    {% if  academico %}  
+            <table cellspacing='0' style='margin-top: 0px; margin-bottom: 0px;'> <!-- cellspacing='0' is important, must stay -->
+        <tr><th>Bachillerato</th><th>Título Universitario</th><th>Post-Grado</th><th>Área de Conocimiento</th>
+            <th>Cursos Realizados</th>
+        </tr><!-- Table Header -->  
+        <tr>
+            <td>{{academico.bachillerato}}</td><td>{{academico.titulouniversitario}}</td>
+            <td>{{academico.postgrado}}</td><td>{{academico.areaconocimiento}}</td><td>{{academico.cursos}}</td>
+            <td>
+                <a class="enlace" href="{{path('academico_update',{'idaca':academico.id})}}">Actualizar</a>
+            </td>            
+        </tr><!-- Table Row -->    
+        </table>
+    {% else %}  
+        <h2 class="sub_heading_style"><span class='icon'><img src="{{asset('img/Actions-edit-delete-icon.png')}}"/><span>Sin Datos Académicos</h2>            
+    <a style='margin-left: 12px;' class="enlace" href="{{path('academico_new',{'id': usuario.id})}}">
+    <img src="{{asset('img/add-1-icon.png')}}"/></span> Agregar Datos</a>
+        
+    {% endif %}  
+    
+    
+
+</div>
+    
+</div>    
+    
+    
+</div>
+    
+{% endblock %}
+

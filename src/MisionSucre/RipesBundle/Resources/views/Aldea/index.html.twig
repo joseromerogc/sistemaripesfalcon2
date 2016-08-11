@@ -1,0 +1,23 @@
+{% extends 'MisionSucreRipesBundle::layout.html.twig' %}
+
+{% block stylesheets %}
+{{ parent() }}
+<link href="{{ asset('css/botones.css') }}" rel="stylesheet" />
+{% endblock %}
+
+{% block content %}
+{{ parent() }}	
+        
+<div>
+<button   class="styled-button-10" id="green" onclick="window.location.href='{{path('aldea_new')}}'"> <span ><img src="{{asset('img/new-document-icon.png')}}"/></span>Nueva Aldea</button>
+<button class="styled-button-10" id="blue" onclick="window.location.href='{{path('aldea_lista')}}'"> <span ><img src="{{asset('img/Actions-view-list-details-icon.png')}}"/></span>Lista de Aldeas</button>
+</div>
+        
+<div> 
+<button id="purple" class="styled-button-10" onclick="window.location.href='{{path('aldea_buscar')}}'"> <span ><img src="{{asset('img/search-icon.png')}}"/></span>Buscar Aldea</button> 
+<button  id="red" class="styled-button-10" onclick="window.location.href='{{path('aldea_resumen')}}'"> <span ><img src="{{asset('img/Resume-icon.png')}}"/></span>Resumen de Aldeas</button> 
+</div>
+
+        
+{% endblock %}
+

@@ -1,0 +1,67 @@
+{% extends 'base.html.twig' %}
+
+{% block stylesheets %}
+{{ parent() }}
+	<link rel="stylesheet" href="{{asset('css/form/login.css')}}" />
+{% endblock %}
+
+{% block body %}
+
+{{ parent() }}
+
+{% if error%}
+    {% for flashMessage in app.session.flashbag.get('notice') %}
+        <div class="flash-notice">
+        {{ flashMessage }}
+        </div>
+    {% endfor %}
+ {% endif%}
+
+<form method="post" action="{{path('login')}}" id="login" class="cj-form" autocomplete="off">
+            <div class="logo">SISTEMA RIPES FALCÓN</div>
+            <h2>Ingresa a tu Cuenta</h2>
+            <div id="cajaform">
+            <label for="user_login">
+                <span>Correo Electrónico:</span>
+                <input type="text" name="_username" id="username" />
+            </label>
+            <label for="user_pass">
+                <span>Constraseña:</span>
+                <input type="password" name="_password" id="password" />
+            </label>
+             
+            {{ form_start(form) }}
+                {{ form_label(form.ca) }}
+                 {{ form_widget(form.ca) }}
+            {{ form_end(form) }}
+            <button type="submit" id="submit">Ingresar</button>
+            <button type="button" id="submit" onclick="window.location.href='{{path('recuperar_password')}}'"> <img src="http://icons.iconarchive.com/icons/custom-icon-design/flatastic-2/16/help-desk-icon.png"/>Olvidé Contraseña</button>
+            <button type="button" style="background-color: blue; border-color: blue" id="submit" onclick="window.open('{{path('guia')}}','_blank');"> <img  src="http://icons.iconarchive.com/icons/mayosoft/azullustre-2/16/tutorials-folder-icon.png"/>Guía de Usuario</button>
+            </div>
+            <div>
+                
+        </div>  
+</form>    
+    
+<style>
+    #form_captcha{
+        margin: 10px 0px 10px 30px;    
+    }
+    
+    img{
+        vertical-align: middle; 
+    }
+    
+    img[title="captcha"]{
+      margin: 10px 0px 10px 10px;}
+    
+</style>
+<script src="//code.jquery.com/jquery-1.11.3.min.js"></script>
+<script >
+$(document).ready(function(){
+
+$(".captcha_reload").html("<img src='{{ asset('img/update32.png') }}' />");
+});
+</script>
+{% endblock %}
+

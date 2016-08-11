@@ -1,0 +1,286 @@
+{% extends 'MisionSucreRipesBundle::layout.html.twig' %}
+
+{% block stylesheets %}
+{{ parent() }}
+	<link rel="stylesheet" type="text/css" href="{{asset('css/form/responsiveform.css')}}">
+	<link rel="stylesheet" media="screen and (max-width: 1200px) and (min-width: 601px)" href="{{asset('css/form/responsiveform1.css')}}" />
+	<link rel="stylesheet" media="screen and (max-width: 600px) and (min-width: 351px)" href="{{asset('css/form/responsiveform2.css')}}" />
+	<link rel="stylesheet" media="screen and (max-width: 350px)" href="{{asset('css/form/responsiveform3.css')}}" />
+        <link rel="stylesheet" type="text/css" href="{{asset('css/table/littletable.css')}}">
+{% endblock %}
+
+{% block content %}
+
+{% for f in form %}
+                {% if f.vars.block_prefixes[0]!="button" %}
+                    <div class="flash-notice">
+                        {{f.vars.errors}}
+                    </div>
+                {% endif %}
+    {% endfor %}
+
+	<div id="envelope" style='width: 75%;'>
+	
+        <header>
+            <h2>{{mensaje_heading|raw}}</h2>
+            <p>{{sub_heading |raw}}</p>
+	</header>
+	<hr>
+	
+        {{ form_start(form) }}
+	
+        <div>
+            {{ form_label(form.anexo) }}
+	<div class="styled">
+            {{ form_widget(form.anexo) }}
+	</div>
+            <div class="error">
+                    {{ form_errors(form.anexo) }}
+            </div>
+        </div>
+        
+        <div>
+            {{ form_label(form.modalidad) }}
+	<div class="styled">
+            {{ form_widget(form.modalidad) }}
+	</div>
+            <div class="error">
+                    {{ form_errors(form.modalidad) }}
+            </div>
+        </div>
+        
+        <div>   
+                <label >
+                    Programa Nacional de Formación (P.N.F)
+                </label>
+                <div class="styled">
+                    <select id="form_pnf" required="required" >
+                        <option value=""> Seleccione Modalidad</option>
+                    </select>
+                    
+                </div>
+        </div>        
+        
+        <div>
+            {{ form_label(form.turno) }}
+        <div class="styled">
+            {{ form_widget(form.turno) }}
+	</div>
+            <div class="error">
+                    {{ form_errors(form.turno) }}
+            </div>
+        </div>
+        
+        <div>
+            {{ form_label(form.vinculadosistema) }}
+        <div class="styled">
+            {{ form_widget(form.vinculadosistema) }}
+	</div>
+            <div class="error">
+                    {{ form_errors(form.vinculadosistema) }}
+            </div>
+        </div>
+            
+        <div>
+            {{ form_label(form.promocion) }}
+        <div class="styled">
+            {{ form_widget(form.promocion) }}
+	</div>
+            <div class="error">
+                    {{ form_errors(form.promocion) }}
+            </div>
+        </div>    
+        
+        <div>
+            {{ form_label(form.condicion) }}
+        <div class="styled">
+            {{ form_widget(form.condicion) }}
+	</div>
+            <div class="error">
+                    {{ form_errors(form.condicion) }}
+            </div>
+        </div>    
+            <div>
+            <label>Periodo Ingreso a la Misión Sucre</label>
+            
+            <div class="styled">
+            <select id="_form_ingreso" class="ingreso" >
+                        <option value="" selected> Seleccione</option>
+            </select>
+            </div>   
+            
+            </div>
+            
+            <div id="egreso" style="display: none">
+            <label>Periodo Egreso a la Misión Sucre</label>
+            
+            <div class="styled">
+            <select id="_form_egreso" class="egreso" >
+                        <option value="" selected> Seleccione</option>
+            </select>
+            </div>  
+            </div>
+            <div>
+            {{ form_label(form.nombre) }}
+            {{ form_widget(form.nombre) }}
+            <div class="error">
+                    {{ form_errors(form.nombre) }}
+            </div>
+        </div>   
+        <div>
+		{{ form_widget(form.save) }}
+	</div>
+		{{ form_end(form) }}		
+</div>
+
+<script>    
+    
+$(document).ready(function(){
+
+if($('#form_modalidad').value!=""){
+    
+    $('#form_pnf').html('<option>Cargando........</option>');
+    
+    var id=$('#form_modalidad').val();
+    $.ajax({
+        url: "../modalidad/"+id+"",
+        success: function (html) {$('#form_pnf').html(html);}
+    });
+    
+    if($('#form_modalidad').val()=="TI" || $('#form_modalidad').val()=="TRIMESTRAL"){
+    var txt="<option value=''>Seleccione</option>";
+    
+    for(i=5;i<20;i++){
+        if(i<10)
+            anyo="200"+i
+        else
+            anyo="20"+i
+        for(j=1;j<4;j++)
+            txt+="<option value='"+anyo+"-"+j+"' >"+anyo+"-"+j+"</option>";
+    } 
+    
+    $('#_form_ingreso').html(txt);
+    $('#_form_egreso').html(txt);
+    
+}
+
+else{
+    
+    var txt="<option value=''>Seleccione</option>";
+    
+    for(i=5;i<20;i++){
+        if(i<10)
+            anyo="200"+i
+        else
+            anyo="20"+i
+        for(j=1;j<3;j++)
+            txt+="<option value='"+anyo+"-"+j+"' >"+anyo+"-"+j+"</option>";
+    } 
+    
+    $('#_form_ingreso').html(txt);
+    $('#_form_egreso').html(txt);
+    
+}
+}
+
+$('#form_modalidad').change( function () {
+
+if($('#form_modalidad').val()=="TI"){
+    $('#_form_trayecto').html("<option value='1'>1</option>");
+    $('#_form_periodo').html("<option value='1'>1</option>");
+}
+
+else{
+    
+    var txtt="<option value=''>Seleccione</option>";
+    var txtp="<option value=''>Seleccione</option>";
+    
+    for(i=1;i<6;i++)
+            txtt+="<option value='"+i+"' >"+i+"</option>";
+    for(i=1;i<4;i++)
+            txtp+="<option value='"+i+"' >"+i+"</option>";
+            
+    $('#_form_trayecto').html(txtt);
+    $('#_form_periodo').html(txtp);
+    
+}
+
+$('#form_pnf').html('<option>Cargando........</option>');
+    
+    var id=$('#form_modalidad').val();
+    $.ajax({
+        url: "../modalidad/"+id+"",
+        success: function (html) {$('#form_pnf').html(html);}
+    });
+});
+
+$('#form_condicion').change( function () {  
+    if($('#form_condicion').val()=='Culminado' || $('#form_condicion').val()=='Abandonado'|| $('#form_condicion').val()=='Egresado')
+        $( "#egreso" ).show( "slow" );
+    else
+        $( "#egreso" ).hide( "slow" );
+});
+
+$('#form_pnf').change( function () {    
+    document.getElementById("form_idpnf").value=$('#form_pnf').val();
+});
+
+$('#_form_ingreso').change( function () {    
+    document.getElementById("form_tingreso").value=$('#_form_ingreso').val();
+});
+
+$('#_form_egreso').change( function () {    
+    document.getElementById("form_engreso").value=$('#_form_ingreso').val();
+});
+
+{% if pnf is defined%}   
+     $('#form_pnf').html("<option value='{{idpnf}}' selected>{{pnf}}</option>");
+     document.getElementById("form_idpnf").value=$('#form_pnf').val();
+{%endif  %}        
+ 
+});
+
+$('#form_modalidad, #form_pnf').change( function () {
+
+if($('#form_modalidad').val()=="TI" || $('#form_modalidad').val()=="TRIMESTRAL"){
+    var txt="<option value=''>Seleccione</option>";
+    
+    for(i=5;i<20;i++){
+        if(i<10)
+            anyo="200"+i
+        else
+            anyo="20"+i
+        for(j=1;j<4;j++)
+            txt+="<option value='"+anyo+"-"+j+"' >"+anyo+"-"+j+"</option>";
+    } 
+    
+    $('#_form_ingreso').html(txt);
+    $('#_form_egreso').html(txt);
+    
+}
+
+else{
+    
+    var txt="<option value=''>Seleccione</option>";
+    
+    for(i=5;i<20;i++){
+        if(i<10)
+            anyo="200"+i
+        else
+            anyo="20"+i
+        for(j=1;j<3;j++)
+            txt+="<option value='"+anyo+"-"+j+"' >"+anyo+"-"+j+"</option>";
+    } 
+    
+    $('#_form_ingreso').html(txt);
+    $('#_form_egreso').html(txt);
+    
+}
+
+});
+
+</script>
+
+                
+{% endblock %}
+

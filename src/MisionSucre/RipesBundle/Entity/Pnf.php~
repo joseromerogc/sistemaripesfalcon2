@@ -1,0 +1,52 @@
+<?php
+
+namespace MisionSucre\RipesBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * Pnf
+ *
+ * @ORM\Table(name="pnf")
+ * @ORM\Entity(repositoryClass="MisionSucre\RipesBundle\Entity\PnfRepository")
+ */
+class Pnf
+{   
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="id", type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="AUTO")
+     */
+    private $id;
+    
+     /**
+     * @ORM\ManyToOne(targetEntity="Universidad", inversedBy="pnfs")
+     * @ORM\JoinColumn(name="universidad_id", referencedColumnName="id")
+     */
+    protected $universidad;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="nombre", type="string", length=70, unique=true)
+     */
+    
+    private $nombre;
+    
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="modalidad", type="string", length=20)
+     */
+    
+    private $modalidad;
+    
+    /**
+     * @ORM\OneToMany(targetEntity="Ambiente", mappedBy="pnf")
+     */
+    protected $ambientes;
+    
+    
+    }

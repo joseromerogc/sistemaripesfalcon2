@@ -1,0 +1,289 @@
+<?php
+
+namespace MisionSucre\RipesBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * Ambiente
+ *
+ * @ORM\Table(name="triunfador")
+ * @ORM\Entity(repositoryClass="MisionSucre\RipesBundle\Entity\TriunfadorRepository")
+ */
+class Triunfador
+{   
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="id", type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="AUTO")
+     */
+    private $id;
+    
+     /**
+     * @ORM\ManyToOne(targetEntity="Ambiente", inversedBy="ambientes")
+     * @ORM\JoinColumn(name="ambiente_id", referencedColumnName="id")
+     */
+    protected $ambiente;
+    
+    
+    /**
+     * @ORM\OneToOne(targetEntity="User")
+     * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
+     **/
+    
+    private $user;
+        
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="condicion", type="string", length=40, nullable=true)
+     */
+    
+    private $condicion;
+    
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="becamision", type="string", length=2)
+     */
+    
+    private $becamision;
+    
+    
+     /**
+     * @var string
+     *
+     * @ORM\Column(type="string", length=2)
+     */
+    
+    private $sistema;
+     /**
+     * @var string
+     *
+     * @ORM\Column(type="string", length=10,nullable=true)
+     */
+    
+    private $periodoingreso;
+    
+   
+    
+    
+    /**
+     * Get id
+     *
+     * @return integer 
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * Set condicion
+     *
+     * @param string $condicion
+     * @return Triunfador
+     */
+    public function setCondicion($condicion)
+    {
+        $this->condicion = $condicion;
+
+        return $this;
+    }
+
+    /**
+     * Get condicion
+     *
+     * @return string 
+     */
+    public function getCondicion()
+    {
+        return $this->condicion;
+    }
+
+    /**
+     * Set ambiente
+     *
+     * @param \MisionSucre\RipesBundle\Entity\Ambiente $ambiente
+     * @return Triunfador
+     */
+    public function setAmbiente(\MisionSucre\RipesBundle\Entity\Ambiente $ambiente = null)
+    {
+        $this->ambiente = $ambiente;
+
+        return $this;
+    }
+
+    /**
+     * Get ambiente
+     *
+     * @return \MisionSucre\RipesBundle\Entity\Ambiente 
+     */
+    public function getAmbiente()
+    {
+        return $this->ambiente;
+    }
+
+    /**
+     * Set user
+     *
+     * @param \MisionSucre\RipesBundle\Entity\User $user
+     * @return Triunfador
+     */
+    public function setUser(\MisionSucre\RipesBundle\Entity\User $user = null)
+    {
+        $this->user = $user;
+
+        return $this;
+    }
+
+    /**
+     * Get user
+     *
+     * @return \MisionSucre\RipesBundle\Entity\User 
+     */
+    public function getUser()
+    {
+        return $this->user;
+    }
+
+    /**
+     * Set becamision
+     *
+     * @param string $becamision
+     * @return Triunfador
+     */
+    public function setBecamision($becamision)
+    {
+        $this->becamision = $becamision;
+
+        return $this;
+    }
+
+    /**
+     * Get becamision
+     *
+     * @return string 
+     */
+    public function getBecamision()
+    {
+        return $this->becamision;
+    }  
+
+    /**
+     * Set fechainiciomision
+     *
+     * @param \DateTime $fechainiciomision
+     * @return Triunfador
+     */
+    public function setFechainiciomision($fechainiciomision)
+    {
+        $this->fechainiciomision = $fechainiciomision;
+
+        return $this;
+    }
+
+    /**
+     * Get fechainiciomision
+     *
+     * @return \DateTime 
+     */
+    public function getFechainiciomision()
+    {
+        return $this->fechainiciomision;
+    }
+
+    /**
+     * Set fechainiciopnf
+     *
+     * @param \DateTime $fechainiciopnf
+     * @return Triunfador
+     */
+    public function setFechainiciopnf($fechainiciopnf)
+    {
+        $this->fechainiciopnf = $fechainiciopnf;
+
+        return $this;
+    }
+
+    /**
+     * Get fechainiciopnf
+     *
+     * @return \DateTime 
+     */
+    public function getFechainiciopnf()
+    {
+        return $this->fechainiciopnf;
+    }
+
+    /**
+     * Set migracion
+     *
+     * @param \MisionSucre\RipesBundle\Entity\MigracionAldea $migracion
+     * @return Triunfador
+     */
+    public function setMigracion(\MisionSucre\RipesBundle\Entity\MigracionAldea $migracion = null)
+    {
+        $this->migracion = $migracion;
+
+        return $this;
+    }
+
+    /**
+     * Get migracion
+     *
+     * @return \MisionSucre\RipesBundle\Entity\MigracionAldea 
+     */
+    public function getMigracion()
+    {
+        return $this->migracion;
+    }
+
+    /**
+     * Set sistema
+     *
+     * @param string $sistema
+     * @return Triunfador
+     */
+    public function setSistema($sistema)
+    {
+        $this->sistema = $sistema;
+
+        return $this;
+    }
+
+    /**
+     * Get sistema
+     *
+     * @return string 
+     */
+    public function getSistema()
+    {
+        return $this->sistema;
+    }
+
+    /**
+     * Set periodoingreso
+     *
+     * @param string $periodoingreso
+     * @return Triunfador
+     */
+    public function setPeriodoingreso($periodoingreso)
+    {
+        $this->periodoingreso = $periodoingreso;
+
+        return $this;
+    }
+
+    /**
+     * Get periodoingreso
+     *
+     * @return string 
+     */
+    public function getPeriodoingreso()
+    {
+        return $this->periodoingreso;
+    }
+}

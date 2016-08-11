@@ -1,0 +1,128 @@
+{% extends 'MisionSucreRipesBundle::layout.html.twig' %}
+
+{% block stylesheets %}
+{{ parent() }}
+	<link rel="stylesheet" type="text/css" href="{{asset('css/form/responsiveform.css')}}">
+	<link rel="stylesheet" media="screen and (max-width: 1200px) and (min-width: 601px)" href="{{asset('css/form/responsiveform1.css')}}" />
+	<link rel="stylesheet" media="screen and (max-width: 600px) and (min-width: 351px)" href="{{asset('css/form/responsiveform2.css')}}" />
+	<link rel="stylesheet" media="screen and (max-width: 350px)" href="{{asset('css/form/responsiveform3.css')}}" />
+        <link rel="stylesheet" type="text/css" href="{{asset('css/table/littletable.css')}}">
+{% endblock %}
+
+{% block content %}
+
+{% for f in form %}
+                {% if f.vars.block_prefixes[0]!="button" %}
+                    <div class="flash-notice">
+                        {{f.vars.errors}}
+                    </div>
+                {% endif %}
+    {% endfor %}
+
+	<div id="envelope" style='width: 75%;'>
+	
+        <header>
+            <h2>{{mensaje_heading|raw}}</h2>
+            <p>{{sub_heading |raw}}</p>
+	</header>
+	<hr>
+	
+        <table cellspacing='0' style='margin-left: 10%;' > <!-- cellspacing='0' is important, must stay -->
+            
+            <h1 class="heading_style">Datos de Docente a Registrar</h1> 
+            <tr><th>ID</th><th>Nombre de Usuario</th><th>Nombres</th><th>Apellido</th><th>Cédula</th></tr>
+            <td>{{usr.id}}</td><td>{{usr.username}}</td>
+            <td>{{ per.priNom |upper}} {{ per.segNom |upper}}</td>
+            <td>{{ per.priApe |upper}} {{ per.segApe |upper}}</td>
+            <td>{{ per.cedPer}}</td>
+        </tr><!-- Table Row -->
+        </table>    
+        
+        
+  {% if  cargahoraria %}  
+      <h1 class="heading_style">Carga Horaria</h1>  
+    <table cellspacing='0' > <!-- cellspacing='0' is important, must stay -->
+	<tr><th>ID</th><th>Aldea</th><th>Unidades Curriculares</th><th>Horas</th>
+        </tr><!-- Table Header -->  
+    
+    {% for d in cargahoraria %}          
+        <tr>
+        <td>{{d.id}}</td>
+        <td><a class="enlace" href="{{path('aldea_show',{'id':d.aldea.id})}}">{{d.aldea.nombre}}</a></td>
+        <td>{{d.unidadescurriculares}}</td>
+        <td>{{d.horas}}</td>
+        </tr><!-- Table Row -->
+    {% endfor %}              
+    
+    </table>
+   {% endif %}
+        
+        {{ form_start(form) }}
+        
+        <div>
+            {{ form_label(form.unidadescurriculares) }}
+            {{ form_widget(form.unidadescurriculares) }}
+
+            <div class="error">
+                    {{ form_errors(form.unidadescurriculares) }}
+            </div>
+        </div>
+        
+        <div>
+            {{ form_label(form.pnfs) }}
+            {{ form_widget(form.pnfs) }}
+
+            <div class="error">
+                    {{ form_errors(form.pnfs) }}
+            </div>
+        </div>
+        
+            <div>
+            {{ form_label(form.componentedocente) }}
+	<div class="styled">
+            {{ form_widget(form.componentedocente) }}
+	</div>
+            <div class="error">
+                    {{ form_errors(form.componentedocente) }}
+            </div>
+        </div>
+            
+        <div>
+            {{ form_label(form.horas) }}
+        <div class="styled">
+            {{ form_widget(form.horas) }}
+	</div>
+            <div class="error">
+                    {{ form_errors(form.horas) }}
+            </div>
+        </div>    
+            
+        <div>
+            {{ form_label(form.periodoingreso) }}
+       
+            {{ form_widget(form.periodoingreso) }}
+	
+            <div class="error">
+                    {{ form_errors(form.periodoingreso) }}
+            </div>
+        </div>    
+         
+            
+        <div>
+            {{ form_label(form.exclusividad) }}
+            <div class="styled">
+            {{ form_widget(form.exclusividad) }}
+            </div>
+            <div class="error">
+                    {{ form_errors(form.exclusividad) }}
+            </div>
+        </div>    
+            
+        <div>
+		{{ form_widget(form.save) }}
+	</div>
+		{{ form_end(form) }}		
+</div>
+                
+{% endblock %}
+

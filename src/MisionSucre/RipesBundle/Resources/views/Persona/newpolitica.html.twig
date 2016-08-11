@@ -1,0 +1,139 @@
+{% extends 'MisionSucreRipesBundle::layout.html.twig' %}
+
+{% block stylesheets %}
+{{ parent() }}
+	<link rel="stylesheet" type="text/css" href="{{asset('css/form/responsiveform.css')}}">
+	<link rel="stylesheet" media="screen and (max-width: 1200px) and (min-width: 601px)" href="{{asset('css/form/responsiveform1.css')}}" />
+	<link rel="stylesheet" media="screen and (max-width: 600px) and (min-width: 351px)" href="{{asset('css/form/responsiveform2.css')}}" />
+	<link rel="stylesheet" media="screen and (max-width: 350px)" href="{{asset('css/form/responsiveform3.css')}}" />
+	<link rel="stylesheet"  href="{{asset('css/blitzer/jquery-ui-1.10.4.custom.css')}}" />
+{% endblock %}
+
+{% block content %}
+
+	<div id="envelope">
+	<header>
+	    <h2>{{mensaje_heading}}</h2>
+	    <p>{{sub_heading}}</p>
+	</header>
+	<hr>
+	{{ form_start(form) }}
+        
+        <div>   
+                {{ form_label(form.afiliacion) }}
+                <div class="styled">
+		{{ form_widget(form.afiliacion) }}
+                </div>
+                <div class="error">
+                    {{ form_errors(form.afiliacion) }}
+                </div>
+	</div>  
+        
+        <div>
+		{{ form_label(form.cargo) }}
+		{{ form_widget(form.cargo) }}
+                <div class="error">
+                    {{ form_errors(form.cargo) }}
+                </div>
+	</div>
+                
+        <div>
+		{{ form_label(form.municipio) }}
+                <div class="styled">
+                    {{ form_widget(form.municipio) }}
+                </div>
+                <div class="error">
+                    {{ form_errors(form.municipio) }}
+                </div>
+	</div>
+                
+        <div>   
+                <label >
+                    Parroquia de Centro Electoral
+                </label>
+                <div class="styled">
+                    <select id="politica_parroquia" required="required" >
+                        <option value=""> Seleccione Municipio</option>
+                    </select>
+                    
+                </div>
+        </div>
+                
+        <div>   
+                <label >
+                    Centro de Votación
+                </label>
+                <div class="styled">
+                    <select id="politica_ubchs" required="required" >
+                        <option value=""> Seleccione</option>
+                    </select>
+                    
+                </div>
+        </div>
+                
+	<div>   
+                {{ form_label(form.mesa) }}
+		{{ form_widget(form.mesa) }}
+                
+                <div class="error">
+                    {{ form_errors(form.mesa) }}
+                </div>
+	</div>  
+                
+	
+        
+		{{ form_widget(form.save) }}
+	</div>
+		{{ form_end(form) }}
+</div>
+<script>    
+    
+$(document).ready(function(){
+
+
+if($('#politica_municipio').value!=""){
+    
+    $('#politica_parroquia').html('<option>Cargando........</option>');
+    
+    var id=$('#politica_municipio').val();
+    $.ajax({
+        url: "../parroquia/"+id+"",
+        success: function (html) {$('#politica_parroquia').html(html);}
+    });
+}
+
+ $('#politica_municipio').change( function () {
+
+    $('#politica_parroquia').html('<option>Cargando........</option>');
+    
+    var id=$('#politica_municipio').val();
+    $.ajax({
+        url: "../parroquias/"+id+"",
+        success: function (html) {$('#politica_parroquia').html(html);}
+    });
+});
+
+
+$('#politica_parroquia').change( function () {
+
+    $('#politica_ubchs').html('<option>Cargando........</option>');
+    
+    var id=$('#politica_parroquia').val();
+    $.ajax({
+        url: "../ubch/"+id+"",
+        success: function (html) {$('#politica_ubchs').html(html);}
+    });
+});
+
+$('#politica_ubchs').change( function () {    
+    document.getElementById("politica_ubch").value=$('#politica_ubchs').val();
+});
+
+});
+
+</script>
+
+{% endblock %}
+
+
+

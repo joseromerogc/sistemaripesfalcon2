@@ -1,0 +1,105 @@
+body{
+margin: 0;
+overflow-x: hidden;    	
+	}
+#cintillo img{
+width: 80%;	
+margin: 10px 25% auto 10%;
+	}
+
+#menulateral{	
+
+padding-top: 10px;
+position: fixed;
+top: 100px; 	
+	}
+
+#menulateral *{
+	margin: 0;
+	padding: 0;	
+	}
+	
+#contenido{
+	float: right;
+	padding: 10px 30px 30px 0px;
+	min-height: 500px;
+	width: 75%;
+	}
+
+.flash-notice{
+    
+background: crimson;
+text-align: center;
+font-size: 1.5em;
+font-weight: bold;
+color: #ffffff;
+}
+
+#cuerpo{
+display: block;	
+	}
+
+.footer-wrapper {
+clear: both;	
+background: #333333; /*Color de fondo del pie de página*/
+padding-top: 20px; /*Con esta línea y la siguiente ajustamos la altura, para que quede bien, los dos valores deben ser iguales*/
+padding-bottom: 20px;
+margin-top: 5%; 
+text-align: center;
+font: normal normal 12px Arial; /*Tamaño y tipografía*/
+color: #ffffff; /*Color del texto*/
+letter-spacing: 2px; /*Espaciado entre caracteres, si no queréis borrar la línea*/
+text-transform: uppercase; /*Para que esté en mayúsculas, si no queréis borrad la línea*/
+}
+
+#mensaje{
+width: 40%
+padding: 0px 0 10% 0px;
+margin: 	0px;
+	}
+
+#mensaje h1{
+color: blue;
+text-shadow: 1px 1px black;
+text-align: center;	
+	}
+
+/*
+MOSTRAR TITULOS Y SUBTITULOS
+*/
+
+.heading_style{
+text-align: center;
+color: #5F3C3C;
+font-size: 1.5em;
+font-variant: small-caps;
+	}
+
+.sub_heading_style{
+text-align: left;
+font-style: italic;
+color: #4D4D4D;
+font-size: 1.1em;
+font-variant: small-caps;
+	}
+/*
+MOSTRAR MENSAJE DE ERROR
+*/
+
+.error ul,.error{
+margin: 0 0 10px 0;
+padding: 0;
+}
+
+.error ul li,.error{
+font-variant: small-caps;
+color: maroon;
+margin: 0;
+padding: 0;
+list-style-type: none;
+font-size: .9em; 
+}
+
+.center{
+    text-align: center;
+}

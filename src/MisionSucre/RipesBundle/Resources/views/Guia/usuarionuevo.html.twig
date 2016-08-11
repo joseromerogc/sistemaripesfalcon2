@@ -1,0 +1,47 @@
+{% extends 'baseguia.html.twig' %}
+
+ {% block body %} 
+     
+     <h1 class="titulo">Nuevos usuarios</h1>
+ <img src="{{asset('img/guia/Usuarios/registrarusuario1.png')}}" width="200" align="left"/>    
+     
+     <ol class="lista-imagen">
+         <li>Ingresar al menú lateral <strong>Usuario->Registrar Usuario</strong> o al menú principal Usuario->Nuevo Usuario</li>
+
+         <li> Se les solicitará el <strong>correo electrónico</strong> el cual funcionará como nombre de usuario y una contraseña para acceder al sistema.</li>
+
+       <li>La contraseña debe ser mayor o igual a <strong>8 caracteres</strong> alfanumericos o simbolos.</li>
+
+       <li>En el cuarto campo debes ingresar el tipo de usuario: <strong>Triunfador, Docente Colaborador o Personal Operativo</strong></li>
+         
+     </ol>
+ 
+    
+     <div class="central" style="margin-top: 120px"> 
+     <img  src="{{asset('img/guia/Usuarios/registrarusuario2.png')}}" width="700">
+     </div>
+     
+     <ol start="5">
+         <li>El sistema te direccionará para la carga de <strong>datos personales</strong> del usuario que acabas de registrar.</li>
+
+         <li>Debes tener en cuenta el <strong>ID</strong> que genera cuando creas el Usuario, ya que con este valor podemos acceder más facilmente a ciertas opciones.</li>
+
+     </ol>
+     
+     <h3>Carga de Datos Personales:</h3>
+     
+     <p class="parrafo">Para poder continuar en el sistema es necesario que los datos personales para ello es necesario que completes estos datos. Si te falta estos datos el sistema te lo solicitará al iniciar sesión.</p>
+
+     <ol>
+<li>Cédula. (Obligatorio)</li>
+<li>Nombres y Apellidos(Obligatorio)</li>
+<li>Edad</li>
+<li>Sexo (Obligatorio)</li>
+<li>Estado Civil</li>
+<li>Celular y Teléfono Fijo en el formato: 0xx4-XXXXXXX y 02XX-XXXXXXX</li>
+<li>Fecha de Nacimiento</li>
+     </ol>
+<h3>Video Resumen:</h3>  
+<iframe width="700" height="500" src="https://www.youtube.com/embed/0nW-kkhjbC8" frameborder="0" allowfullscreen></iframe>
+ {% endblock body %} 
+ 

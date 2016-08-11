@@ -1,0 +1,126 @@
+{% extends 'MisionSucreRipesBundle::layout.html.twig' %}
+{% block stylesheets %}
+{{ parent() }}
+	<link rel="stylesheet" type="text/css" href="{{asset('css/demo_table.css')}}">
+	<link rel="stylesheet" type="text/css" href="{{asset('css/demo_page.css')}}">
+	<link rel="stylesheet" type="text/css" href="{{asset('css/botones.css')}}">
+	<link rel="stylesheet" type="text/css" href="{{asset('css/dataTables.tableTools.css')}}">
+	
+	
+{% endblock %}
+
+{% block content %}
+
+<h1 class="heading_style"> Lista de Ambientes Actuales</h1>
+<div id="dt_example">
+<div id="container" style="width: 100%">
+<table cellpadding="0" cellspacing="0" border="0" class="display" id="example" width="100%">
+	<thead>
+		<tr><th>ID</th><th>Aldea</th><th>P.N.F.</th><th>Turno</th><th>Condición</th>
+                    <th>Trayecto</th><th>Periodo</th><th>Nombre</th><th></th>
+                </tr><!-- Table Header -->  
+	</thead>
+	<tbody>
+{% set i = 1 %}
+{% for a in ambientes.conperiodos %}
+    
+   
+	{% if a.ambiente.pnf.modalidad == 'SEMESTRAL' %}
+			{% set class = 'gradeC' %}
+        {% elseif  a.ambiente.pnf.modalidad == 'TRIMESTRAL' %}	
+			{% set class = 'gradeB' %}
+        {% elseif  a.ambiente.pnf.modalidad == 'TI' %}	
+			{% set class = 'gradeX' %}
+	{% else %}	
+			{% set class = 'gradeA' %}		
+        {% endif %}	
+                
+       
+        <tr class="{{class}}">   
+	<td>{{a.ambiente.id}}</td><td>{{a.ambiente.aldea.nombre}}</td> <td>{{a.ambiente.pnf.nombre}}</td> <td>{{a.ambiente.turno}}</td><td>{{a.ambiente.condicion}}</td>
+        <td>{{a.trayecto}}</td><td>{{a.periodo}}</td><td>{{a.ambiente.nombre}}</td>
+            <td><a class="enlace" href="{{path('ambiente_show',{'idamb':a.ambiente.id})}}">Mostrar</a></td>
+        </tr><!-- Table Row -->
+    
+    {% set i = i+1 %}
+   
+{% endfor %}    
+
+	
+        
+        </tbody>
+</table>
+</div>
+
+</div>
+
+<h1 class="heading_style"> Lista de Ambientes sin Periodo Académico Actual</h1>
+<div id="dt_example">
+<div id="container" style="width: 100%">
+<table cellpadding="0" cellspacing="0" border="0" class="display" id="example2" width="100%">
+	<thead>
+		<tr><th>ID</th><th>Aldea</th><th>P.N.F.</th><th>Turno</th><th>Condición</th><th>Nombre</th>
+                    <th></th>
+                </tr><!-- Table Header -->  
+	</thead>
+	<tbody>
+{% set i = 1 %}
+{% for a in ambientes.sinperiodos %}
+   
+	{% if a.pnf.modalidad == 'SEMESTRAL' %}
+			{% set class = 'gradeC' %}
+        {% elseif  a.pnf.modalidad == 'TRIMESTRAL' %}	
+			{% set class = 'gradeB' %}
+	{% else %}	
+			{% set class = 'gradeB' %}		
+        {% endif %}	
+        <tr class="{{class}}">   
+	<td>{{a.id}}</td><td>{{a.aldea.nombre}}</td> <td>{{a.pnf.nombre}}</td> <td>{{a.turno}}</td><td>{{a.condicion}}</td><td>{{a.nombre}}</td>
+            <td><a class="enlace" href="{{path('ambiente_show',{'idamb':a.id})}}">Mostrar</a></td>
+        </tr><!-- Table Row -->
+    
+    {% set i = i+1 %}
+   
+{% endfor %}    
+
+	
+        
+        </tbody>
+</table>
+</div>
+
+</div>
+
+<a href="{{path('ambiente_lista_new')}}" id="boton_nuevo">Nuevo Ambiente</a>
+
+<script src="{{asset('js/jquery.dataTables.js')}}" type="text/javascript" type="text/javascript"></script>
+<script src="{{asset('js/dataTables.tableTools.js')}}" type="text/javascript" type="text/javascript"></script>
+
+{% endblock %}
+
+{% block javascripts %}
+{{parent()}}
+
+$(document).ready(function() {
+$('#example,#example2').dataTable( {
+        "oLanguage": {
+            "sLengthMenu": "Mostrar _MENU_ Ambientes por Página",
+            "sZeroRecords": "No se encontraron Resultados",
+            "sSearch": "Buscar: ",
+            "sInfo": "Mostrando _START_ a _END_  de un Total de _TOTAL_ Ambientes",
+            "sInfoEmpty": "No hay Resultados",
+            "sInfoFiltered": "(Filtrado de un _MAX_ total de Ambientes)",
+            "oPaginate": {
+                "sNext": "Página Siguiente",
+                "sPrevious": "Página Anterior"
+                }
+        },
+        dom: 'T<"clear">lfrtip'
+        ,
+        tableTools:{
+        		"sSwfPath": "{{asset('swf/copy_csv_xls_pdf.swf')}}",
+        }
+    } );
+} );
+
+{% endblock %}

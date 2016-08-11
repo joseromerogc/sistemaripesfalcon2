@@ -1,0 +1,48 @@
+<?php
+
+namespace MisionSucre\RipesBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * Sector
+ *
+ * @ORM\Table(name="coordenadas_aldea")
+ * @ORM\Entity()
+ */
+class CoordenadasAldea
+{   
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="id", type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="AUTO")
+     */
+    private $id;
+    
+     /**
+     * @ORM\ManyToOne(targetEntity="Aldea", inversedBy="coordenadas")
+     * @ORM\JoinColumn(name="aldea_id", referencedColumnName="id")
+     */
+    protected $aldea;
+    
+    
+        
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="norte", type="string", length=30)
+     */
+    
+    private $norte;
+    
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="oeste", type="string", length=30)
+     */
+    
+    private $oeste;
+    
+    }

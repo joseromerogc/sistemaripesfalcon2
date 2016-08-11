@@ -1,0 +1,49 @@
+{% extends 'MisionSucreRipesBundle::layout.html.twig' %}
+
+{% block stylesheets %}
+{{ parent() }}
+	<link rel="stylesheet" type="text/css" href="{{asset('css/table/littletable.css')}}">
+{% endblock %}
+
+
+{% block content %}
+	{{ parent() }}
+
+        
+{% for flashMessage in app.session.flashbag.get('notice') %}
+        <div class="flash-notice">
+        {{ flashMessage }}
+        </div>
+{% endfor %}
+
+    <h1 class="heading_style">Resumen de Usuarios</h1> 
+    <table cellspacing='0'  > <!-- cellspacing='0' is important, must stay -->
+        <tr > <th class="heading" colspan='7'> Cantidad de Usuarios</th></tr>
+            <tr><th>Total</th>
+                {% if is_granted('ROLE_CTRL') %}    
+                <th>Coordinadores Eje</th>
+                {% endif %}    
+                {% if is_granted('ROLE_EJE') %}    
+                <th>Coordinadores Aldea</th>
+                {% endif %}    
+                <th>Triunfadores</th><th>Docentes Colaboradores</th><th>Personal Operativo</th>
+            <th>No Vinculados</th>
+            </tr><!-- Table Header -->
+
+
+        <tr ><td class ='total'>{{total}}</td>
+            
+            {% if is_granted('ROLE_CTRL') %}    
+            <td>{{ccejes.cantidadcejes}}</td>
+            {% endif %}
+            {% if is_granted('ROLE_EJE') %}    
+            <td>{{ccaldeas.ccas}}</td>
+            {% endif %}
+            <td>{{cts.cts}}</td><td>{{cds.cds}}</td>
+            <td>{{cos.cos}}</td><td class ='falta'>{{cnv.cnv}}</td>
+            
+        </tr><!-- Table Row -->
+    </table>
+    
+{% endblock %}
+

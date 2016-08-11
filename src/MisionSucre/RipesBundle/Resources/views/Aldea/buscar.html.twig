@@ -1,0 +1,108 @@
+{% extends 'MisionSucreRipesBundle::layout.html.twig' %}
+{% block stylesheets %}
+{{ parent() }}
+	<link rel="stylesheet" type="text/css" href="{{asset('css/demo_table.css')}}">
+	<link rel="stylesheet" type="text/css" href="{{asset('css/demo_page.css')}}">
+	<link rel="stylesheet" type="text/css" href="{{asset('css/botones.css')}}">
+	<link rel="stylesheet" type="text/css" href="{{asset('css/dataTables.tableTools.css')}}">	
+        <link rel="stylesheet" type="text/css" href="{{asset('css/table/littletable.css')}}">
+{% endblock %}
+
+{% block content %}
+    
+<h1 class="heading_style">Busqueda de Aldea</h1> 
+
+<h1 class="sub_heading_style">Buscar por: </h1> 
+
+Municipio: 
+<select id="form_municipio" class="municipio" >
+                        <option value="" selected> Seleccione</option>
+                        {% for key, m in municipios %}
+                            <option value="{{ key }}" >{{m}}</option>
+                        {% endfor %}
+</select>
+Parroquia
+<select id="form_parroquia" required="required" class ="parroquia">
+                        <option value=""> Seleccione</option>
+</select>
+<br/>
+<br/>
+Nombre de Aldea: <input type="search" class="nombre" />
+
+<label >Dirección:</label>
+<textarea class ="direccion" style="vertical-align: middle;" cols="40" class ="direccion">
+</textarea>
+<br/>
+<br/>
+<input type="submit" value="Buscar" id="b_buscar" required/>
+
+<div class="error">
+</div>
+
+<div class="tabla_aldea">
+    
+</div>
+
+<script>    
+    
+$(document).ready(function(){
+
+if($('#form_municipio').value!=""){
+    
+    $('#form_parroquia').html('<option value="" >Seleccione</option>');
+    
+    var id=$('#form_municipio').val();
+    $.ajax({
+        url: "parroquia/"+id+"",
+        success: function (html) {$('#form_parroquia').html(html);}
+    });
+}
+
+ $('#form_municipio').change( function () {
+
+    $('#form_parroquia').html('<option value="">Cargando........</option>');
+    
+    var id=$('#form_municipio').val();
+    $.ajax({
+        url: "parroquia/"+id+"",
+        success: function (html) {$('#form_parroquia').html(html);}
+    });
+});
+
+
+
+$('#b_buscar').click( function () {
+
+if($('.municipio').val()=="" && $('.nombre').val()=="" && $('.direccion').val()==""){
+    $('.error').html("Parámetros de Busqueda Vacios.");
+    $('.tabla_aldea').html("");
+}
+
+else{
+
+$('.error').html("");
+
+$('.tabla_aldea').html('<img src="{{asset('img/ajax-loader.gif')}}" width="16" height="16" alt="cargando" />');
+
+var municipio=$('.municipio').val();
+var parroquia=$('.parroquia').val();
+var nombre=$('.nombre').val();
+var direccion=$('.direccion').val();
+
+var query='{"query":{"municipio":"'+municipio+'","parroquia":"'+parroquia+'","nombre":"'+nombre+'","direccion":"'+direccion+'"}}';
+
+$.ajax({
+        url: "busqueda/"+query+"",
+        success: function (html) {$('.tabla_aldea').html(html);}
+    });
+$('html, body').animate({scrollTop:220});
+}
+
+});
+
+});
+
+</script>
+
+
+{% endblock %}

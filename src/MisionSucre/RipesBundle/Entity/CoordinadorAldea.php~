@@ -1,0 +1,36 @@
+<?php
+
+namespace MisionSucre\RipesBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * @ORM\Table(name="coordinador_aldea")
+ * @ORM\Entity(repositoryClass="MisionSucre\RipesBundle\Entity\CoordinadoAldeaRepository")
+ */
+class CoordinadorAldea
+{
+    /**
+     * @ORM\Column(type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="AUTO")
+     */
+    private $id;
+    
+    /**
+     * @ORM\OneToOne(targetEntity="User")
+     * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
+     **/
+    private $user;
+    
+    /**
+     * @ORM\ManyToOne(targetEntity="Aldea", inversedBy="coordinadoresaldeas")
+     * @ORM\JoinColumn(name="aldea_id", referencedColumnName="id")
+     */
+    protected $aldea;
+    
+     /**
+     * @ORM\OneToMany(targetEntity="CoordinadorTurno", mappedBy="coordinadores")
+     */
+    protected $turnos;
+}

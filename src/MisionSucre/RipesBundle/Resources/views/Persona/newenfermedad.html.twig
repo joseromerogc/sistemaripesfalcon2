@@ -1,0 +1,68 @@
+{% extends 'MisionSucreRipesBundle::layout.html.twig' %}
+
+{% block stylesheets %}
+{{ parent() }}
+	<link rel="stylesheet" type="text/css" href="{{asset('css/form/responsiveform.css')}}">
+	<link rel="stylesheet" media="screen and (max-width: 1200px) and (min-width: 601px)" href="{{asset('css/form/responsiveform1.css')}}" />
+	<link rel="stylesheet" media="screen and (max-width: 600px) and (min-width: 351px)" href="{{asset('css/form/responsiveform2.css')}}" />
+	<link rel="stylesheet" media="screen and (max-width: 350px)" href="{{asset('css/form/responsiveform3.css')}}" />
+{% endblock %}
+
+{% block content %}
+
+	<div id="envelope">
+	<header>
+	    <h2>{{mensaje_heading}}</h2>
+	    <p>{{sub_heading}}</p>
+	</header>
+	<hr>
+	{{ form_start(form) }}
+        {{ form_errors(form) }}
+	<div>
+		{{ form_label(form.enfermedades) }}
+                <div class="styled">
+                    {{ form_widget(form.enfermedades) }}
+                </div>
+                <div class="error">
+                    {{ form_errors(form.enfermedades) }}
+                </div>
+	</div>
+               <div> 
+                   <label> Nombre de Enfermedades</label>
+                <div class="styled">
+                    <select id="nombre" required="required">
+                        <option selected="selected" value="">Seleccione una</option>
+                    </select>
+                </div>
+                </div>
+	<div>
+		{{ form_widget(form.save) }}
+	</div>
+		{{ form_end(form) }}		
+</div>
+<script>    
+    
+$(document).ready(function(){
+
+$('#form_enfermedades').change( function () {
+
+    $('#nombre').html('<option>Cargando........</option>');
+    
+    var nombre=$('#form_enfermedades').val();
+    $.ajax({
+        url: "../../enfermedades/"+nombre+"",
+        success: function (html) {$('#nombre').html(html);}
+    });
+});
+
+$('#nombre').change( function () {
+    
+    
+    document.getElementById("form_enf").value=$('#nombre').val();
+});
+
+});
+
+</script>		
+{% endblock %}
+

@@ -1,0 +1,9 @@
+services:
+#    mision_sucre_ripes.example:
+#        class: MisionSucre\RipesBundle\Example
+#        arguments: [@service_id, "plain_value", %parameter%]
+    my.handler.session_idle:
+            class: MisionSucre\RipesBundle\Handler\SessionIdleHandler
+            arguments: ["@session", "@security.context", "@router", %session_max_idle_time%]
+            tags:
+                - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }

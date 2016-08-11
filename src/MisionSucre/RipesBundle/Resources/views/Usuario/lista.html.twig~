@@ -1,0 +1,88 @@
+{% extends 'MisionSucreRipesBundle::layout.html.twig' %}
+{% block stylesheets %}
+{{ parent() }}
+	<link rel="stylesheet" type="text/css" href="{{asset('css/demo_table.css')}}">
+	<link rel="stylesheet" type="text/css" href="{{asset('css/demo_page.css')}}">
+	<link rel="stylesheet" type="text/css" href="{{asset('css/botones.css')}}">
+	<link rel="stylesheet" type="text/css" href="{{asset('css/dataTables.tableTools.css')}}">
+	
+	
+{% endblock %}
+
+{% block content %}
+
+<div id="dt_example">
+<div id="container">
+<table cellpadding="0" cellspacing="0" border="0" class="display" id="example">
+	<thead>
+		<tr>
+			<th>#</th><th>Nombre de Usuario</th><th>Tipo de Usuario</th><th></th><th></th><th></th>
+		</tr>
+	</thead>
+	<tbody>
+	
+{% set i = 1 %}
+
+{% for user in usuarios %}
+
+	{% if user.idrole == 1 %}
+			{% set class = 'gradeA' %}
+	{% elseif  user.idrole == 2 %}	
+			{% set class = 'gradeC' %}
+	{% elseif  user.idrole == 5 %}	
+			{% set class = 'gradeX' %}
+	{% else %}	
+			{% set class = 'gradeU' %}		
+{% endif %}	
+	
+		<tr class="{{class}}">
+<td>{{i}}</td><td>{{user.username | lower}}</td><td>{{user.name}}</td><td><a class="enlace" href="show/{{user.id}}">Mostrar</a></td>
+    <td><a class="enlace" href="update/{{user.id}}">Actualizar</a></td><td><a class="enlace" onclick="return confirm('******Confirmar Borrar******')" href="delete/{{user.id}}">Borrar</a></td>
+    
+{% set i = i+1 %}
+{% endfor %}    
+    
+		</tr>
+		
+	<tfoot>
+		<tr>
+			<th>#</th><th>Nombre de Usuario</th><th>Tipo de Usuario</th><th></th><th></th><th></th>
+		</tr>
+	</tfoot>
+</table>
+</div>
+</div>
+
+<a href="new" id="boton_nuevo">Nuevo Usuario</a>
+
+<script src="{{asset('js/jquery.dataTables.js')}}" type="text/javascript" type="text/javascript"></script>
+<script src="{{asset('js/dataTables.tableTools.js')}}" type="text/javascript" type="text/javascript"></script>
+
+{% endblock %}
+
+{% block javascripts %}
+{{parent()}}
+
+
+$(document).ready(function() {
+$('#example').dataTable( {
+        "oLanguage": {
+            "sLengthMenu": "Mostrar _MENU_ Usuarios por Página",
+            "sZeroRecords": "No se encontraron Resultados",
+            "sInfo": "Mostrando _START_ a _END_  de un Total de _TOTAL_ Usuarios",
+            "sInfoEmpty": "Mostrando 0 de 0 de 0 Usuarios",
+            "sInfoFiltered": "(Filtrado de un _MAX_ total de Usuarios)"
+        },
+        dom: 'T<"clear">lfrtip'
+        ,
+        tableTools:{
+        		"sSwfPath": "{{asset('swf/copy_csv_xls_pdf.swf')}}",
+        		"aButtons": {
+	        		"sExtends":  "excel"
+	        		"sButtonText": "Excel"
+        		}
+        }
+    } );
+} );
+
+{% endblock %}
