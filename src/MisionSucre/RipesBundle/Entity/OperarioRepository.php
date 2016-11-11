@@ -74,4 +74,19 @@ class OperarioRepository extends EntityRepository
             ->setParameter('eje', $eje)      
             ->getResult();
     }
+    
+     public function cantidadCoordinador($idcoordinador)
+    {
+          return $this->getEntityManager()
+            ->createQuery(
+                "SELECT COUNT (o) as cantidadoperarios FROM MisionSucreRipesBundle:Operario o,
+                    MisionSucreRipesBundle:CoordinadorTurno t JOIN t.coordinador c
+                            WHERE c.id = :idcoordinador  AND c.aldea = o.aldea AND t.turno=o.turno
+                                    
+                                     
+                    "
+            )
+            ->setParameters(array('idcoordinador'=> $idcoordinador))
+            ->getSingleResult();
+    }
 }

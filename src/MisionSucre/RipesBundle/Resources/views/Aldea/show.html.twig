@@ -33,6 +33,7 @@
                 <li><a href="#docentes">Docentes</a></li>
                 <li><a href="#operarios">Personal Operativo</a></li>
                 <li><a href="#estructuras">Estructuras</a></li>
+                <li><a href="#actividades">Actividades</a></li>
                 {% endif%}
     </ul>
 <div id="info">    
@@ -134,16 +135,16 @@
   <div id="accordionambientes">
     <h3>TI</h3>
       <div>  
-          {% if  ambientesti %} 
+          {% if  ambientesti.conperiodos %} 
             <table cellspacing='0' style='margin-top: 0px; margin-bottom: 0px;margin-left: 0px;'> <!-- cellspacing='0' is important, must stay -->
-                <tr><th>ID</th><th>P.N.F.</th><th>Turno</th><th>Anexo</th><th>Condición</th>
+                <tr><th>ID</th><th>P.N.F.</th><th>Turno</th><th>Anexo</th><th>Nombre del Ambiente</th><th>Condición</th>
                     <th>Trayecto</th><th>Periodo</th>
                 </tr><!-- Table Header -->  
             <tr>
                 
-                {% for a in ambientesti %}
+                {% for a in ambientesti.conperiodos%}
                    
-                <td>{{a.ambiente.id}}</td><td>{{a.ambiente.pnf.nombre}}</td> <td>{{a.ambiente.turno}}</td><td>{{a.ambiente.anexo.nombre}}</td>
+                <td>{{a.ambiente.id}}</td><td>{{a.ambiente.pnf.nombre}}</td> <td>{{a.ambiente.turno}}</td><td>{{a.ambiente.anexo.nombre}}</td><td>{{a.ambiente.nombre}}</td>
                 <td>{{a.ambiente.condicion}}</td><td>{{a.trayecto}}</td><td>{{a.periodo}}</td>
                 {% if is_granted('ROLE_COORD')%}        
                     <td><a class="enlace" href="{{path('ambiente_show',{'idamb': a.ambiente.id})}}">Mostrar</a></td>
@@ -151,7 +152,28 @@
                 {% endif %}
                 
             </tr><!-- Table Row -->
-            {% endfor %}
+                {% endfor %}
+            </table>    
+            {% endif %}    
+            <h3>Sin Periodo Académico Activo<h3>
+          {% if  ambientesti.sinperiodos %} 
+            <table cellspacing='0' style='margin-top: 0px; margin-bottom: 0px;margin-left: 0px;'> <!-- cellspacing='0' is important, must stay -->
+                <tr><th>ID</th><th>P.N.F.</th><th>Turno</th><th>Anexo</th><th>Nombre del Ambiente</th><th>Condición</th>
+                    <th>Trayecto</th><th>Periodo</th>
+                </tr><!-- Table Header -->  
+            <tr>
+                
+                {% for a in ambientesti.sinperiodos%}
+                   
+                <td>{{a.id}}</td><td>{{a.pnf.nombre}}</td> <td>{{a.turno}}</td><td>{{a.anexo.nombre}}</td><td>{{a.nombre}}</td>
+                <td>{{a.condicion}}</td>
+                {% if is_granted('ROLE_COORD')%}        
+                    <td><a class="enlace" href="{{path('ambiente_show',{'idamb': a.id})}}">Mostrar</a></td>
+                    <td><a class="enlace" href="{{path('ambiente_update',{'idamb': a.id})}}">Actualizar</a></td>
+                {% endif %}
+                
+            </tr><!-- Table Row -->
+                {% endfor %}
             </table>    
             {% endif %}    
       </div>
@@ -159,7 +181,7 @@
       <div>  
           {% if  ambientescta.conperiodos %} 
             <table cellspacing='0' style='margin-top: 0px; margin-bottom: 0px;margin-left: 0px;'> <!-- cellspacing='0' is important, must stay -->
-                <tr><th>ID</th><th>P.N.F.</th><th>Turno</th><th>Anexo</th><th>Condición</th>
+                <tr><th>ID</th><th>P.N.F.</th><th>Turno</th><th>Anexo</th><th>Nombre del Ambiente</th><th>Condición</th>
                     <th>Trayecto</th><th>Periodo</th>
                 </tr><!-- Table Header -->  
             <tr>
@@ -167,7 +189,7 @@
                 {% for a in ambientescta.conperiodos %}	
 
                     
-                <td>{{a.ambiente.id}}</td><td>{{a.ambiente.pnf.nombre}}</td> <td>{{a.ambiente.turno}}</td><td>{{a.ambiente.anexo.nombre}}</td>
+                <td>{{a.ambiente.id}}</td><td>{{a.ambiente.pnf.nombre}}</td> <td>{{a.ambiente.turno}}</td><td>{{a.ambiente.anexo.nombre}}</td><td>{{a.ambiente.nombre}}</td>
                 <td>{{a.ambiente.condicion}}</td><td>{{a.trayecto}}</td><td>{{a.periodo}}</td>
                 {% if is_granted('ROLE_COORD')%}        
                     <td><a class="enlace" href="{{path('ambiente_show',{'idamb': a.ambiente.id})}}">Mostrar</a></td>
@@ -182,14 +204,14 @@
             <h3>Sin Periodo Académico Activo<h3>
              {% if  ambientescta.sinperiodos %} 
             <table cellspacing='0' style='margin-top: 0px; margin-bottom: 0px;margin-left: 0px;'> <!-- cellspacing='0' is important, must stay -->
-                <tr><th>ID</th><th>P.N.F.</th><th>Turno</th><th>Anexo</th><th>Condición</th>
+                <tr><th>ID</th><th>P.N.F.</th><th>Turno</th><th>Anexo</th><th>Nombre del Ambiente</th><th>Condición</th>
                 </tr><!-- Table Header -->  
             <tr>
                 
                 {% for a in ambientescta.sinperiodos %}
                 
                     
-                <td>{{a.id}}</td><td>{{a.pnf.nombre}}</td> <td>{{a.turno}}</td><td>{{a.anexo.nombre}}</td>
+                <td>{{a.id}}</td><td>{{a.pnf.nombre}}</td> <td>{{a.turno}}</td><td>{{a.anexo.nombre}}</td><td>{{a.nombre}}</td>
                 <td>{{a.condicion}}</td>
                 {% if is_granted('ROLE_COORD')%}        
                     <td><a class="enlace" href="{{path('ambiente_show',{'idamb': a.id})}}">Mostrar</a></td>
@@ -205,14 +227,14 @@
       <div>  
           {% if  ambientesubv.conperiodos %} 
             <table cellspacing='0' style='margin-top: 0px; margin-bottom: 0px;margin-left: 0px;'> <!-- cellspacing='0' is important, must stay -->
-                <tr><th>ID</th><th>P.N.F.</th><th>Turno</th><th>Anexo</th><th>Promoción</th><th>Condición</th>
+                <tr><th>ID</th><th>P.N.F.</th><th>Turno</th><th>Anexo</th><th>Nombre del Ambiente</th><th>Promoción</th><th>Condición</th>
                     <th>Trayecto</th><th>Tramo</th>
                 </tr><!-- Table Header -->  
             <tr>
                 
                 {% for a in ambientesubv.conperiodos %}
                 	 
-                <td>{{a.ambiente.id}}</td><td>{{a.ambiente.pnf.nombre}}</td> <td>{{a.ambiente.turno}}</td><td>{{a.ambiente.anexo.nombre}}</td>
+                <td>{{a.ambiente.id}}</td><td>{{a.ambiente.pnf.nombre}}</td> <td>{{a.ambiente.turno}}</td><td>{{a.ambiente.anexo.nombre}}</td><td>{{a.ambiente.nombre}}</td>
                 <td>{{a.ambiente.condicion}}</td><td>{{a.trayecto}}</td><td>{{a.periodo}}</td>
                 {% if is_granted('ROLE_COORD')%}        
                     <td><a class="enlace" href="{{path('ambiente_show',{'idamb': a.ambiente.id})}}">Mostrar</a></td>
@@ -225,13 +247,13 @@
             <h3>Sin Periodo Académico Activo<h3>
              {% if  ambientesubv.sinperiodos %} 
             <table cellspacing='0' style='margin-top: 0px; margin-bottom: 0px;margin-left: 0px;'> <!-- cellspacing='0' is important, must stay -->
-                <tr><th>ID</th><th>P.N.F.</th><th>Turno</th><th>Anexo</th><th>Condición</th>
+                <tr><th>ID</th><th>P.N.F.</th><th>Turno</th><th>Anexo</th><th>Nombre del Ambiente</th><th>Condición</th>
                 </tr><!-- Table Header -->  
             <tr>
                 
                 {% for a in ambientesubv.sinperiodos %}
                  
-                <td>{{a.id}}</td><td>{{a.pnf.nombre}}</td> <td>{{a.turno}}</td><td>{{a.anexo.nombre}}</td>
+                <td>{{a.id}}</td><td>{{a.pnf.nombre}}</td> <td>{{a.turno}}</td><td>{{a.anexo.nombre}}</td><td>{{a.nombre}}</td>
                 <td>{{a.condicion}}</td>
                 {% if is_granted('ROLE_COORD')%}        
                     <td><a class="enlace" href="{{path('ambiente_show',{'idamb': a.id})}}">Mostrar</a></td>
@@ -370,6 +392,8 @@
                         <th>Exclusividad</th><th>Horas</th>
                         {% if is_granted('ROLE_COORD')%}  
                         <th></th>
+                        <th></th>
+                        <th></th>
                         {% endif %}
 		</tr>
                 <thead>
@@ -455,9 +479,89 @@
     </div>
     {% endif %}
 </div>
+
+<div id="actividades">    
+    <h1 class="heading_style">Actividades</h1> 
+    
+    <form name="form" method="post" action="">
+        
+        <div style="float:left; margin-right: 30px; margin-bottom: 30px;">
+	<div class="styled">
+            <h3>Fecha desde</h3> 
+            <label for="mes" ><h3>Mes:</h3></label>
+            <select id="imes" name="imes"><option value="" selected="selected">Seleccione una</option>
+                <option value="0">Enero</option>
+                <option value="1">Febrero</option>
+                <option value="2">Marzo</option>
+                <option value="3">Abril</option>
+                <option value="4">Mayo</option>
+                <option value="5">Junio</option>
+                <option value="6">Julio</option>
+                <option value="7">Agosto</option>
+                <option value="8">Septiembre</option>
+                <option value="9">Octubre</option>
+                <option value="10">Noviembre</option>
+                <option value="11">Diciembre</option>
+            </select>
+
+        </div>
+            
+	<div class="styled">
+            <label for="anyo" ><h3>Año:</h3></label>
+            <select id="ianyo" name="ianyo">
+                <option value="2016" select>2016</option>
+                <option value="2016">2016</option>
+                <option value="2017">2017</option>
+                <option value="2017">2018</option>
+                <option value="2017">2019</option>
+                <option value="2017">2020</option>
+            </select>
+	</div>
+        </div>
+        
+        <div style="float:left">
+	<div class="styled">
+            <h3>Fecha desde</h3> 
+            <label for="fmes" ><h3>Mes:</h3></label>
+            <select id="fmes" name="fmes"><option value="" selected="selected">Seleccione una</option>
+                 <option value="0">Enero</option>
+                <option value="1">Febrero</option>
+                <option value="2">Marzo</option>
+                <option value="3">Abril</option>
+                <option value="4">Mayo</option>
+                <option value="5">Junio</option>
+                <option value="6">Julio</option>
+                <option value="7">Agosto</option>
+                <option value="8">Septiembre</option>
+                <option value="9">Octubre</option>
+                <option value="10">Noviembre</option>
+                <option value="11">Diciembre</option>
+            </select>
+
+        </div>  
+	<div class="styled">
+            <label for="fanyo" ><h3>Año:</h3></label>
+            <select id="fanyo" name="fanyo">
+                <option value="2016" select>2016</option>
+                <option value="2017">2017</option>
+                <option value="2017">2018</option>
+                <option value="2017">2019</option>
+                <option value="2017">2020</option>
+            </select>
+	</div>
+        </div>
+    </form>
+     <!-- cellspacing='0' is important, must stay -->
+     <div id="tablaactividades" style="clear: both">   
+     </div>
+    
+    
+      
+</div>
  {% endif %}
 </div>
-<script src="https://maps.googleapis.com/maps/api/js?v=3.exp"></script>
+<script src="https://maps.googleapis.com/maps/api/js?v=3.exp">
+</script>
   
 {% endblock %}
 
@@ -502,7 +606,43 @@ $(function() {
         }
         google.maps.event.addDomListener(window, 'load', initialize);
     
-    {% endif %}            
+    {% endif %}    
+    
+ $('#imes,#ianyo,#fmes,#fanyo').change( function () {
+
+$('#tablaactividades').html('<img src="{{asset('img/ajax-loader.gif')}}" width="16" height="16" alt="cargando" />');
+    
+   var imes=$('#imes').val();
+ var ianyo=$('#ianyo').val();
+ var fmes=$('#fmes').val();
+ var fanyo=$('#fanyo').val();
+    $.ajax({
+        method: "POST",
+        url: "../../estructuraactividad/aldea/buscarfecha",
+         data: {im: imes, ia: ianyo,fm: fmes, fa: fanyo,aldea:"{{aldea.id}}"},
+        success: function (html) {$('#tablaactividades').html(html);}
+    });
+   
+});
+
+var CurrentDate=new Date();
+$('#imes').val(CurrentDate.getMonth());
+$('#fmes').val((CurrentDate.getMonth()+3)%12);
+if(CurrentDate.getMonth()>=9)
+    var anyofinal=CurrentDate.getFullYear()+1;
+$('#ianyo').val(CurrentDate.getFullYear());
+$('#fanyo').val(anyofinal);
+ var imes=$('#imes').val();
+ var ianyo=$('#ianyo').val();
+ var fmes=$('#fmes').val();
+ var fanyo=$('#fanyo').val();
+    $.ajax({
+        method: "POST",
+        url: "../../estructuraactividad/aldea/buscarfecha",
+         data: {im: imes, ia: ianyo,fm: fmes, fa: fanyo,aldea:"{{aldea.id}}"},
+        success: function (html) {$('#tablaactividades').html(html);}
+    });
+
 {% endblock %}
 
 

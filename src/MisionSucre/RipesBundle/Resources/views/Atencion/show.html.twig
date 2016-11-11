@@ -1,0 +1,97 @@
+{% extends 'MisionSucreRipesBundle::layout.html.twig' %}
+
+{% block stylesheets %}
+{{ parent() }}
+	<link rel="stylesheet" type="text/css" href="{{asset('css/table/littletable.css')}}">
+	<link rel="stylesheet" type="text/css" href="{{asset('css/blitzer/jquery-ui-1.10.4.custom.css')}}">
+	
+{% endblock %}
+
+{% block js %}
+        {{ parent() }}
+	<script src="{{asset('js/jquery-ui-1.10.4.custom.js')}}"></script>
+        <script>
+            
+            $(function() {
+                $( "#tabs" ).tabs();
+            });            
+            
+        </script>
+{% endblock %}    
+
+{% block content %}
+	{{ parent() }}
+
+{% for flashMessage in app.session.flashbag.get('notice') %}
+        <div class="flash-notice">
+        {{ flashMessage }}
+        </div>
+{% endfor %}
+
+<div id="tabs">
+    <ul>
+		<li><a href="#info">Información General</a></li>
+		<li><a href="#miembros">Atenciones</a></li>
+		
+                
+    </ul>
+<div id="info">    
+    <h1 class="heading_style">Datos de Persona</h1> 
+    <table cellspacing='0' style='margin-top: 0px; margin-bottom: 0px;margin-left: 0px;'> <!-- cellspacing='0' is important, must stay -->
+                <tr><th>ID Usuario</th><th>Cédula</th><th>Nombre y Apellido</th><th>Aldea</th><th>Perfil</th>
+                    <th></th>
+                </tr><!-- Table Header -->  
+            <tr>
+                <td>{{datapersonal.idusr}}</td>
+                <td>{{datapersonal.cedula}}</td></a><td><a href="{{path('usuario_show',{'id':datapersonal.idusr})}}">{{datapersonal.nombre}}</a></td>
+                <td><a href="{{path('aldea_show',{'id':datapersonal.aldeaid})}}">{{datapersonal.aldea}}</a></td>
+                <td>{{datapersonal.perfil}}</td>
+                
+            </tr><!-- Table Row -->
+    </table>    
+      
+</div>
+
+      
+<div id="miembros" >
+   <h1 class="heading_style">Atenciones</h1> 
+   
+   <div id="container" style="width: 100%">
+<table cellpadding="0" cellspacing="0" border="0" class="display" id="example" width="100%">
+	<thead>
+		<tr>
+                    <th>ID</th><th>Fecha</th><th>Tipo</th><th>Estatus</th>
+                    <th></th><th></th><th></th>
+                        
+		</tr>
+	</thead>
+	<tbody>
+
+
+{% set i = 1 %}
+
+{% for a in atenciones %}
+	
+        <tr >   
+            <td>{{a.id}}</td>
+            <td>{{a.fecha |date('d/m/Y')}}</td>
+            <td>{{a.tipo}}</td>
+            <td>{{a.estatus}}</td>
+            <td><a href="{{path('atencion_show',{'id':a.user.id})}}">Mostrar</a></td>
+            <td><a href="{{path('atencion_update',{'id':a.id})}}">Actualizar</a></td>
+            <td><a class="enlace" onclick="return confirm('******Confirmar Borrar******')" href="{{path('atencion_delete',{'id':a.id})}}">Borrar</a></td>
+        </tr><!-- Table Row -->
+    
+{% set i = i+1 %}
+{% endfor %}    	
+        
+        </tbody>
+</table>
+   
+</div>
+
+</div>
+</div>
+
+{% endblock %}
+

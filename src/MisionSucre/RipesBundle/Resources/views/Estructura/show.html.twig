@@ -38,11 +38,11 @@
 <div id="info">    
     <h1 class="heading_style">Información de Estructura</h1> 
     <table cellspacing='0' style='margin-top: 0px; margin-bottom: 0px;margin-left: 0px;'> <!-- cellspacing='0' is important, must stay -->
-                <tr><th>ID</th><th>Tipo</th><th>Nombre</th><th></th>
+                <tr><th>ID</th><th>Tipo</th><th>Nombre</th><th>Aldea</th><th></th>
                     <th></th>
                 </tr><!-- Table Header -->  
             <tr>
-                <td>{{estructura.id}}</td><td>{{estructura.tipo}}</td> <td>{{estructura.nombre}}</td>
+                <td>{{estructura.id}}</td><td>{{estructura.tipo}}</td> <td>{{estructura.nombre}}</td><td><a href="{{path('aldea_show',{'id':estructura.aldea.id})}}">{{estructura.aldea.nombre}}<a</td>
                 
                 {% if is_granted('ROLE_COORD') %}
                 <td><a class="enlace" href="{{path('estructura_update',{'id': estructura.id})}}">Actualizar</a></td>
@@ -117,81 +117,78 @@
     <h1 class="heading_style">Actividades</h1> 
     
     <form name="form" method="post" action="">
-	
-        <div>
+        
+        <div style="float:left; margin-right: 30px; margin-bottom: 30px;">
+	<div class="styled">
+            <h3>Fecha desde</h3> 
             <label for="mes" ><h3>Mes:</h3></label>
-	<div class="styled">
-            <select id="mes" name="mes"><option value="" selected="selected">Seleccione una</option>
-                <option value="1">Enero</option>
-                <option value="2">Febrero</option>
+            <select id="imes" name="imes"><option value="" selected="selected">Seleccione una</option>
+                <option value="0">Enero</option>
+                <option value="1">Febrero</option>
+                <option value="2">Marzo</option>
+                <option value="3">Abril</option>
+                <option value="4">Mayo</option>
+                <option value="5">Junio</option>
+                <option value="6">Julio</option>
+                <option value="7">Agosto</option>
+                <option value="8">Septiembre</option>
+                <option value="9">Octubre</option>
+                <option value="10">Noviembre</option>
+                <option value="11">Diciembre</option>
             </select>
-	</div>
-            <div class="error">
-                    
-            </div>
+
         </div>
-        <div>
-            <label for="mes" ><h3>Año:</h3></label>
+            
 	<div class="styled">
-            <select id="mes" name="mes"><option value="" selected="selected">Seleccione una</option>
+            <label for="anyo" ><h3>Año:</h3></label>
+            <select id="ianyo" name="ianyo">
+                <option value="2016" select>2016</option>
                 <option value="2016">2016</option>
                 <option value="2017">2017</option>
+                <option value="2017">2018</option>
+                <option value="2017">2019</option>
+                <option value="2017">2020</option>
             </select>
 	</div>
-            <div class="error">
-                    
-            </div>
+        </div>
+        
+        <div style="float:left">
+	<div class="styled">
+            <h3>Fecha desde</h3> 
+            <label for="fmes" ><h3>Mes:</h3></label>
+            <select id="fmes" name="fmes"><option value="" selected="selected">Seleccione una</option>
+                 <option value="0">Enero</option>
+                <option value="1">Febrero</option>
+                <option value="2">Marzo</option>
+                <option value="3">Abril</option>
+                <option value="4">Mayo</option>
+                <option value="5">Junio</option>
+                <option value="6">Julio</option>
+                <option value="7">Agosto</option>
+                <option value="8">Septiembre</option>
+                <option value="9">Octubre</option>
+                <option value="10">Noviembre</option>
+                <option value="11">Diciembre</option>
+            </select>
+
+        </div>  
+	<div class="styled">
+            <label for="fanyo" ><h3>Año:</h3></label>
+            <select id="fanyo" name="fanyo">
+                <option value="2016" select>2016</option>
+                <option value="2017">2017</option>
+                <option value="2017">2018</option>
+                <option value="2017">2019</option>
+                <option value="2017">2020</option>
+            </select>
+	</div>
         </div>
     </form>
+     <!-- cellspacing='0' is important, must stay -->
+     <div id="tablaactividades" style="clear: both">   
+     </div>
     
-    {% if actividades %}
-        
-        <h1 class="heading_style">Actividades</h1> 
-    
-   {% if  actividades %}
-    <table cellspacing='0' style='margin-top: 0px; margin-bottom: 0px;margin-left: 0px;'> <!-- cellspacing='0' is important, must stay -->
-		<tr>
-			<th >#</th>
-                        <th >Fecha</th><th>Nombre de la Actividad</th><th>Lugar</th><th>Responsable</th><th>Objetivo</th>
-                        <th>Observacion</th>
-                        <th></th>
-                        <th></th>
-		</tr>
-                
-	<tbody>
-    {% endif %}
-	
-{% set i = 1 %}
-
-{% for a in actividades %}
-
-	{% if i %2== 0 %}
-			{% set class = 'gradeA' %}
-	{% else %}	
-			{% set class = 'gradeU' %}		
-        {% endif %}	
-        	
-		<tr class="{{class}}">
-    <td>{{i}}</td>  
-    <td>{{a.fecha |date('d/m/Y')}}</td>
-    <td>{{a.nombre}}</td>
-    <td>{{a.lugar}}</td>
-    <td>({{ a.cedPer}})
-    {{ a.priNom |upper}} 
-    {{ a.priApe |upper}}({{a.tipo}})<a class="enlace" href="{{path('usuario_show',{'id': a.idusr})}}">Ver</a></td>   
-    <td>{{a.objetivo}}</td>    
-    <td>{{a.observacion}}</td>    
-   
-    {% if is_granted('ROLE_COORD') %}
-        <td> <a class="enlace" href="{{path('estructura_actividad_update',{'id': a.id})}}">Actualizar</a></td>
-        <td><a class="enlace" onclick="return confirm('******Confirmar Borrar******')" href="{{path('estructura_actividad_delete',{'id': a.id})}}">Borrar</a></td>
-    {% endif %} 
-{% set i = i+1 %}
-{% endfor %}    
-		</tr>
-      </tbody>
-</table>
-    {% endif%}   
+     
     
     {% if is_granted('ROLE_COORD') %}
     <a style='margin-left: 12px;' class="enlace" href="{{path('estructura_actividad_new',{'idstr':estructura.id})}}"> 
@@ -201,5 +198,45 @@
 </div>
   
 </div>
+    <script>       
+$(document).ready(function(){
+
+ $('#imes,#ianyo,#fmes,#fanyo').change( function () {
+
+    $('#tablaactividades').html('<img src="{{asset('img/ajax-loader.gif')}}" width="16" height="16" alt="cargando" />');
+    
+   var imes=$('#imes').val();
+ var ianyo=$('#ianyo').val();
+ var fmes=$('#fmes').val();
+ var fanyo=$('#fanyo').val();
+    $.ajax({
+        method: "POST",
+        url: "../../estructuraactividad/buscarfecha",
+         data: {im: imes, ia: ianyo,fm: fmes, fa: fanyo,estructura:"{{estructura.id}}"},
+        success: function (html) {$('#tablaactividades').html(html);}
+    });
+   
+});
+
+var CurrentDate=new Date();
+$('#imes').val(CurrentDate.getMonth());
+$('#fmes').val((CurrentDate.getMonth()+3)%12);
+if(CurrentDate.getMonth()>=9)
+    var anyofinal=CurrentDate.getFullYear()+1;
+$('#ianyo').val(CurrentDate.getFullYear());
+$('#fanyo').val(anyofinal);
+ var imes=$('#imes').val();
+ var ianyo=$('#ianyo').val();
+ var fmes=$('#fmes').val();
+ var fanyo=$('#fanyo').val();
+    $.ajax({
+        method: "POST",
+        url: "../../estructuraactividad/buscarfecha",
+         data: {im: imes, ia: ianyo,fm: fmes, fa: fanyo,estructura:"{{estructura.id}}"},
+        success: function (html) {$('#tablaactividades').html(html);}
+    });
+});
+
+</script>
 {% endblock %}
 

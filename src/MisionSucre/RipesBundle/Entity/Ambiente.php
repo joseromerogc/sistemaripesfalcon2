@@ -53,7 +53,12 @@ class Ambiente
      * @ORM\OneToMany(targetEntity="PeriodoAcademicoAmbiente", mappedBy="ambiente")
      */
     protected $periodosacademicos;
-        
+    
+    /**
+     * @ORM\OneToMany(targetEntity="TIFinalizado", mappedBy="ambiente")
+     */
+    protected $tifinalizados;
+    
     /**
      * @var string
      *

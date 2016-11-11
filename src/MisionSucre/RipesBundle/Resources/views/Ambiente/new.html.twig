@@ -104,7 +104,7 @@
             <label>Periodo Ingreso a la Misión Sucre</label>
             
             <div class="styled">
-            <select id="_form_ingreso" class="ingreso" >
+            <select id="_form_ingreso" class="ingreso" required="required">
                         <option value="" selected> Seleccione</option>
             </select>
             </div>   
@@ -221,6 +221,9 @@ $('#form_condicion').change( function () {
         $( "#egreso" ).hide( "slow" );
 });
 
+if($('#form_condicion').val()=='Culminado' || $('#form_condicion').val()=='Abandonado'|| $('#form_condicion').val()=='Egresado'){
+        $( "#egreso" ).show( "slow" );
+        }
 $('#form_pnf').change( function () {    
     document.getElementById("form_idpnf").value=$('#form_pnf').val();
 });
@@ -230,7 +233,7 @@ $('#_form_ingreso').change( function () {
 });
 
 $('#_form_egreso').change( function () {    
-    document.getElementById("form_engreso").value=$('#_form_ingreso').val();
+    document.getElementById("form_tegreso").value=$('#_form_egreso').val();
 });
 
 {% if pnf is defined%}   

@@ -16,7 +16,7 @@ class ParticipacionPoliticaType extends AbstractType
         
         $builder->add('cargo', 'text',array('label' => 'Cargo'));
         $builder->add('afiliacion', 'choice', array(
-        'choices' => array('PSUV'=>'PSUV','PSUV'=>'PSUV','GPP'=>'GPP','Otro'=>'Otro'),'placeholder' => 'Seleccione',
+        'choices' => array('PSUV'=>'PSUV','PSUV'=>'PSUV','GPP'=>'GPP','Otro'=>'Otro','No Definido'=>'No Definido'),'placeholder' => 'Seleccione',
             'label' => 'Afiliación Politica'));
         $builder->add('ubch', 'hidden',array('mapped' => false));
         $builder->add('mesa', 'choice', array(

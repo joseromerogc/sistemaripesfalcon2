@@ -89,6 +89,7 @@ class DocenteRepository extends EntityRepository
             ->getSingleResult();
     }
     
+    
     //para la lista de docente
     public function findAllOrderedByEje($eje)
     {

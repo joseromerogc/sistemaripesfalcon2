@@ -12,7 +12,7 @@ security:
         user_db:
             entity: { class: MisionSucre\RipesBundle\Entity\User, property: username }
     role_hierarchy:
-        ROLE_ADMIN:       [ ROLE_COORD, ROLE_TRF, ROLE_DOC, ROLE_CTRL, ROLE_EJE,ROLE_OP ]
+        ROLE_ADMIN:       [ ROLE_COORD, ROLE_TRF, ROLE_DOC, ROLE_CTRL, ROLE_EJE,ROLE_OP, ROLE_REC ]
         ROLE_CTRL: [ROLE_EJE]
         ROLE_EJE: [ ROLE_COORD]
         ROLE_COORD: [ ROLE_TRF,ROLE_DOC, ROLE_OP]
@@ -75,6 +75,7 @@ security:
     access_control:
         # require ROLE_ADMIN for /admin*
         - { path: ^/admin, roles: ROLE_ADMIN }
+        - { path: ^/atencion, roles: ROLE_REC }
         - { path: ^/aldea, roles: IS_AUTHENTICATED_FULLY }
         - { path: ^/coord, roles: ROLE_COORD }
         - { path: ^/usuario, roles: IS_AUTHENTICATED_FULLY }

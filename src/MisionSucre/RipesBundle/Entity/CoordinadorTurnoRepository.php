@@ -68,10 +68,12 @@ class CoordinadorTurnoRepository extends EntityRepository
     {
           return $this->getEntityManager()
             ->createQuery(
-                " SELECT pa FROM MisionSucreRipesBundle:PeriodoAcademico p, MisionSucreRipesBundle:PeriodoAcademicoAmbiente pa JOIN pa.ambiente a,
+                " SELECT pa as ambiente, (select count(tr.id)  FROM MisionSucreRipesBundle:Triunfador tr WHERE tr.ambiente=a.id) AS cantidadtriunfadores 
+                    FROM MisionSucreRipesBundle:PeriodoAcademico p,  MisionSucreRipesBundle:PeriodoAcademicoAmbiente pa 
+                    JOIN pa.ambiente a,
                     MisionSucreRipesBundle:CoordinadorTurno t JOIN t.coordinador c
                             WHERE c.id = :idcoordinador AND c.aldea = a.aldea AND t.turno=a.turno
-                            AND p.actual='SI AND pa.periodoacademico=p.id'
+                            AND p.actual='SI' AND pa.periodoacademico=p.id
                     "
             )
             ->setParameters(array('idcoordinador'=> $idcoordinador))
@@ -81,7 +83,8 @@ class CoordinadorTurnoRepository extends EntityRepository
     {
           return $this->getEntityManager()
             ->createQuery(
-                "SELECT am FROM MisionSucreRipesBundle:Ambiente am JOIN am.pnf pn,
+                "SELECT am as ambiente, (select count(tr.id)  FROM MisionSucreRipesBundle:Triunfador tr WHERE tr.ambiente=am.id) AS cantidadtriunfadores 
+                    FROM MisionSucreRipesBundle:Ambiente am JOIN am.pnf pn,
                     MisionSucreRipesBundle:CoordinadorTurno t JOIN t.coordinador c
                             WHERE c.id = :idcoordinador AND c.aldea = am.aldea AND t.turno=am.turno
                             AND (am.condicion ='Nuevo' OR am.condicion ='Activo')

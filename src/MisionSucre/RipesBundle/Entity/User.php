@@ -265,6 +265,18 @@ class User implements UserInterface, \Serializable
      */
     protected $docentes;
     /**
+     * @ORM\OneToMany(targetEntity="Atencion", mappedBy="user")
+     */
+    protected $atenciones;
+    /**
+     * @ORM\OneToMany(targetEntity="RegistroUsuario", mappedBy="registrador")
+     */
+    protected $registradores;
+    /**
+     * @ORM\OneToMany(targetEntity="RegistroUsuario", mappedBy="registrado")
+     */
+    protected $registrados;
+    /**
      * @ORM\OneToMany(targetEntity="MiembroEstructura", mappedBy="user")
      */
     protected $miembros;
@@ -359,5 +371,137 @@ class User implements UserInterface, \Serializable
     public function getMiembros()
     {
         return $this->miembros;
+    }
+
+    /**
+     * Add atenciones
+     *
+     * @param \MisionSucre\RipesBundle\Entity\Atencion $atenciones
+     * @return User
+     */
+    public function addAtencione(\MisionSucre\RipesBundle\Entity\Atencion $atenciones)
+    {
+        $this->atenciones[] = $atenciones;
+
+        return $this;
+    }
+
+    /**
+     * Remove atenciones
+     *
+     * @param \MisionSucre\RipesBundle\Entity\Atencion $atenciones
+     */
+    public function removeAtencione(\MisionSucre\RipesBundle\Entity\Atencion $atenciones)
+    {
+        $this->atenciones->removeElement($atenciones);
+    }
+
+    /**
+     * Get atenciones
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getAtenciones()
+    {
+        return $this->atenciones;
+    }
+
+    /**
+     * Add registradores
+     *
+     * @param \MisionSucre\RipesBundle\Entity\RegistroUsuario $registradores
+     * @return User
+     */
+    public function addRegistradore(\MisionSucre\RipesBundle\Entity\RegistroUsuario $registradores)
+    {
+        $this->registradores[] = $registradores;
+
+        return $this;
+    }
+
+    /**
+     * Remove registradores
+     *
+     * @param \MisionSucre\RipesBundle\Entity\RegistroUsuario $registradores
+     */
+    public function removeRegistradore(\MisionSucre\RipesBundle\Entity\RegistroUsuario $registradores)
+    {
+        $this->registradores->removeElement($registradores);
+    }
+
+    /**
+     * Get registradores
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getRegistradores()
+    {
+        return $this->registradores;
+    }
+
+    /**
+     * Add registrados
+     *
+     * @param \MisionSucre\RipesBundle\Entity\RegistroUsuario $registrados
+     * @return User
+     */
+    public function addRegistrado(\MisionSucre\RipesBundle\Entity\RegistroUsuario $registrados)
+    {
+        $this->registrados[] = $registrados;
+
+        return $this;
+    }
+
+    /**
+     * Remove registrados
+     *
+     * @param \MisionSucre\RipesBundle\Entity\RegistroUsuario $registrados
+     */
+    public function removeRegistrado(\MisionSucre\RipesBundle\Entity\RegistroUsuario $registrados)
+    {
+        $this->registrados->removeElement($registrados);
+    }
+
+    /**
+     * Get registrados
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getRegistrados()
+    {
+        return $this->registrados;
+    }
+
+    /**
+     * Add responsablesactividades
+     *
+     * @param \MisionSucre\RipesBundle\Entity\EstructuraActividad $responsablesactividades
+     * @return User
+     */
+    public function addResponsablesactividade(\MisionSucre\RipesBundle\Entity\EstructuraActividad $responsablesactividades)
+    {
+        $this->responsablesactividades[] = $responsablesactividades;
+
+        return $this;
+    }
+
+    /**
+     * Remove responsablesactividades
+     *
+     * @param \MisionSucre\RipesBundle\Entity\EstructuraActividad $responsablesactividades
+     */
+    public function removeResponsablesactividade(\MisionSucre\RipesBundle\Entity\EstructuraActividad $responsablesactividades)
+    {
+        $this->responsablesactividades->removeElement($responsablesactividades);
+    }
+
+    /**
+     * Get responsablesactividades
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getResponsablesactividades()
+    {
+        return $this->responsablesactividades;
     }
 }

@@ -484,7 +484,10 @@ public function choicesaldeaAction($prq) {
                 $comunitaria =  $em->getRepository('MisionSucreRipesBundle:ParticipacionComunitaria')->findOneByUser($id);       
                 $politica =  $em->getRepository('MisionSucreRipesBundle:ParticipacionPolitica')->findOneByUser($id); 
                 
-                $turnos = $em->getRepository('MisionSucreRipesBundle:CoordinadorTurno')->findAllByCoordinador($coordinador->getId()); 
+                if($coordinador)
+                    $turnos = $em->getRepository('MisionSucreRipesBundle:CoordinadorTurno')->findAllByCoordinador($coordinador->getId()); 
+                else
+                    $turnos=null;
                 
                 return $this->render(
 			'MisionSucreRipesBundle:Coordinador:show.html.twig',
@@ -558,27 +561,16 @@ public function choicesaldeaAction($prq) {
                 $deporte =  $em->getRepository('MisionSucreRipesBundle:Deporte')->findOneByUser($id);       
                 $trabajo =  $em->getRepository('MisionSucreRipesBundle:Trabajo')->findOneByUser($id);       
                 $comunitaria =  $em->getRepository('MisionSucreRipesBundle:ParticipacionComunitaria')->findOneByUser($id);       
-                $politica =  $em->getRepository('MisionSucreRipesBundle:ParticipacionPolitica')->findOneByUser($id);    
+                $politica =  $em->getRepository('MisionSucreRipesBundle:ParticipacionPolitica')->findOneByUser($id); 
+                $turnos = $em->getRepository('MisionSucreRipesBundle:CoordinadorTurno')->findAllByCoordinador($coordinador->getId()); 
                 
-                switch($coordinador->getTurno()){
-                        
-                        case 'a':
-                                $turnocoordinador = "Nocturno / Fines de Semana";
-                        break;
-                        case 'n':
-                                $turnocoordinador = "Nocturno";
-                        break;
-                        case 'f':
-                                $turnocoordinador = "Fines de Semana";
-                        break;
-                    }
                 
                 return $this->render(
 			'MisionSucreRipesBundle:Coordinador:show.html.twig',
 			array('usuario' => $usuario,'persona' => $per,'sociales'=> $sociales,'enfermedades'=>$enfermedades,
                         'discapacidad'=>$discapacidad,'arte'=>$arte,'deporte'=>$deporte,'trabajo'=>$trabajo,
                             'comunitaria'=>$comunitaria,'politica'=>$politica,'academico'=>$academico,'coordinador'=>$coordinador,
-                            'turno'=>$turnocoordinador,'ubicacionvivienda'=>$ubicacionvivienda
+                            'turnos'=>$turnos,'ubicacionvivienda'=>$ubicacionvivienda
                         )
 		);
         }
@@ -629,53 +621,5 @@ protected function ChoicesCoordinadoresAldea() {
     }
     return $choices;
     }        
-
-public function choicesturnoAction($aldea) {
-        
-    $turnos = array();
-    
-    $em = $this->getDoctrine()->getManager();
-    
-    $nocturno = $em->createQuery(
-"SELECT c
-FROM MisionSucreRipesBundle:CoordinadorAldea c
-WHERE c.aldea = :aldea AND c.turno = :turno"
-)->setParameters(array('aldea'=>$aldea,'turno'=>'n'))->getOneOrNullResult();
-    
-    $finessemana = $em->createQuery(
-"SELECT c
-FROM MisionSucreRipesBundle:CoordinadorAldea c
-WHERE c.aldea = :aldea AND c.turno = :turno"
-)->setParameters(array('aldea'=>$aldea,'turno'=>'f'))->getOneOrNullResult();
-    
-    $ambos = $em->createQuery(
-"SELECT c
-FROM MisionSucreRipesBundle:CoordinadorAldea c
-WHERE c.aldea = :aldea AND c.turno = :turno"
-)->setParameters(array('aldea'=>$aldea,'turno'=>'a'))->getOneOrNullResult();
-    
-    if($nocturno && !$finessemana){
-    
-        $turnos=array(array('valor'=>'f','turno'=>'Fines de Semana'));
-    }else{
-    
-    if($finessemana && !$nocturno){
-    
-        $turnos=array(array('valor'=>'n','turno'=>'Nocturno'));
-    }
-    else{
-        if($ambos || ($finessemana && $nocturno)){
-            $turnos=array(array('valor'=>'','turno'=>'Todos los Turnos Ocupados. Seleccione Otra Aldea'));
-        }
-        else{
-        $turnos=array(array('valor'=>'n','turno'=>'Nocturno'),
-            array('valor'=>'f','turno'=>'Fines de Semana'),
-            array('valor'=>'a','turno'=>'Ambos')
-            );
-        }
-    }
-    }
-    return $this->render('MisionSucreRipesBundle:Aldea:turnos.html.twig',array('turnos'=>$turnos));
-    }
     
 }

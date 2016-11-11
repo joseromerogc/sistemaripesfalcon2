@@ -180,6 +180,9 @@ class PersonaController extends Controller
         $priapellido="";
         $segapellido="";
         $sexo="";
+        $dia = "";
+        $mes = "";
+        $anyo ="";
         
         if($datacne){
         $nombres_apellidos = $datacne->getNombreApellido();

@@ -231,7 +231,10 @@ class TriunfadorController extends Controller
         'choices' => array('Si'=>'Si','No'=>'No'),'label' => 'Becado de la Misión','placeholder'=>'Seleccione'
             ))  ->add('sistema', 'choice', array(
         'choices' => array('Si'=>'Si','No'=>'No'),'label' => 'Vinculado al Sistema','placeholder'=>'Seleccione'
-            ))          
+            ))   
+                        ->add('periodoingreso', 'text', array(
+        'label' => 'Periodo de Ingreso al ambiente'
+            ))  
              ->add('save', 'submit',array('label' => 'Actualizar Triunfador'))->getForm();
             
                 $form->handleRequest($request);
@@ -397,9 +400,27 @@ class TriunfadorController extends Controller
                 return $this->redirect($this->generateUrl('usuario_show',array('id'=>$usr->getId())));
                 }
                 
+                if($ambiente->getCondicion()=="Egresado" || $ambiente->getCondicion()=="Culminado" || $ambiente->getCondicion()=="Culminado")
+                {
+                    $infoambiente = $this->getDoctrine()
+                   ->getRepository('MisionSucreRipesBundle:PeriodoAcademicoAmbiente')
+                   ->UltimoPeriodo($idamb);
+
+                    if(!$infoambiente){
+
+               $request->getSession()->getFlashBag()->add(
+               'notice',
+               'Ningún Periodo Académico Registrado'
+                   );
+                   return $this->redirect($this->generateUrl('periodo_academico_new_ambiente',array('idamb'=>$ambiente->getId())));
+                   }
+
+                }
+               else
+                {
                  $infoambiente = $this->getDoctrine()
                 ->getRepository('MisionSucreRipesBundle:PeriodoAcademicoAmbiente')
-                ->findAllByAmbiente($idamb);
+                ->Ambiente($idamb);
                  
                  if(!$infoambiente){
                 
@@ -409,7 +430,7 @@ class TriunfadorController extends Controller
                 );
                 return $this->redirect($this->generateUrl('periodo_academico_new_ambiente',array('idamb'=>$ambiente->getId())));
                 }
-                
+                }
                 $idaldea = $ambiente->getAldea()->getId();
                 
                 $aldea = $this->getDoctrine()
@@ -484,20 +505,10 @@ class TriunfadorController extends Controller
                 ->findOneByUser($per->getUser()->getId());
                                    if($trf)
                                    {
-                                       $valorturno = $trf->getAmbiente()->getTurno();
-                                       
-                                       switch ($valorturno){
-                                           
-                                           case 'f': 
-                                               $turno="Fines de Semana";
-                                               break;
-                                           case 'n':
-                                               $turno="Nocturno";
-                                               break;
-                                       }
+                                $ambiente=$trf->getAmbiente();
                                                
-                                      $vinculados[] = array ('ced'=>$c,'pnf'=>$trf->getAmbiente()->getPnf()->getNombre()."/".$turno
-                                          ,'aldea'=>$trf->getAmbiente()->getAldea()->getNombre());
+                                      $vinculados[] = array ('ced'=>$c,'pnf'=>$ambiente->getPnf()->getNombre()."/".$ambiente->getTurno()
+                                          ,'aldea'=>$ambiente->getAldea()->getNombre());
                                    }
                              break;        
                     }
@@ -1116,7 +1127,7 @@ class TriunfadorController extends Controller
             'notice',
             'Ningun Triunfador Registrado'
             );
-            return $this->redirect($this->generateUrl('Triunfador'));
+            return $this->redirect($this->generateUrl('triunfador'));
             }
             
 		return $this->render(
@@ -1143,7 +1154,7 @@ class TriunfadorController extends Controller
                             );            
                             return $this->redirect($this->generateUrl('aldea_coordinador_info'));
                         }
-            $triunfadores = $em->getRepository('MisionSucreRipesBundle:CoordinadorTurno')->TriunfadoresCoordinador($coordinador->getAldea()->getId());
+            $triunfadores = $em->getRepository('MisionSucreRipesBundle:CoordinadorTurno')->TriunfadoresCoordinador($coordinador->getId());
             break;
         case 8:    
         

@@ -1,0 +1,80 @@
+{% extends 'MisionSucreRipesBundle::layout.html.twig' %}
+{% block stylesheets %}
+{{ parent() }}
+	<link rel="stylesheet" type="text/css" href="{{asset('css/demo_table.css')}}">
+	<link rel="stylesheet" type="text/css" href="{{asset('css/demo_page.css')}}">
+	<link rel="stylesheet" type="text/css" href="{{asset('css/botones.css')}}">
+	<link rel="stylesheet" type="text/css" href="{{asset('css/dataTables.tableTools.css')}}">
+	
+	
+{% endblock %}
+
+{% block content %}
+
+<h1 class="heading_style"> Lista de Estructura</h1>
+<div id="dt_example">
+<div id="container" style="width: 100%">
+<table cellpadding="0" cellspacing="0" border="0" class="display" id="example" width="100%">
+	<thead>
+		<tr><th>ID</th><th>Aldea</th>
+                    <th>Nombre</th>
+                    <th>Tipo</th>
+                </tr><!-- Table Header -->  
+	</thead>
+	<tbody>
+{% set i = 1 %}
+{% for str in estructuras %}
+    
+        <tr >   
+	
+        <td>{{str.id}}</td><td>{{str.nombre}}</td><td>{{str.tipo}}</td>
+            <td><a class="enlace" href="{{path('estructura_show',{'id':str.id})}}">Mostrar</a></td>
+        </tr><!-- Table Row -->
+    
+    {% set i = i+1 %}
+   
+{% endfor %}    
+  
+        </tbody>
+</table>
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+<a href="{{path('ambiente_lista_new')}}" id="boton_nuevo">Nuevo Estructura</a>
+
+<script src="{{asset('js/jquery.dataTables.js')}}" type="text/javascript" type="text/javascript"></script>
+<script src="{{asset('js/dataTables.tableTools.js')}}" type="text/javascript" type="text/javascript"></script>
+
+{% endblock %}
+
+{% block javascripts %}
+{{parent()}}
+
+$(document).ready(function() {
+$('#example').dataTable( {
+        "oLanguage": {
+            "sLengthMenu": "Mostrar _MENU_ Estructura por Página",
+            "sZeroRecords": "No se encontraron Resultados",
+            "sSearch": "Buscar: ",
+            "sInfo": "Mostrando _START_ a _END_  de un Total de _TOTAL_ Estructuras",
+            "sInfoEmpty": "No hay Resultados",
+            "sInfoFiltered": "(Filtrado de un _MAX_ total de Estructuras)",
+            "oPaginate": {
+                "sNext": "Página Siguiente",
+                "sPrevious": "Página Anterior"
+                }
+        },
+        dom: 'T<"clear">lfrtip'
+        ,
+        tableTools:{
+        		"sSwfPath": "{{asset('swf/copy_csv_xls_pdf.swf')}}",
+        }
+    } );
+} );
+
+{% endblock %}

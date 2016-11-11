@@ -56,6 +56,25 @@
                             <li>
                                 <a href="{{path('estructura_lista')}}"><span ><img src="{{asset('img/Business-Tree-Structure-icon')}}"/> </span>Estructuras</a>
                             </li>
+                            <li>
+                                <a href="{{path('sistema_resumen')}}"><span ><img src="{{asset('img/Resume-icon-small.png')}}"/> </span>Resumen Sistema</a>
+                            </li>
+                        </ul>
+		</li>
+                <li class ={{class}} >
+			<h3><span ><img src="{{asset('img/reception.png')}}"/></span>Atención al Público </h3>
+                        <ul>
+                            <li>
+                                <a href="{{path('atencion_new')}}"><span ><img src="{{asset('img/save-icon.png')}}"/> </span>Registrar </a>
+                            </li>
+                            <li><a href="{{path('atencion_lista')}}">
+                                        <span ><img src="{{asset('img/Apps-preferences-contact-list-icon.png')}}"/>
+                                        </span>
+                                        Lista</a></li>
+                            <li><a href="{{path('atencion_buscar')}}">
+                                        <span ><img src="{{asset('img/Zoom-icon.png')}}"/>
+                                        </span>
+                                        Buscar</a></li>
                         </ul>
 		</li>
                 {% endif %}
@@ -139,6 +158,10 @@
                                         <span ><img src="{{asset('img/Resume-icon-small.png')}}"/>
                                         </span>
                                         Resumen de Aldea</a></li>
+                                <li><a href="{{path('estructura_actividad_lista')}}">
+                                        <span ><img src="{{asset('img/Resume-icon-small.png')}}"/>
+                                        </span>
+                                        Actividades de Aldea</a></li>
                                 <li><a href="{{path('eje_lista')}}">
                                         <span ><img src="{{asset('img/Link-icon.png')}}"/>
                                         </span>
@@ -380,9 +403,27 @@
                                 <li><a href="{{path('politica_ubch_resumen')}}">
                                         <span ><img src="{{asset('img/Resume-icon-small.png')}}"/>
                                         </span>
-                                        Resumen Centro Electoral</a></li> 
+                                        Resumen Centro Electoral</a></li>
+                               
 			</ul>
 		</li>
+                 <li class ={{class}}>
+			<h3><span><img src="{{asset('img/community-users-icon.png')}}"/></span>Centros Electorales</h3>
+                        <ul>
+                             <li><a href="{{path('politica_centroelectoral_new')}}">
+                                        <span ><img src="{{asset('img/save-icon.png')}}"/>
+                                        </span>
+                                        Registrar Centro Electoral</a></li> 
+                             <li><a href="{{path('politica_centroelectoral_lista_completa')}}">
+                                        <span ><img src="{{asset('img/Actions-view-list-details-icon-small.png')}}"/>
+                                        </span>
+                                        Centros Electorales</a></li>            
+                             <li><a href="{{path('politica_centroelectoral_completardata')}}">
+                                        <span ><img src="{{asset('img/update.png')}}"/>
+                                        </span>
+                                        Completar Data con CNE</a></li>
+                        </ul>
+                 </li>
               {% endif%}
               
               
@@ -393,43 +434,7 @@
                    {% set class='' %}
                 {% endif %}
              
-              
-              {% if is_granted('ROLE_COORD')%}
-                    <li class ={{class}}>
-			<h3><span><img src="{{asset('img/community-users-icon.png')}}"/></span>Consejo Comunal</h3>
-			<ul>
-                                  
-                                <li><a href="{{path('comunitaria_lista')}}"><span ><img src="{{asset('img/Actions-view-list-details-icon-small.png')}}"/>
-                                        </span>Participación Comunitaria</a></li>         
-                                <li><a href="{{path('politica_lista')}}"><span ><img src="{{asset('img/Actions-view-list-details-icon-small.png')}}"/>
-                                        </span>Participación Política</a></li> 
-                                <li><a href="{{path('comunitaria_resumen')}}">
-                                        <span ><img src="{{asset('img/Resume-icon-small.png')}}"/>
-                                        </span>
-                                        Resumen Partipación Comunitarias</a></li> 
-                                <li><a href="{{path('politica_resumen')}}">
-                                        <span ><img src="{{asset('img/Resume-icon-small.png')}}"/>
-                                        </span>
-                                        Resumen Partipación Resumen Política</a></li> 
-                                <li><a href="{{path('comunitaria_consejocomunal_lista')}}">
-                                        <span ><img src="{{asset('img/Actions-view-list-details-icon-small.png')}}"/>
-                                        </span>
-                                        Lista Consejo Comunal</a></li> 
-                                <li><a href="{{path('comunitaria_consejocomunal_resumen')}}">
-                                        <span ><img src="{{asset('img/Resume-icon-small.png')}}"/>
-                                        </span>
-                                        Resumen Consejo Comunal</a></li> 
-                                <li><a href="{{path('politica_ubch_lista')}}">
-                                        <span ><img src="{{asset('img/Actions-view-list-details-icon-small.png')}}"/>
-                                        </span>
-                                        Lista Centro Electoral</a></li> 
-                                <li><a href="{{path('politica_ubch_resumen')}}">
-                                        <span ><img src="{{asset('img/Resume-icon-small.png')}}"/>
-                                        </span>
-                                        Resumen Centro Electoral</a></li> 
-			</ul>
-		</li>
-              {% endif%}
+             
 	</ul>
 </div>
 

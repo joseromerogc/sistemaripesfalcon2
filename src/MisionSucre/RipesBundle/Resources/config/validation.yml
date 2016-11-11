@@ -69,3 +69,9 @@ MisionSucre\RipesBundle\Entity\AldeaComunal:
         - Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity: 
             fields: nombre
             message: Este Nombre de Ambiente Comunal ya Existe
+            
+MisionSucre\RipesBundle\Entity\Ubch:
+  constraints:
+        - Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity:
+            fields: codigo
+            message: Este código ya existe

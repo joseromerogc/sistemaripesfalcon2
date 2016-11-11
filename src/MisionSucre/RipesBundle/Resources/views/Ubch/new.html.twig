@@ -1,0 +1,137 @@
+{% extends 'MisionSucreRipesBundle::layout.html.twig' %}
+
+{% block stylesheets %}
+{{ parent() }}
+	<link rel="stylesheet" type="text/css" href="{{asset('css/form/responsiveform.css')}}">
+	<link rel="stylesheet" media="screen and (max-width: 1200px) and (min-width: 601px)" href="{{asset('css/form/responsiveform1.css')}}" />
+	<link rel="stylesheet" media="screen and (max-width: 600px) and (min-width: 351px)" href="{{asset('css/form/responsiveform2.css')}}" />
+	<link rel="stylesheet" media="screen and (max-width: 350px)" href="{{asset('css/form/responsiveform3.css')}}" />
+	<link rel="stylesheet"  href="{{asset('css/blitzer/jquery-ui-1.10.4.custom.css')}}" />
+{% endblock %}
+
+{% block content %}
+        
+    {% for f in form %}
+                {% if f.vars.block_prefixes[0]!="button" %}
+                    <div class="flash-notice">
+                        {{f.vars.errors}}
+                    </div>
+                {% endif %}
+    {% endfor %}
+	<div id="envelope">
+	<header>
+	    <h2>{{mensaje_heading}}</h2>
+	    <p>{{sub_heading}}</p>
+	</header>
+	<hr>
+	{{ form_start(form) }}
+        
+        
+        
+        
+        
+        <div class="error" style="margin-bottom: 15px">
+                    (*) Campos Obligatorios
+        </div>
+                
+	<div>   
+                {{ form_label(form.nombre) }}               
+                    {{ form_widget(form.nombre) }}
+               
+                <div class="error">
+                    {{ form_errors(form.nombre) }}
+                </div>
+	</div>  
+	<div>   
+                {{ form_label(form.municipio) }}
+                <div class="styled">
+                    {{ form_widget(form.municipio) }}
+                </div>
+                <div class="error">
+                    {{ form_errors(form.municipio) }}
+                </div>
+	</div>  
+                
+        <div>   
+                <label >
+                    Parroquia*
+                </label>
+                <div class="styled">
+                    <select id="form_parroquia" name="form_parroquia" required="required" >
+                        
+                        {%if prq is not null%}
+                        <option value="{{prq.id}}" selected> {{prq.parroquia}}</option>
+                        {%else %}
+                        <option value=""> Seleccione Municipio</option>
+                        {%endif%}
+                    </select>
+                    
+                </div>
+        </div>
+        
+                    <div>   
+                {{ form_label(form.codigo) }}
+		{{ form_widget(form.codigo) }}
+                
+                <div class="error">
+                    {{ form_errors(form.codigo) }}
+                </div>
+	</div>  
+                    
+	<div>   
+                {{ form_label(form.direccion) }}
+		{{ form_widget(form.direccion) }}
+                
+                <div class="error">
+                    {{ form_errors(form.direccion) }}
+                </div>
+	</div>  
+        
+		{{ form_widget(form.save) }}
+	</div>
+		{{ form_end(form) }}
+</div>
+<script>    
+    
+$(document).ready(function(){
+
+{%if prq is null%}
+                       
+if($('#form_municipio').value!=""){
+    
+    $('#form_parroquia').html('<option>Cargando........</option>');
+    
+    var id=$('#form_municipio').val();
+    $.ajax({
+        url: "../../../persona/parroquias/"+id+"",
+        success: function (html) {$('#form_parroquia').html(html);}
+    });
+}
+{%else%}
+   document.getElementById("form_parroquia_id").value=$('#form_parroquia').val(); 
+{%endif%}
+
+$('#form_municipio').change( function () {
+
+    $('#form_parroquia').html('<option>Cargando........</option>');
+    
+    
+    var id=$('#form_municipio').val();
+    $.ajax({
+        url: "../../../persona/parroquias/"+id+"",
+        success: function (html) {$('#form_parroquia').html(html);}
+    });
+});
+
+$('#form_parroquia').change( function () {    
+    document.getElementById("form_parroquia_id").value=$('#form_parroquia').val();
+});
+
+});
+
+</script>
+
+{% endblock %}
+
+
+

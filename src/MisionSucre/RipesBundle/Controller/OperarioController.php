@@ -84,21 +84,9 @@ class OperarioController extends Controller
                 return $this->redirect($this->generateUrl('usuario_show',array('id'=>$usr->getId())));
                 }
                 
-                if($caldea->getTurno()=='a'){
-                    
-                    $turnos=array('n'=>'Nocturno','f'=>'Fines de Semana');
-                }
-                elseif($caldea->getTurno()=='n'){
-                    $turnos=array('n'=>'Nocturno');
-                }
-                else{
-                    $turnos=array('f'=>'Fines de Semana');
-                }
-                
-                
 		$form = $this->createFormBuilder($operario)->
         add('turno', 'choice', array(
-        'choices' => $turnos,
+        'choices' => $this->choicesTurno($aldea->getId(),$caldea->getId()),
             'placeholder'=>"Seleccione una",'label' => 'Turno'))->
         add('cargo', 'text', array(
         'label' => 'Cargo o Función'))->
@@ -160,36 +148,41 @@ class OperarioController extends Controller
                 
                 $usr = $this->getUser();
                 
-                $caldea = $this->getDoctrine()
-                ->getRepository('MisionSucreRipesBundle:CoordinadorAldea')
-                ->findCoordinadorAldeaByUserAndId($idaldea,$usr->getId());
                 
-                if(!$aldea){
-                
-            $request->getSession()->getFlashBag()->add(
-            'notice',
-            'Aldea con ID: '.$idaldea.' no registrada'
-                );
-                return $this->redirect($this->generateUrl('usuario_show',array('id'=>$usr->getId())));
-                }
-            
-                if($usr->getTipUsr()!=5){
+                if($usr->getTipUsr()==5){
+                        
+                    $coordaldea = $this->getDoctrine()
+                        ->getRepository('MisionSucreRipesBundle:CoordinadorAldea')
+                        ->findOneByUser($usr->getId());
+                        
+                        if(!$coordaldea){
 
-                $request->getSession()->getFlashBag()->add(
-                'notice',
-                'Usuario No es de Tipo Coordinador(a) de Aldea'
-                );
-                return $this->redirect($this->generateUrl('usuario_show',array('id'=>$usr->getId())));
+                        $request->getSession()->getFlashBag()->add(
+                        'notice',
+                        'Coordinador de Aldea No registrado(a)'
+                        );
+                        return $this->redirect($this->generateUrl('eje_new',array('id'=>$usr->getId())));
+                        } 
+                        $usrs = $em->getRepository('MisionSucreRipesBundle:CoordinadorAldea')->findAllByAldea($coordaldea->getAldea());
+                        
+                        if(!$coordaldea->getAldea()->getId()==$aldea->getId())
+                        {
+                        $request->getSession()->getFlashBag()->add(
+                        'notice',
+                        'Acceso Denegado a esta Aldea'
+                        );
+                        return $this->redirect($this->generateUrl('usuario_lista'));     
+                        }
+                        if($em->getRepository('MisionSucreRipesBundle:CoordinadorTurno')->CoordinadorTurno($operario->getTurno(),$coordaldea->getId()))
+                        {
+                        $request->getSession()->getFlashBag()->add(
+                        'notice',
+                        'Acceso Denegado a esta Turno'
+                        );
+                        return $this->redirect($this->generateUrl('usuario_lista'));     
+                        }
                 }
                 
-                if(!$caldea){
-
-                $request->getSession()->getFlashBag()->add(
-                'notice',
-                'Usted no es Coordinador de Esta Aldea'
-                );
-                return $this->redirect($this->generateUrl('usuario_show',array('id'=>$usr->getId())));
-                }
         
                             $em->remove($operario);
                             $em->flush();
@@ -293,6 +286,8 @@ public function showAction(Request $request,$id){
                 
                 $operario = $em->getRepository('MisionSucreRipesBundle:Operario')->findOneByUser($id);
                 
+                $aldea=null;
+                
                 if($operario){
                 $ideje = $operario->getAldea()->getParroquia()->getEje()->getId();
                 $aldea = $operario->getAldea();
@@ -345,9 +340,26 @@ public function showAction(Request $request,$id){
                         );
                         return $this->redirect($this->generateUrl('usuario_lista'));     
                         }
+                        if($em->getRepository('MisionSucreRipesBundle:CoordinadorTurno')->CoordinadorTurno($operario->getTurno(),$coordaldea->getId()))
+                        {
+                        $request->getSession()->getFlashBag()->add(
+                        'notice',
+                        'Acceso Denegado a esta Turno'
+                        );
+                        return $this->redirect($this->generateUrl('usuario_lista'));     
+                        }
                         break;
                 }
                 }
+ else {
+     if($usr->getTipUsr()==5){    
+                        $coordaldea = $this->getDoctrine()
+                        ->getRepository('MisionSucreRipesBundle:CoordinadorAldea')
+                        ->findOneByUser($usr->getId());
+                        if($coordaldea)
+                            $aldea=$coordaldea->getAldea();
+                }
+ }
                 $usuario =  $em->getRepository('MisionSucreRipesBundle:Role')->findOneByRole($id);    
                 $sociales =  $em->getRepository('MisionSucreRipesBundle:Social')->findOneByUser($id); 
                 $enfermedades =  $usr->getEnfermedades()->getValues();
@@ -360,26 +372,13 @@ public function showAction(Request $request,$id){
                 $comunitaria =  $em->getRepository('MisionSucreRipesBundle:ParticipacionComunitaria')->findOneByUser($id);       
                 $politica =  $em->getRepository('MisionSucreRipesBundle:ParticipacionPolitica')->findOneByUser($id);    
                 
-                if($operario){ 
-                if($operario->getTurno()=='n')
                 
-                {
-                    $turno = "Nocturno";
-                }
-                else{
-                    $turno = "Fines de Semana";
-                }
-                }
-                else{
-                    $turno =null;
-                }
-                    
                 return $this->render(
 			'MisionSucreRipesBundle:Operario:show.html.twig',
 			array('usuario' => $usuario,'persona' => $per,'sociales'=> $sociales,'enfermedades'=>$enfermedades,
                         'discapacidad'=>$discapacidad,'arte'=>$arte,'deporte'=>$deporte,'trabajo'=>$trabajo,
                             'comunitaria'=>$comunitaria,'politica'=>$politica,'academico'=>$academico,'operario'=>$operario,
-                            'turno'=>$turno,'ubicacionvivienda'=>$ubicacionvivienda
+                            'ubicacionvivienda'=>$ubicacionvivienda,'aldea'=>$aldea
                         )
 		);
         }
@@ -459,9 +458,21 @@ public function infoAction(Request $request){
                         );
                         return $this->redirect($this->generateUrl('usuario_lista'));     
                         }
+                        if($em->getRepository('MisionSucreRipesBundle:CoordinadorTurno')->CoordinadorTurno($operario->getTurno(),$coordaldea->getId()))
+                        {
+                        $request->getSession()->getFlashBag()->add(
+                        'notice',
+                        'Acceso Denegado a esta Turno'
+                        );
+                        return $this->redirect($this->generateUrl('usuario_lista'));     
+                        }
+                        
                         break;
+                        
                 }
             
+                
+                
                 $usuario =  $em->getRepository('MisionSucreRipesBundle:Role')->findOneByRole($id);    
                 $sociales =  $em->getRepository('MisionSucreRipesBundle:Social')->findOneByUser($id); 
                 $enfermedades =  $usr->getEnfermedades()->getValues();
@@ -474,20 +485,14 @@ public function infoAction(Request $request){
                 $politica =  $em->getRepository('MisionSucreRipesBundle:ParticipacionPolitica')->findOneByUser($id);    
                 $ubicacionvivienda = $em->getRepository('MisionSucreRipesBundle:UbicacionVivienda')->findOneByUser($id); 
                 
-                if($operario->getTurno()=='n')
-                {
-                    $turno = "Nocturno";
-                }
-                else{
-                    $turno = "Fines de Semana";
-                }
+                
                 
                 return $this->render(
 			'MisionSucreRipesBundle:Operario:show.html.twig',
 			array('usuario' => $usuario,'persona' => $per,'sociales'=> $sociales,'enfermedades'=>$enfermedades,
                         'discapacidad'=>$discapacidad,'arte'=>$arte,'deporte'=>$deporte,'trabajo'=>$trabajo,
                             'comunitaria'=>$comunitaria,'politica'=>$politica,'academico'=>$academico,'operario'=>$operario,
-                            'turno'=>$turno,'ubicacionvivienda'=>$ubicacionvivienda
+                           'ubicacionvivienda'=>$ubicacionvivienda
                         )
 		);
         }        
@@ -533,7 +538,7 @@ public function listaAction(Request $request)
                             );            
                             return $this->redirect($this->generateUrl('aldea_coordinador_info'));
                         }
-            $operarios = $em->getRepository('MisionSucreRipesBundle:Operario')->findAllByAldea($coordinador->getAldea()->getId());
+            $operarios = $em->getRepository('MisionSucreRipesBundle:Operario')->findAllOrderedByAldeaTurno($coordinador->getId());
             break;
         case 8:    
         
@@ -705,5 +710,25 @@ public function buscarAction(Request $request)
                 
                 }
         }
+        
+    public function choicesTurno($idaldea,$idcoordinador="") {
+       
+    $em = $this->getDoctrine()->getManager();
+        
+    $choices = array();
     
+    if($idcoordinador){
+    $turnoscoordinador=$em->getRepository('MisionSucreRipesBundle:CoordinadorTurno')->findAllByCoordinador($idcoordinador);
+    }
+    else{
+        $turnoscoordinador=$em->getRepository('MisionSucreRipesBundle:CoordinadorTurno')->findAllByAldea($idaldea);
+    }
+    
+    foreach ($turnoscoordinador as $t) {
+        $choices[$t['turno']] =$t['turno'];
+        }
+     
+    return $choices;
+    
+        }
 }

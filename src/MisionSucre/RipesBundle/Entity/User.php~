@@ -265,9 +265,25 @@ class User implements UserInterface, \Serializable
      */
     protected $docentes;
     /**
+     * @ORM\OneToMany(targetEntity="Atencion", mappedBy="user")
+     */
+    protected $atenciones;
+    /**
+     * @ORM\OneToMany(targetEntity="RegistroUsuario", mappedBy="registrador")
+     */
+    protected $registradores;
+    /**
+     * @ORM\OneToMany(targetEntity="RegistroUsuario", mappedBy="registrado")
+     */
+    protected $registrados;
+    /**
      * @ORM\OneToMany(targetEntity="MiembroEstructura", mappedBy="user")
      */
     protected $miembros;
+    /**
+     * @ORM\OneToMany(targetEntity="EstructuraActividad", mappedBy="responsable")
+     */
+    protected $responsablesactividades;
 
     /**
      * Add docentes
@@ -323,4 +339,37 @@ class User implements UserInterface, \Serializable
     }
     
     
+
+    /**
+     * Add miembros
+     *
+     * @param \MisionSucre\RipesBundle\Entity\MiembroEstructura $miembros
+     * @return User
+     */
+    public function addMiembro(\MisionSucre\RipesBundle\Entity\MiembroEstructura $miembros)
+    {
+        $this->miembros[] = $miembros;
+
+        return $this;
+    }
+
+    /**
+     * Remove miembros
+     *
+     * @param \MisionSucre\RipesBundle\Entity\MiembroEstructura $miembros
+     */
+    public function removeMiembro(\MisionSucre\RipesBundle\Entity\MiembroEstructura $miembros)
+    {
+        $this->miembros->removeElement($miembros);
+    }
+
+    /**
+     * Get miembros
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getMiembros()
+    {
+        return $this->miembros;
+    }
 }

@@ -34,20 +34,13 @@
 			{% set class = 'gradeA' %}
 	{% else %}	
 			{% set class = 'gradeU' %}		
-{% endif %}	
-
-{% if op.o.turno == 'f' %}
-			{% set turno = 'Fines de Semana' %}
-	{% else %}	
-			{% set turno = 'Nocturno' %}		
-{% endif %}	
-	
+{% endif %}		
 		<tr class="{{class}}">
     <td>{{i}}</td><td>{{ op.cedPer}}</td>
     <td>{{ op.priNom |upper}} {{ op.segNom |upper}}</td>
     <td>{{ op.priApe |upper}} {{ op.segApe |upper}}</td>
             <td><a class="enlace" href="{{path('aldea_info',{'id':op.o.aldea.id})}}">{{op.o.aldea.nombre}}</a></td>
-            <td>{{turno}}</td>
+            <td>{{op.o.turno}}</td>
             <td>{{op.o.cargo}}</td>
             
             

@@ -61,14 +61,22 @@
   {% if  operario %}  
       <h1 class="heading_style">Personal Operativo</h1>  
     <table cellspacing='0' > <!-- cellspacing='0' is important, must stay -->
-	<tr><th>ID</th><th>Aldea</th><th>Turno</th>
+	<tr><th>ID</th><th>Aldea</th><th>Turno</th><th></th>
         </tr><!-- Table Header -->  
     <tr>
         <td>{{operario.id}}</td>
         <td><a class="enlace" href="{{path('aldea_show',{'id':operario.aldea.id})}}">{{operario.aldea.nombre}}</a></td>
-        <td>{{turno}}</td>
+        <td>{{operario.turno}}</td>
+        <td><a style='margin-left: 12px;' class="enlace" href="{{path('operario_delete',{'idop':operario.id})}}">Borrar</a> </td>
     </tr><!-- Table Row -->
     </table>
+   {% else %}
+       {% if aldea %}
+       <a style='margin-left: 12px;' class="enlace" href="{{path('operario_new',{'idusr':usuario.id,'idaldea':aldea.id})}}"> <span class='icon'>
+                <img src="{{asset('img/add-1-icon.png')}}"/></span> Vincular Operario</a> 
+              
+      
+       {% endif %}
    {% endif %}
 </div>
 

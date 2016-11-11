@@ -115,13 +115,13 @@ class PeriodoAcademicoController extends Controller
                             
                             $request->getSession()->getFlashBag()->add(
                             'notice',
-                            'Periodo Académico Creado con Éxito'.$actual
+                            'Periodo Académico Actualizado con Éxito'.$actual
                             );  
                          return $this->redirect($this->generateUrl('periodo_academico_lista'));
 		}
              
 		return $this->render('MisionSucreRipesBundle:PeriodoAcademico:new.html.twig', array(
-		'form' => $form->createView(),'mensaje_heading'=>'Nuevo Periodo Académico'
+		'form' => $form->createView(),'mensaje_heading'=>'Actualizar Periodo Académico'
 		));
 	}
         

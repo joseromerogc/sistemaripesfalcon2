@@ -26,4 +26,70 @@ class EstructuraActividadRepository extends EntityRepository
             ->setParameters(array('idstr'=> $idstr))      
             ->getResult();
     }
+    
+    public function buscarFecha($idstr,$imes,$ianyo,$fmes,$fanyo){
+        
+        $fechainicial=date_create("$ianyo-$imes-01");
+        $fechainicial=date_format($fechainicial,"Y-m-d");
+        $fechafinal=date_create("$fanyo-$fmes-31");
+        $fechafinal=date_format($fechafinal,"Y-m-d");
+        
+        return $this->getEntityManager()
+            ->createQuery(
+                'SELECT u.id AS idusr, u.tip_usr AS tipo, p.priNom,p.segNom, p.priApe, p.segApe, p.cedPer, a.id AS id, a.fecha, a.nombre,
+                    a.objetivo, a.objetivo, a.observacion, a.lugar
+                    FROM MisionSucreRipesBundle:EstructuraActividad a JOIN a.responsable u,
+                    MisionSucreRipesBundle:Persona p
+                    WHERE p.user= u.id AND a.estructura =:idstr
+                    AND a.fecha BETWEEN :fechainicial AND :fechafinal
+                    '
+            )
+            ->setParameters(array('fechainicial'=> $fechainicial,'fechafinal'=> $fechafinal,'idstr'=> $idstr))      
+            ->getResult();
+    }
+    public function buscarFechaAldea($idaldea,$imes,$ianyo,$fmes,$fanyo){
+        
+        $fechainicial=date_create("$ianyo-$imes-01");
+        $fechainicial=date_format($fechainicial,"Y-m-d");
+        $fechafinal=date_create("$fanyo-$fmes-31");
+        $fechafinal=date_format($fechafinal,"Y-m-d");
+        
+        return $this->getEntityManager()
+            ->createQuery(
+                'SELECT u.id AS idusr, u.tip_usr AS tipo, p.priNom,p.segNom, p.priApe, p.segApe, p.cedPer, a.id AS id, a.fecha, a.nombre,
+                    a.objetivo, a.objetivo, a.observacion, a.lugar, e.id AS idstr
+                    FROM MisionSucreRipesBundle:EstructuraActividad a JOIN a.responsable u,
+                    MisionSucreRipesBundle:Estructura e,
+                    MisionSucreRipesBundle:Persona p
+                    WHERE p.user= u.id AND a.estructura = e.id
+                    AND a.fecha BETWEEN :fechainicial AND :fechafinal
+                    AND e.aldea =:idaldea
+                    '
+            )
+            ->setParameters(array('fechainicial'=> $fechainicial,'fechafinal'=> $fechafinal,'idaldea'=> $idaldea))      
+            ->getResult();
+    }
+    public function buscarFechaLista($imes,$ianyo,$fmes,$fanyo){
+        
+        $imes+=1;
+        $fmes+=1;        
+        $fechainicial=date_create("$ianyo-$imes-01");
+        $fechainicial=date_format($fechainicial,"Y-m-d");
+        $fechafinal=date_create("$fanyo-$fmes-31");
+        $fechafinal=date_format($fechafinal,"Y-m-d");
+        
+        return $this->getEntityManager()
+            ->createQuery(
+                'SELECT u.id AS idusr, u.tip_usr AS tipo, p.priNom,p.segNom, p.priApe, p.segApe, p.cedPer, a.id AS id, a.fecha, a.nombre,
+                    a.objetivo, a.objetivo, a.observacion, a.lugar, e.id AS idstr
+                    FROM MisionSucreRipesBundle:EstructuraActividad a JOIN a.responsable u,
+                    MisionSucreRipesBundle:Estructura e,
+                    MisionSucreRipesBundle:Persona p
+                    WHERE p.user= u.id AND a.estructura = e.id
+                    AND a.fecha BETWEEN :fechainicial AND :fechafinal
+                    '
+            )
+            ->setParameters(array('fechainicial'=> $fechainicial,'fechafinal'=> $fechafinal))      
+            ->getResult();
+    }
 }

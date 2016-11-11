@@ -92,10 +92,12 @@
         {%endfor %}
     </tr><!-- Table Row -->
     </table>
-  {% else %}    
+{% endif %}
+      {% if  coordinador %} 
       <a style='margin-left: 12px;' class="enlace" href="{{path('coordinador_turno_new',{'id':coordinador.id})}}"> 
                    <span class='icon'><img src="{{asset('img/add-1-icon.png')}}"/></span> Asignar Turno</a> 
-  {% endif %}
+      {% endif %} 
+  
   
 </div>
 
@@ -134,8 +136,8 @@
     </tr><!-- Table Row -->
    </table>
    {% else %}    
-    <a style='margin-left: 12px;' class="enlace" href="{{path('persona_new',{'id':usuario.id})}}"> <span class='icon'>
-    <img src="{{asset('img/add-1-icon.png')}}"/></span> Agregar Datos Personales</a> 
+    <a style='margin-left: 12px;' class="enlace" href="{{path('ubicacion_vivienda_new',{'id':usuario.id})}}"> <span class='icon'>
+    <img src="{{asset('img/add-1-icon.png')}}"/></span> Agregar Datos Vivienda</a> 
   {% endif %}     
 </div>
   

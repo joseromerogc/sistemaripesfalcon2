@@ -131,7 +131,7 @@ class AmbienteController extends Controller
                             'notice',
                             'Ambiente Creado con Éxito'
                             );            
-                    return $this->redirect($this->generateUrl('aldea_show',array('id'=>$idaldea)));
+                    return $this->redirect($this->generateUrl('ambiente_show',array('idamb'=>$ambiente->getId())));
 		}
 		
 		return $this->render('MisionSucreRipesBundle:Ambiente:new.html.twig', array(
@@ -277,13 +277,17 @@ class AmbienteController extends Controller
 		if ($form->isValid()) {
                             
                             $em = $this->getDoctrine()->getManager();    
+                            $ingreso = $form->get('tingreso')->getData();
+                            $egreso = $form->get('tegreso')->getData();
                             
                             $idpnf = $form->get('idpnf')->getData();
                             
                             $pnf = $em->getRepository('MisionSucreRipesBundle:Pnf')->find($idpnf);
                                 
                             $ambiente->setAldea($aldea);    
-                            $ambiente->setPnf($pnf);    
+                            $ambiente->setPnf($pnf);  
+                            $ambiente->setIngreso($ingreso);
+                            $ambiente->setEgreso($egreso);
                             $em->persist($ambiente);
                             $em->flush();
                             
@@ -388,10 +392,21 @@ class AmbienteController extends Controller
                 ->getRepository('MisionSucreRipesBundle:Vocero')
                 ->findAllOrderedByAmbiente($idamb);
                 
+                
+                $modalidad=$ambiente->getPnf()->getModalidad();
+                
+                if($modalidad=="TI"){
+                    $finalizados=$this->getDoctrine()
+                ->getRepository('MisionSucreRipesBundle:TIFinalizado')
+                ->findAllOrderedByAmbiente($idamb);
+                }
+                else{
+                     $finalizados=NULL;
+                }
 		return $this->render(
 			'MisionSucreRipesBundle:Ambiente:show.html.twig',
 			array('aldea'=>$aldea,'ambiente'=>$ambiente,'triunfadores'=>$triunfadores,
-                            'vocero'=>$vocero, 'periodosacademicos' =>$periodosacademicos
+                            'vocero'=>$vocero, 'periodosacademicos' =>$periodosacademicos,'modalidad'=>$modalidad,"finalizados"=>$finalizados
                         ));
 	}
         

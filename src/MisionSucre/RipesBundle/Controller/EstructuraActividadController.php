@@ -317,4 +317,87 @@ class EstructuraActividadController extends Controller
     }
     return $choices;
     }  
+    
+    public function buscarFechaAction(Request $request)
+	{
+        
+         if($request->request->get('estructura'))
+                {   $estructura=$request->request->get('estructura');  
+                    $imes=$request->request->get('im');  
+                    $ianyo=$request->request->get('ia'); 
+                    $fmes=$request->request->get('fm');  
+                    $fanyo=$request->request->get('fa'); 
+                }
+//                    $estructura="1";
+//                    $imes="9";
+//                    $ianyo="2016";
+//                    $fmes="0";
+//                    $fanyo="2017";
+         $em = $this->getDoctrine()->getManager();
+         $actividades=$em
+                ->getRepository('MisionSucreRipesBundle:EstructuraActividad')
+                ->buscarFecha($estructura,$imes,$ianyo,$fmes,$fanyo);
+//         //$fechafinal="Sirve";
+         return $this->render(
+			'MisionSucreRipesBundle:Estructura:actividadesaldea.html.twig',
+			array('actividades'=>$actividades));
+    }
+    public function buscarFechaAldeaAction(Request $request)
+	{
+        
+         if($request->request->get('aldea'))
+                {   $aldea=$request->request->get('aldea');  
+                    $imes=$request->request->get('im');  
+                    $ianyo=$request->request->get('ia'); 
+                    $fmes=$request->request->get('fm');  
+                    $fanyo=$request->request->get('fa'); 
+                }
+                    
+//                    $aldea="1";
+//                    $imes="9";
+//                    $ianyo="2016";
+//                    $fmes="0";
+//                    $fanyo="2017";                
+                
+         $em = $this->getDoctrine()->getManager();
+         $actividades=$em
+                ->getRepository('MisionSucreRipesBundle:EstructuraActividad')
+                ->buscarFechaAldea($aldea,$imes,$ianyo,$fmes,$fanyo);
+//         //$fechafinal="Sirve";
+         return $this->render(
+			'MisionSucreRipesBundle:Estructura:actividadesestructuraaldea.html.twig',
+			array('actividades'=>$actividades));
+    }
+    public function buscarFechalistaAction(Request $request)
+	{
+        
+         if($request->request->get('im'))
+                {   
+                    $imes=intval($request->request->get('im'));  
+                    $ianyo=intval($request->request->get('ia')); 
+                    $fmes=intval($request->request->get('fm'));  
+                    $fanyo=intval($request->request->get('fa')); 
+                }
+
+//                    $imes=0;
+//                    $ianyo=2016;
+//                    $fmes=0;
+//                    $fanyo=2017;                
+                
+         $em = $this->getDoctrine()->getManager();
+         $actividades=$em
+                ->getRepository('MisionSucreRipesBundle:EstructuraActividad')
+                ->buscarFechaLista($imes,$ianyo,$fmes,$fanyo);
+//         //$fechafinal="Sirve";
+         return $this->render(
+			'MisionSucreRipesBundle:Estructura:actividadesestructuraaldea.html.twig',
+			array('actividades'=>$actividades));
+    }
+     public function listaAction(Request $request)
+	{   
+            
+		return $this->render(
+			'MisionSucreRipesBundle:EstructuraActividad:lista.html.twig'
+		);	
+	} 
 }

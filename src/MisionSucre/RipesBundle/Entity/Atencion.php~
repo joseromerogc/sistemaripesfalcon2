@@ -1,0 +1,64 @@
+<?php
+
+namespace MisionSucre\RipesBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * Academico
+ *
+ * @ORM\Table(name="atencion")
+ * @ORM\Entity
+ * @ORM\Entity(repositoryClass="MisionSucre\RipesBundle\Entity\atencionRepository")
+ */
+class Atencion
+{   
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="id", type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="AUTO")
+     */
+    private $id;
+    
+    
+    /**
+     * @ORM\ManyToOne(targetEntity="User", inversedBy="atenciones")
+     * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
+     */
+    protected $user;
+    
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="tipo", type="string", length=100)
+     */
+    
+    private $tipo;
+    
+    /**
+     * @var string
+     *
+     * @ORM\Column(type="string", length=50)
+     */
+    
+    private $estatus;
+    
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="fecha", type="date")
+     */
+    private $fecha;
+    
+    /**
+     * @var string
+     *
+     * @ORM\Column(type="string", length=100)
+     */
+    
+    private $observacion;
+   
+    
+}

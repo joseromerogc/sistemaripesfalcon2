@@ -1,0 +1,87 @@
+{% extends 'MisionSucreRipesBundle::layout.html.twig' %}
+{% block stylesheets %}
+{{ parent() }}
+	<link rel="stylesheet" type="text/css" href="{{asset('css/demo_table.css')}}">
+	<link rel="stylesheet" type="text/css" href="{{asset('css/demo_page.css')}}">
+	<link rel="stylesheet" type="text/css" href="{{asset('css/botones.css')}}">
+	<link rel="stylesheet" type="text/css" href="{{asset('css/dataTables.tableTools.css')}}">
+	
+	
+{% endblock %}
+
+{% block content %}
+
+<h1 class="heading_style">Lista de Atención</h1> 
+<div id="dt_example">
+<div id="container" style="width: 100%">
+<table cellpadding="0" cellspacing="0" border="0" class="display" id="example" width="100%">
+	<thead>
+		<tr>
+                    <th>ID</th><th>Fecha</th><th>Cedula</th><th>Nombre y Apellido</th><th>Aldea</th><th>Perfil</th><th>Tipo</th><th>Estatus</th>
+                    <th></th><th></th><th></th>
+                        
+		</tr>
+	</thead>
+	<tbody>
+
+
+{% set i = 1 %}
+
+{% for a in atenciones %}
+	
+        <tr >   
+            <td>{{a.id}}</td>
+            <td>{{a.fecha |date('d/m/Y')}}</td>
+            <td>{{a.cedula}}</td></a><td><a href="{{path('usuario_show',{'id':a.idusr})}}">{{a.nombre}}</a></td>
+            <td><a href="{{path('aldea_show',{'id':a.id})}}">{{a.aldea}}</a></td>
+            <td>{{a.perfil}}</td>
+            <td>{{a.tipo}}</td>
+            <td>{{a.estatus}}</td>
+            <td><a href="{{path('atencion_show',{'id':a.idusr})}}">Mostrar</a></td>
+            <td><a href="{{path('atencion_update',{'id':a.id})}}">Actualizar</a></td>
+            <td><a class="enlace" onclick="return confirm('******Confirmar Borrar******')" href="{{path('atencion_delete',{'id':a.id})}}">Borrar</a></td>
+        </tr><!-- Table Row -->
+    
+{% set i = i+1 %}
+{% endfor %}    
+
+	
+        
+        </tbody>
+</table>
+</div>
+</div>
+
+<a href="atencion_new" id="boton_nuevo">Nueva Atención</a>
+
+<script src="{{asset('js/jquery.dataTables.js')}}" type="text/javascript" type="text/javascript"></script>
+<script src="{{asset('js/dataTables.tableTools.js')}}" type="text/javascript" type="text/javascript"></script>
+
+{% endblock %}
+
+{% block javascripts %}
+{{parent()}}
+
+$(document).ready(function() {
+$('#example').dataTable( {
+        "oLanguage": {
+            "sLengthMenu": "Mostrar _MENU_ Usuarios por Página",
+            "sZeroRecords": "No se encontraron Resultados",
+            "sSearch": "Buscar: ",
+            "sInfo": "Mostrando _START_ a _END_  de un Total de _TOTAL_ Usuarios",
+            "sInfoEmpty": "Mostrando 0 de 0 de 0 Usuarios",
+            "sInfoFiltered": "(Filtrado de un _MAX_ total de Usuarios)",
+            "oPaginate": {
+                "sNext": "Página Siguiente",
+                "sPrevious": "Página Anterior"
+                }
+        },
+        dom: 'T<"clear">lfrtip'
+        ,
+        tableTools:{
+        		"sSwfPath": "{{asset('swf/copy_csv_xls_pdf.swf')}}",
+        }
+    } );
+} );
+
+{% endblock %}

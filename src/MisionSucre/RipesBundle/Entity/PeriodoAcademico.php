@@ -62,6 +62,10 @@ class PeriodoAcademico
      * @ORM\OneToMany(targetEntity="PeriodoAcademicoAmbiente", mappedBy="periodoacademico")
      */
     protected $periodosacademicosambiente;
+    /**
+     * @ORM\OneToMany(targetEntity="TIFinalizado", mappedBy="periodoacademico")
+     */
+    protected $periodosacademicostifinalizados;
     
     /**
      * Constructor

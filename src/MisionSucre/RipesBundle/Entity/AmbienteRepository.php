@@ -70,7 +70,8 @@ class AmbienteRepository extends EntityRepository
     {
           return $this->getEntityManager()
             ->createQuery(
-                "SELECT pa FROM MisionSucreRipesBundle:PeriodoAcademico p, MisionSucreRipesBundle:PeriodoAcademicoAmbiente pa JOIN pa.ambiente a
+                "SELECT pa as ambiente, (select count(tr.id)  FROM MisionSucreRipesBundle:Triunfador tr WHERE tr.ambiente=a.id) AS cantidadtriunfadores 
+                    FROM MisionSucreRipesBundle:PeriodoAcademico p, MisionSucreRipesBundle:PeriodoAcademicoAmbiente pa JOIN pa.ambiente a
                     WHERE p.actual=:actual AND pa.periodoacademico=p.id
                     AND (a.condicion ='Nuevo' OR a.condicion ='Activo')
                 "
@@ -121,7 +122,7 @@ class AmbienteRepository extends EntityRepository
     {
           return $this->getEntityManager()
             ->createQuery(
-                "SELECT a FROM MisionSucreRipesBundle:Ambiente a WHERE
+                "SELECT a as ambiente, (select count(tr.id)  FROM MisionSucreRipesBundle:Triunfador tr WHERE tr.ambiente=a.id) AS cantidadtriunfadores FROM MisionSucreRipesBundle:Ambiente a WHERE
                     NOT EXISTS
                    ( SELECT pa FROM MisionSucreRipesBundle:PeriodoAcademicoAmbiente pa join pa.periodoacademico p WHERE pa.ambiente=a.id AND p.actual=:actual) 
                    AND (a.condicion ='Nuevo' OR a.condicion ='Activo')
@@ -229,6 +230,21 @@ class AmbienteRepository extends EntityRepository
             )
             ->setParameters(array('idcoordinador'=> $idcoordinador,'egresado'=>'Egresado','culminado'=>'Culminado'))
             ->getResult();
+    }
+    
+    public function cantidadAmbientesCoordinador($idcoordinador)
+    {
+          return $this->getEntityManager()
+            ->createQuery(
+                "SELECT COUNT (a) as cantidadambiente FROM MisionSucreRipesBundle:Ambiente a JOIN a.pnf p,
+                    MisionSucreRipesBundle:CoordinadorTurno t JOIN t.coordinador c
+                            WHERE c.id = :idcoordinador AND a.condicion !=:egresado
+                            AND a.condicion !=:culminado AND c.aldea = a.aldea AND t.turno=a.turno
+                             AND (a.condicion ='Nuevo' OR a.condicion ='Activo'  )       
+                    "
+            )
+            ->setParameters(array('idcoordinador'=> $idcoordinador,'egresado'=>'Egresado','culminado'=>'Culminado'))
+            ->getSingleResult();
     }
     
     public function cantidadAmbientesnovinculados($aldea)

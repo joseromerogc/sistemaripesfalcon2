@@ -23,4 +23,27 @@ class PeriodoAcademicoAmbienteRepository extends EntityRepository
             )
             ->setParameters(array('actual'=>'SI','ambiente'=>$ambiente))->getOneOrNullResult();
     }
+    public function Ambiente($ambiente)
+    {
+          return $this->getEntityManager()
+            ->createQuery(
+                'SELECT pa FROM MisionSucreRipesBundle:PeriodoAcademico p, MisionSucreRipesBundle:PeriodoAcademicoAmbiente pa JOIN pa.ambiente a
+                    WHERE p.actual=:actual AND a.id =:ambiente AND
+                    pa.periodoacademico=p.id
+                '
+            )
+            ->setParameters(array('actual'=>'SI','ambiente'=>$ambiente))->getOneOrNullResult();
+    }
+    public function UltimoPeriodo($ambiente)
+    {
+          return $this->getEntityManager()
+            ->createQuery(
+                "SELECT pa FROM MisionSucreRipesBundle:PeriodoAcademico p, MisionSucreRipesBundle:PeriodoAcademicoAmbiente pa JOIN pa.ambiente a
+                    WHERE a.id =:ambiente AND
+                    pa.periodoacademico=p.id AND
+                    p.nombre LIKE CONCAT('%',a.egreso)
+                "
+            )
+            ->setParameters(array('ambiente'=>$ambiente))->getOneOrNullResult();
+    }
 }

@@ -32,6 +32,10 @@ class DataCne
      * @ORM\Column(type="string", length=3, nullable=true)
      */
     private $sexo;
+    /**
+     * @ORM\Column(type="string", length=20, nullable=true)
+     */
+    private $centroelectoral;
 
     /**
      * Set cedula
@@ -123,5 +127,28 @@ class DataCne
     public function getSexo()
     {
         return $this->sexo;
+    }
+
+    /**
+     * Set centroelectoral
+     *
+     * @param string $centroelectoral
+     * @return DataCne
+     */
+    public function setCentroelectoral($centroelectoral)
+    {
+        $this->centroelectoral = $centroelectoral;
+
+        return $this;
+    }
+
+    /**
+     * Get centroelectoral
+     *
+     * @return string 
+     */
+    public function getCentroelectoral()
+    {
+        return $this->centroelectoral;
     }
 }

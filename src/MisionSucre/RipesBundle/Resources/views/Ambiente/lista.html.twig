@@ -16,8 +16,8 @@
 <div id="container" style="width: 100%">
 <table cellpadding="0" cellspacing="0" border="0" class="display" id="example" width="100%">
 	<thead>
-		<tr><th>ID</th><th>Aldea</th><th>P.N.F.</th><th>Turno</th><th>Condición</th>
-                    <th>Trayecto</th><th>Periodo</th><th>Nombre</th><th></th>
+		<tr><th>ID</th><th>Aldea</th><th>P.N.F.</th><th>Turno</th><th>Condición</th><th>Nombre</th>
+                    <th>Trayecto</th><th>Periodo</th><th>Cantidad Triunfadores</th><th></th>
                 </tr><!-- Table Header -->  
 	</thead>
 	<tbody>
@@ -25,11 +25,11 @@
 {% for a in ambientes.conperiodos %}
     
    
-	{% if a.ambiente.pnf.modalidad == 'SEMESTRAL' %}
+	{% if a.ambiente.ambiente.pnf.modalidad == 'SEMESTRAL' %}
 			{% set class = 'gradeC' %}
-        {% elseif  a.ambiente.pnf.modalidad == 'TRIMESTRAL' %}	
+        {% elseif  a.ambiente.ambiente.pnf.modalidad == 'TRIMESTRAL' %}	
 			{% set class = 'gradeB' %}
-        {% elseif  a.ambiente.pnf.modalidad == 'TI' %}	
+        {% elseif  a.ambiente.ambiente.pnf.modalidad == 'TI' %}	
 			{% set class = 'gradeX' %}
 	{% else %}	
 			{% set class = 'gradeA' %}		
@@ -37,9 +37,10 @@
                 
        
         <tr class="{{class}}">   
-	<td>{{a.ambiente.id}}</td><td>{{a.ambiente.aldea.nombre}}</td> <td>{{a.ambiente.pnf.nombre}}</td> <td>{{a.ambiente.turno}}</td><td>{{a.ambiente.condicion}}</td>
-        <td>{{a.trayecto}}</td><td>{{a.periodo}}</td><td>{{a.ambiente.nombre}}</td>
-            <td><a class="enlace" href="{{path('ambiente_show',{'idamb':a.ambiente.id})}}">Mostrar</a></td>
+	<td>{{a.ambiente.id}}</td><td>{{a.ambiente.ambiente.aldea.nombre}}</td> <td>{{a.ambiente.ambiente.pnf.nombre}}</td> <td>{{a.ambiente.ambiente.turno}}</td>
+        <td>{{a.ambiente.ambiente.condicion}}</td><td>{{a.ambiente.ambiente.nombre}}</td>
+        <td>{{a.ambiente.trayecto}}</td><td>{{a.ambiente.periodo}}</td><td>{{a.cantidadtriunfadores}}</td>
+            <td><a class="enlace" href="{{path('ambiente_show',{'idamb':a.ambiente.ambiente.id})}}">Mostrar</a></td>
         </tr><!-- Table Row -->
     
     {% set i = i+1 %}
@@ -59,7 +60,7 @@
 <div id="container" style="width: 100%">
 <table cellpadding="0" cellspacing="0" border="0" class="display" id="example2" width="100%">
 	<thead>
-		<tr><th>ID</th><th>Aldea</th><th>P.N.F.</th><th>Turno</th><th>Condición</th><th>Nombre</th>
+		<tr><th>ID</th><th>Aldea</th><th>P.N.F.</th><th>Turno</th><th>Condición</th><th>Nombre</th><th>Cantidad Triunfadores</th>
                     <th></th>
                 </tr><!-- Table Header -->  
 	</thead>
@@ -67,16 +68,17 @@
 {% set i = 1 %}
 {% for a in ambientes.sinperiodos %}
    
-	{% if a.pnf.modalidad == 'SEMESTRAL' %}
+	{% if a.ambiente.pnf.modalidad == 'SEMESTRAL' %}
 			{% set class = 'gradeC' %}
-        {% elseif  a.pnf.modalidad == 'TRIMESTRAL' %}	
+        {% elseif  a.ambiente.pnf.modalidad == 'TRIMESTRAL' %}	
 			{% set class = 'gradeB' %}
 	{% else %}	
 			{% set class = 'gradeB' %}		
         {% endif %}	
         <tr class="{{class}}">   
-	<td>{{a.id}}</td><td>{{a.aldea.nombre}}</td> <td>{{a.pnf.nombre}}</td> <td>{{a.turno}}</td><td>{{a.condicion}}</td><td>{{a.nombre}}</td>
-            <td><a class="enlace" href="{{path('ambiente_show',{'idamb':a.id})}}">Mostrar</a></td>
+	<td>{{a.ambiente.id}}</td><td>{{a.ambiente.aldea.nombre}}</td> <td>{{a.ambiente.pnf.nombre}}</td> 
+        <td>{{a.ambiente.turno}}</td><td>{{a.ambiente.condicion}}</td><td>{{a.ambiente.nombre}}</td><td>{{a.cantidadtriunfadores}} </td>
+            <td><a class="enlace" href="{{path('ambiente_show',{'idamb':a.ambiente.id})}}">Mostrar</a></td>
         </tr><!-- Table Row -->
     
     {% set i = i+1 %}

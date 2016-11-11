@@ -50,7 +50,7 @@
 <table cellpadding="0" cellspacing="0" border="0" class="display" id="example">
 	<thead>
 		<tr>
-			<th>#</th><th>ID</th><th>Nombre de Usuario</th><th></th><th></th>
+			<th>#</th><th>ID</th><th>Nombre de Usuario</th><th></th><th></th><th></th>
 		</tr>
 	</thead>
 	<tbody>
@@ -67,6 +67,7 @@
 	
 		<tr class="{{class}}">
 <td>{{i}}</td><td>{{user.id | lower}}</td><td>{{user.username | lower}}</td><td><a class="enlace" href="{{path('usuario_show',{'id':user.id})}}">Mostrar</a></td>
+<td><a class="enlace"  href="{{path('usuario_update',{'id':user.id})}}">Actualizar</a></td>
     <td><a class="enlace" onclick="return confirm('******Confirmar Borrar******')" href="{{path('usuario_delete',{'id':user.id})}}">Borrar</a></td>
     
 {% set i = i+1 %}
@@ -89,7 +90,7 @@
 <table cellpadding="0" cellspacing="0" border="0" class="display" id="caldeas">
 	<thead>
 		<tr>
-			<th>#</th><th>ID</th><th>Nombre de Usuario</th><th></th><th></th>
+			<th>#</th><th>ID</th><th>Nombre de Usuario</th><th></th><th></th><th></th>
 		</tr>
 	</thead>
 	<tbody>
@@ -106,6 +107,7 @@
 	
 		<tr class="{{class}}">
 <td>{{i}}</td><td>{{user.id | lower}}</td><td>{{user.username | lower}}</td><td><a class="enlace" href="{{path('usuario_show',{'id':user.id})}}">Mostrar</a></td>
+<td><a class="enlace"  href="{{path('usuario_update',{'id':user.id})}}">Actualizar</a></td>
     <td><a class="enlace" onclick="return confirm('******Confirmar Borrar******')" href="{{path('usuario_delete',{'id':user.id})}}">Borrar</a></td>
     
 {% set i = i+1 %}
@@ -127,7 +129,7 @@
 <table cellpadding="0" cellspacing="0" border="0" class="display" id="tabla-triunfadores">
 	<thead>
 		<tr>
-			<th>#</th><th>ID</th><th>Nombre de Usuario</th><th></th><th></th>
+			<th>#</th><th>ID</th><th>Nombre de Usuario</th><th></th><th></th><th></th>
 		</tr>
 	</thead>
 	<tbody>
@@ -144,6 +146,7 @@
 	
 		<tr class="{{class}}">
 <td>{{i}}</td><td>{{user.id | lower}}</td><td>{{user.username | lower}}</td><td><a class="enlace" href="{{path('usuario_show',{'id':user.id})}}">Mostrar</a></td>
+<td><a class="enlace"  href="{{path('usuario_update',{'id':user.id})}}">Actualizar</a></td>
     <td><a class="enlace" onclick="return confirm('******Confirmar Borrar******')" href="{{path('usuario_delete',{'id':user.id})}}">Borrar</a></td>
     
 {% set i = i+1 %}
@@ -164,7 +167,7 @@
 <table cellpadding="0" cellspacing="0" border="0" class="display" id="tabla-docente">
 	<thead>
 		<tr>
-			<th>#</th><th>ID</th><th>Nombre de Usuario</th><th></th><th></th>
+			<th>#</th><th>ID</th><th>Nombre de Usuario</th><th></th><th></th><th></th>
 		</tr>
 	</thead>
 	<tbody>
@@ -181,6 +184,7 @@
 	
 		<tr class="{{class}}">
 <td>{{i}}</td><td>{{user.id | lower}}</td><td>{{user.username | lower}}</td><td><a class="enlace" href="{{path('usuario_show',{'id':user.id})}}">Mostrar</a></td>
+<td><a class="enlace"  href="{{path('usuario_update',{'id':user.id})}}">Actualizar</a></td>
     <td><a class="enlace" onclick="return confirm('******Confirmar Borrar******')" href="{{path('usuario_delete',{'id':user.id})}}">Borrar</a></td>
     
 {% set i = i+1 %}
@@ -201,7 +205,7 @@
 <table cellpadding="0" cellspacing="0" border="0" class="display" id="tabla-operario">
 	<thead>
 		<tr>
-			<th>#</th><th>ID</th><th>Nombre de Usuario</th><th></th><th></th>
+			<th>#</th><th>ID</th><th>Nombre de Usuario</th><th></th><th></th><th></th>
 		</tr>
 	</thead>
 	<tbody>
@@ -218,6 +222,7 @@
 	
 		<tr class="{{class}}">
 <td>{{i}}</td><td>{{user.id | lower}}</td><td>{{user.username | lower}}</td><td><a class="enlace" href="{{path('usuario_show',{'id':user.id})}}">Mostrar</a></td>
+<td><a class="enlace"  href="{{path('usuario_update',{'id':user.id})}}">Actualizar</a></td>
     <td><a class="enlace" onclick="return confirm('******Confirmar Borrar******')" href="{{path('usuario_delete',{'id':user.id})}}">Borrar</a></td>
     
 {% set i = i+1 %}

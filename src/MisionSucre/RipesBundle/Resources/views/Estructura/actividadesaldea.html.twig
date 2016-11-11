@@ -1,0 +1,44 @@
+{%if actividades is empty%}  
+        <h3> No hay Actividades</h3>  
+{%endif%}
+<table cellspacing='0' style='margin-top: 30px; margin-bottom: 0px;margin-left: 0px;' >       
+                <tr>
+			<th >#</th>
+                        <th >Fecha</th><th>Nombre de la Actividad</th><th>Lugar</th><th>Responsable</th><th>Objetivo</th>
+                        <th>Observacion</th>
+                        <th></th>
+                        <th></th>
+		</tr>
+                
+	<tbody>	
+{% set i = 1 %}
+
+{% for a in actividades %}
+
+	{% if i %2== 0 %}
+			{% set class = 'gradeA' %}
+	{% else %}	
+			{% set class = 'gradeU' %}		
+        {% endif %}	
+        	
+		<tr class="{{class}}">
+    <td>{{i}}</td>  
+    <td>{{a.fecha |date('d/m/Y')}}</td>
+    <td>{{a.nombre}}</td>
+    <td>{{a.lugar}}</td>
+    <td>({{ a.cedPer}})
+    {{ a.priNom |upper}} 
+    {{ a.priApe |upper}}({{a.tipo}})<a class="enlace" href="{{path('usuario_show',{'id': a.idusr})}}">Ver</a></td>   
+    <td>{{a.objetivo}}</td>    
+    <td>{{a.observacion}}</td>    
+   
+    {% if is_granted('ROLE_COORD') %}
+        <td> <a class="enlace" href="{{path('estructura_actividad_update',{'id': a.id})}}">Actualizar</a></td>
+        <td><a class="enlace" onclick="return confirm('******Confirmar Borrar******')" href="{{path('estructura_actividad_delete',{'id': a.id})}}">Borrar</a></td>
+    {% endif %} 
+{% set i = i+1 %}
+</tr>
+{% endfor %}    
+		
+      </tbody>
+</table>

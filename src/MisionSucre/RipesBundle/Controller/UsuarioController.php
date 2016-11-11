@@ -6,6 +6,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use MisionSucre\RipesBundle\Entity\User;
 use MisionSucre\RipesBundle\Entity\Role;
 use MisionSucre\RipesBundle\Entity\Persona;
+use MisionSucre\RipesBundle\Entity\RegistroUsuario;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Validator\Constraints;
@@ -49,6 +50,7 @@ class UsuarioController extends Controller
             
                 $form->handleRequest($request);
 		if ($form->isValid()) {
+                    
                             
                             $em = $this->getDoctrine()->getManager();    
                                 
@@ -64,8 +66,14 @@ class UsuarioController extends Controller
                             $em->persist($role);
                             $em->persist($usr);
                             
-                            
+                            /*Datos de Registro
+                             */
+                            $registrado = new RegistroUsuario();
+                            $registrado->setRegistrador($this->getUser());
+                            $registrado->setRegistrado($usr);
+                            $em->persist($registrado);
                             $em->flush();
+                            
                             $id=$usr->getId();
                             $request->getSession()->getFlashBag()->add(
                             'notice',
@@ -242,6 +250,7 @@ class UsuarioController extends Controller
                             $trabajo =  $em->getRepository('MisionSucreRipesBundle:Trabajo')->findOneByUser($id);       
                             $comunitaria =  $em->getRepository('MisionSucreRipesBundle:ParticipacionComunitaria')->findOneByUser($id);       
                             $politica =  $em->getRepository('MisionSucreRipesBundle:ParticipacionPolitica')->findOneByUser($id);    
+                            $usuarioregistrado =  $em->getRepository('MisionSucreRipesBundle:RegistroUsuario')->findOneByRegistrado($id);
                             
                             $role->removeUser($usr);
                             $usr->removeRole($role);
@@ -264,6 +273,8 @@ class UsuarioController extends Controller
                                 $em->remove($comunitaria);
                             if($politica)
                                 $em->remove($politica);
+                            if($usuarioregistrado)
+                                $em->remove($usuarioregistrado);
                             
                             $em->remove($usr);
                             
@@ -353,27 +364,62 @@ class UsuarioController extends Controller
                         "
                         )->getResult();
                 
+                /* Si el tipo de usuario es coordinador debe verificar que el lo registro
+                 */
+                
+                $usr = $this->getUser();
+                $idusr= $usr->getId() ;
+        if($usr->getTipUsr()==5){
+                $triunfadores = $em->createQuery(
+                        "SELECT DISTINCT u.username, u.id FROM MisionSucreRipesBundle:RegistroUsuario ru JOIN ru.registrado u
+                            WHERE u.tip_usr=6 AND ru.registrador=:registrador AND NOT EXISTS 
+                            ( SELECT t FROM MisionSucreRipesBundle:Triunfador t WHERE u.id=t.user)
+                            
+                        "
+                        )->setParameters(array('registrador'=>$idusr))->getResult();
+        }else{
                 $triunfadores = $em->createQuery(
                         "SELECT DISTINCT u.username, u.id FROM MisionSucreRipesBundle:User u
                             WHERE u.tip_usr=6 AND NOT EXISTS 
                             ( SELECT t FROM MisionSucreRipesBundle:Triunfador t WHERE u.id=t.user)
                         "
                         )->getResult();
-                
+        }  
+        
+        if($usr->getTipUsr()==5){
+                $docentes = $em->createQuery(
+                        "SELECT DISTINCT u.username, u.id FROM MisionSucreRipesBundle:RegistroUsuario ru JOIN ru.registrado u
+                            WHERE u.tip_usr=7 AND ru.registrador=:registrador AND NOT EXISTS 
+                            ( SELECT d FROM MisionSucreRipesBundle:Docente d WHERE u.id=d.user)
+                            
+                        "
+                        )->setParameters(array('registrador'=>$idusr))->getResult();
+        }else{
                 $docentes = $em->createQuery(
                         "SELECT DISTINCT u.username, u.id FROM MisionSucreRipesBundle:User u
                             WHERE u.tip_usr=7 AND NOT EXISTS 
                             ( SELECT d FROM MisionSucreRipesBundle:Docente d WHERE u.id=d.user)
                         "
                         )->getResult();
-                
+        } 
+        
+        if($usr->getTipUsr()==5){
+                $operarios = $em->createQuery(
+                        "SELECT DISTINCT u.username, u.id FROM MisionSucreRipesBundle:RegistroUsuario ru JOIN ru.registrado u
+                            WHERE u.tip_usr=9 AND ru.registrador=:registrador AND NOT EXISTS 
+                            ( SELECT o FROM MisionSucreRipesBundle:Operario o WHERE u.id=o.user)
+                            
+                        "
+                        )->setParameters(array('registrador'=>$idusr))->getResult();
+        }else{
                 $operarios = $em->createQuery(
                         "SELECT DISTINCT u.username, u.id FROM MisionSucreRipesBundle:User u
                             WHERE u.tip_usr=9 AND NOT EXISTS 
                             ( SELECT o FROM MisionSucreRipesBundle:Operario o WHERE u.id=o.user)
                         "
                         )->getResult();
-                
+        } 
+         
 		return $this->render(
 			'MisionSucreRipesBundle:Usuario:listanovinculados.html.twig',
                 array('cejes' => $cejes,'caldeas' =>$caldeas,'triunfadores' =>$triunfadores
@@ -875,12 +921,10 @@ class UsuarioController extends Controller
                 $data = $request->request->get('usuarios');
                 $tipousuario = $request->request->get('tipousuario');
                 
-                //$registros=array(array(1,1234563,'jose','chirinos','dsjfhkjs@gmail.com','42145','54124',23,'f','12/12/2013'),array(1,13454563,'jose','chirinos','dsjfhkdfdsjs@gmail.com','42145','54124',23,'f','12/12/2013'));
-                
-                
+               // $registros=array(array(1,1234563,'jose','chirinos','dsjfhkjs@gmail.com','42145','54124',23,'f','12/12/2013'),array(1,13454563,'jose','chirinos','dsjfhkdfdsjs@gmail.com','42145','54124',23,'f','12/12/2013'));
                 
                 if($data){
-               $registros=json_decode($data,true);
+              $registros=json_decode($data,true);
                
                $batchSize = 20;
              
@@ -891,6 +935,7 @@ class UsuarioController extends Controller
                     
                     $usuariotriunfador = new User();
                     $persona = new Persona();
+                    $registrado = new RegistroUsuario();
                     $usuariotriunfador->setuserName($username);
                     $usuariotriunfador->SetTipUsr($tipousuario);
                     
@@ -902,8 +947,21 @@ class UsuarioController extends Controller
                     
                     $role->addUser($usuariotriunfador);
                     $usuariotriunfador->addRole($role); 
+                    
+                    try {
+                
                     $em->persist($role);
                     $em->persist($usuariotriunfador);
+                    
+                } catch (Exception $ex) {
+                    return new Response("<h1><img src='http://icons.iconarchive.com/icons/designcontest/ecommerce-business/48/alert-icon.png'/>Error en la Carga de Usuarios!</h1>");	
+                }
+                    /*Datos de Registro
+                             */
+                            
+                            $registrado->setRegistrador($this->getUser());
+                            $registrado->setRegistrado($usuariotriunfador);
+                            $em->merge($registrado);
                     
                     $persona->setUser($usuariotriunfador);
                     
@@ -924,8 +982,11 @@ class UsuarioController extends Controller
                     
                     $fechanacimiento=$anyo."-".$mes."-".$dia;
                     $persona->setFechPer(new \DateTime($fechanacimiento));
-                    
+                    try{
                     $em->persist($persona);
+                    } catch (Exception $ex) {
+                    return new Response("<h1><img src='http://icons.iconarchive.com/icons/designcontest/ecommerce-business/48/alert-icon.png'/>Error en la Carga de Usuarios!</h1>");	
+                    }
                     if (($i % $batchSize) == 0) {
                         $em->flush();
                         $em->clear();
@@ -949,12 +1010,13 @@ class UsuarioController extends Controller
         public function tablacargaAction(Request $request)
 	{       
             $rechazadoscedulas=array();
+            $rechazadoporrepeticion=array();
             $rechazadoscorreo=array();
             $rechazadosfaltadatos=array();
             $rezachodefechas=  array();
             $tabla= "";
             
-          $dir=$_FILES['archivo']['tmp_name'];
+         // $dir=$_FILES['archivo']['tmp_name'];
             
            // move_uploaded_file($_FILES['archivo']['tmp_name'],$_SERVER['DOCUMENT_ROOT'].'documentos/'.$FILES['archivo']['name']);
             
@@ -962,8 +1024,8 @@ class UsuarioController extends Controller
 //            $line = fgetcsv($f);
 //            $line = fgetcsv($f);
             
-         
-            //$dir=$_SERVER['DOCUMENT_ROOT'].'documentos/usuarios2.csv';
+            
+            $dir=$_SERVER['DOCUMENT_ROOT'].'documentos/triunfadores.csv';
             $em = $this->getDoctrine()->getManager();
             
             
@@ -972,6 +1034,10 @@ class UsuarioController extends Controller
             $tabla .= "<tr><th>#</th><th>Cédula</th><th>Nombre</th><th>Apellido</th><th>Correo Electrónico</th><th>Teléfono</th><th>Celular</th><th>Edad</th><th>Sexo</th><th>Fecha de Nacimiento</th></tr>\n\n";
             $line = fgetcsv($f);
             $i=1;
+            
+            $array_cedula = array();
+            $array_username = array();
+                    
             while (($line = fgetcsv($f)) !== false) {
                 
             $tabla.= "<tr>";
@@ -997,6 +1063,23 @@ class UsuarioController extends Controller
                 continue;
             }
             
+            if(!in_array($cedula,$array_cedula))
+            {
+                array_push($array_cedula,$cedula);
+            }else
+            {
+                $rechazadoporrepeticion[]=$cedula;
+                 continue;
+            }
+            if(!in_array($username,$array_username))
+            {
+                array_push($array_username,$username);
+            }else
+            {
+                $rechazadoporrepeticion[]=$username;
+                 continue;
+            }
+            
             if (filter_var($cedula, FILTER_VALIDATE_INT, array("options" => array("min_range"=>100000, "max_range"=>100000000))) === false) {
                  $rechazadoscedulas[]=$cedula;
                  continue;
@@ -1012,11 +1095,19 @@ class UsuarioController extends Controller
                  continue;
             }
             
+            
+            
             //Chequear Fecha
+            if(validateDate($line[8], 'd/m/Y')){
             $test_arr  = explode('/', htmlspecialchars($line[8]));
          if (!checkdate($test_arr[1], $test_arr[0], $test_arr[2])) {
             $rezachodefechas[]=htmlspecialchars($line[8]);
             continue;
+            }
+            }
+            else{
+                $rezachodefechas[]=htmlspecialchars($line[8]);
+                continue;
             }
             
             $tabla.="<td>$i</td>";
@@ -1040,10 +1131,17 @@ class UsuarioController extends Controller
                         array('tabla'=>$tabla,'rechazadoscedulas'=>$rechazadoscedulas,
                             'rechazadoscorreo'=>$rechazadoscorreo,
                             'rechazadosfaltadatos'=>$rechazadosfaltadatos,
-                            'rechazadosfecha' => $rezachodefechas
+                            'rechazadosfecha' => $rezachodefechas,
+                            'rechazadoporrepeticion'=>$rechazadoporrepeticion
                         )
 		);	
 	}
 
         
+}
+
+function validateDate($date, $format = 'Y-m-d H:i:s')
+{
+    $d = \DateTime::createFromFormat($format, $date);
+    return $d && $d->format($format) == $date;
 }

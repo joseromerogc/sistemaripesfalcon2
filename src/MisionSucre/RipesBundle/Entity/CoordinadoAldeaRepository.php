@@ -51,6 +51,36 @@ class CoordinadoAldeaRepository extends EntityRepository
             ->getResult();
     }
     
+    public function findAllOrderedByEje($eje="")
+    {   
+        
+        if($eje)
+        {
+          return $this->getEntityManager()
+            ->createQuery(
+                "SELECT DISTINCT u.id,u.username,CONCAT(p.priNom,' ', p.priApe) as coordinador p.cedPer, p.codCed,p.celPer,p.telPer, c.id as cid, a.nombre,
+                    a.id AS idaldea
+                    FROM MisionSucreRipesBundle:Persona p, MisionSucreRipesBundle:User u, 
+                    MisionSucreRipesBundle:CoordinadorAldea c JOIN c.aldea a JOIN a.parroquia prq
+                    WHERE p.user=u.id AND c.user=u.id AND prq.eje=:eje
+                "
+            )
+            ->setParameter('eje',$eje)
+            ->getResult();
+        }{
+        return $this->getEntityManager()
+            ->createQuery(
+                "SELECT DISTINCT u.id,u.username,CONCAT(p.priNom,' ', p.priApe) as coordinador, p.codCed,p.celPer,p.telPer, c.id as cid, a.nombre,
+                    a.id AS idaldea
+                    FROM MisionSucreRipesBundle:Persona p, MisionSucreRipesBundle:User u, 
+                    MisionSucreRipesBundle:CoordinadorAldea c JOIN c.aldea a JOIN a.parroquia prq
+                    WHERE p.user=u.id AND c.user=u.id
+                "
+            )
+            ->getResult();
+        }
+    }
+    
     public function findCoordinadorAldeaByUserAndId($aldea,$user)
     {
           return $this->getEntityManager()

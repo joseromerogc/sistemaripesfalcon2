@@ -12,4 +12,15 @@ use Doctrine\ORM\EntityRepository;
  */
 class EstructuraRepository extends EntityRepository
 {
+    public function findAllByEje($parroquia)
+    {
+          return $this->getEntityManager()
+            ->createQuery(
+                "SELECT str FROM MisionSucreRipesBundle:Estructura str JOIN str.aldea a
+                    WHERE a.parroquia=:parroquia
+                    
+                "
+            )
+            ->setParameters(array('parroquia'=>$parroquia))->getResult();
+    }
 }

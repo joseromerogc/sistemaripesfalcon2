@@ -32,6 +32,10 @@ class DataCne
      * @ORM\Column(type="string", length=3, nullable=true)
      */
     private $sexo;
+    /**
+     * @ORM\Column(type="string", length=20, nullable=true)
+     */
+    private $centroelectoral;
 
     /**
      * Set cedula

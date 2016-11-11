@@ -1,0 +1,139 @@
+{% extends 'MisionSucreRipesBundle::layout.html.twig' %}
+
+{% block stylesheets %}
+{{ parent() }}
+	<link rel="stylesheet" type="text/css" href="{{asset('css/table/littletable.css')}}">
+	<link rel="stylesheet" type="text/css" href="{{asset('css/blitzer/jquery-ui-1.10.4.custom.css')}}">
+	
+{% endblock %}
+
+{% block content %}
+	{{ parent() }}
+
+{% for flashMessage in app.session.flashbag.get('notice') %}
+        <div class="flash-notice">
+        {{ flashMessage }}
+        </div>
+{% endfor %}
+
+<div id="actividades">    
+    
+    <h1 class="heading_style">Actividades</h1> 
+    
+    <form name="form" method="post" action="">
+        
+        <div style="float:left; margin-right: 30px; margin-bottom: 30px;">
+	<div class="styled">
+            <h3>Fecha desde</h3> 
+            <label for="mes" ><h3>Mes:</h3></label>
+            <select id="imes" name="imes"><option value="" selected="selected">Seleccione una</option>
+                <option value="0">Enero</option>
+                <option value="1">Febrero</option>
+                <option value="2">Marzo</option>
+                <option value="3">Abril</option>
+                <option value="4">Mayo</option>
+                <option value="5">Junio</option>
+                <option value="6">Julio</option>
+                <option value="7">Agosto</option>
+                <option value="8">Septiembre</option>
+                <option value="9">Octubre</option>
+                <option value="10">Noviembre</option>
+                <option value="11">Diciembre</option>
+            </select>
+
+        </div>
+            
+	<div class="styled">
+            <label for="anyo" ><h3>Año:</h3></label>
+            <select id="ianyo" name="ianyo">
+                <option value="2016" select>2016</option>
+                <option value="2016">2016</option>
+                <option value="2017">2017</option>
+                <option value="2017">2018</option>
+                <option value="2017">2019</option>
+                <option value="2017">2020</option>
+            </select>
+	</div>
+        </div>
+        
+        <div style="float:left">
+	<div class="styled">
+            <h3>Fecha desde</h3> 
+            <label for="fmes" ><h3>Mes:</h3></label>
+            <select id="fmes" name="fmes"><option value="" selected="selected">Seleccione una</option>
+                 <option value="0">Enero</option>
+                <option value="1">Febrero</option>
+                <option value="2">Marzo</option>
+                <option value="3">Abril</option>
+                <option value="4">Mayo</option>
+                <option value="5">Junio</option>
+                <option value="6">Julio</option>
+                <option value="7">Agosto</option>
+                <option value="8">Septiembre</option>
+                <option value="9">Octubre</option>
+                <option value="10">Noviembre</option>
+                <option value="11">Diciembre</option>
+            </select>
+
+        </div>  
+	<div class="styled">
+            <label for="fanyo" ><h3>Año:</h3></label>
+            <select id="fanyo" name="fanyo">
+                <option value="2016" select>2016</option>
+                <option value="2017">2017</option>
+                <option value="2017">2018</option>
+                <option value="2017">2019</option>
+                <option value="2017">2020</option>
+            </select>
+	</div>
+        </div>
+    </form>
+     <!-- cellspacing='0' is important, must stay -->
+     <div id="tablaactividades" style="clear: both">   
+     </div>
+      
+</div>
+  
+</div>
+    <script>       
+$(document).ready(function(){
+
+ $('#imes,#ianyo,#fmes,#fanyo').change( function () {
+
+    $('#tablaactividades').html('<img src="{{asset('img/ajax-loader.gif')}}" width="16" height="16" alt="cargando" />');
+    
+   imes=$('#imes').val();
+ ianyo=$('#ianyo').val();
+ fmes=$('#fmes').val();
+ fanyo=$('#fanyo').val();
+    $.ajax({
+        method: "POST",
+        url: "lista/buscarFecha",
+         data: {im: imes, ia: ianyo,fm: fmes, fa: fanyo},
+        success: function (html) {$('#tablaactividades').html(html);}
+    });
+   
+});
+
+var CurrentDate=new Date();
+$('#imes').val(CurrentDate.getMonth());
+$('#fmes').val((CurrentDate.getMonth()+3)%12);
+if(CurrentDate.getMonth()>=9)
+    var anyofinal=CurrentDate.getFullYear()+1;
+$('#ianyo').val(CurrentDate.getFullYear());
+$('#fanyo').val(anyofinal);
+ var imes=$('#imes').val();
+ var ianyo=$('#ianyo').val();
+ var fmes=$('#fmes').val();
+ var fanyo=$('#fanyo').val();
+    $.ajax({
+        method: "POST",
+        url: "lista/buscarFecha",
+         data: {im: imes, ia: ianyo,fm: fmes, fa: fanyo},
+        success: function (html) {$('#tablaactividades').html(html);}
+    });
+});
+
+</script>
+{% endblock %}
+

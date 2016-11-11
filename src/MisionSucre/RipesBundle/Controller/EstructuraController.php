@@ -215,14 +215,18 @@ class EstructuraController extends Controller
                         $caldea = $this->getDoctrine()
                             ->getRepository('MisionSucreRipesBundle:CoordinadorAldea')
                             ->findOneByUser($usr->getId());
-
+                            
+                        if($caldea) {   
+                            
                             if( $caldea->getAldea()->getId() != $idaldea) {   
                             $request->getSession()->getFlashBag()->add(
                             'notice',
                             'Accesso Denegado a esta Aldea'
                             );
-                            return $this->redirect($this->generateUrl('usuario_show',array('id'=>$usr->getId())));
                             }
+                        
+                            return $this->redirect($this->generateUrl('usuario_show',array('id'=>$usr->getId())));
+                        }    
                         break;
                     case 8:
                         $ceje = $this->getDoctrine()
@@ -243,14 +247,9 @@ class EstructuraController extends Controller
                 ->getRepository('MisionSucreRipesBundle:MiembroEstructura')
                 ->findAllByEstructura($id);
                 
-                $actividades=$em
-                ->getRepository('MisionSucreRipesBundle:EstructuraActividad')
-                ->findAllByEstructura($id);;
-                
 		return $this->render(
 			'MisionSucreRipesBundle:Estructura:show.html.twig',
-			array('aldea'=>$aldea,'estructura'=>$estructura,'miembros'=>$miembros,
-                           'actividades'=>$actividades, //'periodosacademicos' =>$periodosacademicos
+			array('aldea'=>$aldea,'estructura'=>$estructura,'miembros'=>$miembros
                         ));
 	}
  
@@ -320,4 +319,59 @@ class EstructuraController extends Controller
                     return $this->redirect($this->generateUrl('aldea_show',array('id'=>$idaldea)));
 	
         }   
+    public function listaAction(Request $request)
+	{   
+    
+            $estructuras = $this->EstructurasAldeas();
+                
+		if(!$estructuras){
+                
+            $request->getSession()->getFlashBag()->add(
+            'notice',
+            'Ningun Estructa Registrada'
+            );
+            return $this->redirect($this->generateUrl('estructura'));
+            }
+            
+		return $this->render(
+			'MisionSucreRipesBundle:Estructura:lista.html.twig',
+                array('estructuras' => $estructuras)
+		);	
+	}    
+    
+         public function EstructurasAldeas()
+    {   
+        $em = $this->getDoctrine()->getManager();
+        
+        $ambientes= array();
+        
+        $user = $this->getUser();
+        
+        switch($user->getTipUsr()){
+        
+        case 5:
+            $coordinador = $em->getRepository('MisionSucreRipesBundle:CoordinadorAldea')->findOneByUser($user->getId());
+                        if(!$coordinador){
+                            $request->getSession()->getFlashBag()->add(
+                            'notice',
+                            'Coordinador No Vinculado a una Aldea'
+                            );            
+                            return $this->redirect($this->generateUrl('aldea_coordinador_info'));
+                        }
+            $estructuras = $em->getRepository('MisionSucreRipesBundle:Estructura')->findAllByAldea($coordinador->getAldea()->getId());
+        
+            break;
+        case 8:    
+        
+        $usreje = $em->getRepository('MisionSucreRipesBundle:CoordinadorEje')->findOneByUser($user->getId());
+        
+        $estructuras = $em->getRepository('MisionSucreRipesBundle:Estructura')->findAllByEje($usreje->getEje()->getParroquia());
+        
+        break;
+        case 1:
+        $estructuras = $em->getRepository('MisionSucreRipesBundle:Estructura')->findAll();
+        break;
+        }
+        return $estructuras;
+    }
  }

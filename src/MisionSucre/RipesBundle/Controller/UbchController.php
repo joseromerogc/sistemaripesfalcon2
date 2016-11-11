@@ -2,8 +2,11 @@
 namespace MisionSucre\RipesBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use MisionSucre\RipesBundle\Entity\Ubch;
+use MisionSucre\RipesBundle\Entity\ParticipacionPolitica;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 class UbchController extends Controller
 {
@@ -254,5 +257,269 @@ public function showAction(Request $request,$id)
                 
                 
 	}
+public function newAction(Request $request)
+	{       
+                $em = $this->getDoctrine()->getManager();
+    
+                $ubch= new Ubch();
+                        
+		$form = $this->createFormBuilder($ubch)
+                ->add('municipio', 'choice', array(
+        'choices' => $this->Municipios() , 'label'=>'Municipios*',
+            'placeholder'=>"Seleccione una",'mapped' => false
+            ))->add('parroquia_id', 'hidden',array('mapped' => false))
+        ->add('direccion', 'textarea',array('label' => 'Dirrección del Centro Electoral','required'=>'false'))
+                        ->add('nombre', 'text',array('label' => 'Nombre del Centro Electoral'))
+                        ->add('codigo', 'text',array('label' => 'Código del Centro Electoral'))
+                        ->add('save', 'submit',array('label' => 'Registrar Centro Electoral'))->getForm();
+                        ;
+                
+                $prq=null;
+               
+                
+                if($request->getMethod() == 'POST'){
+                          $idprq=$this->get('request')->request->get('form_parroquia');
+                        
+                          if($idprq!="")
+                            $prq= $em->getRepository('MisionSucreRipesBundle:Parroquia')->find($idprq);
+                }
+                        
+                $form->handleRequest($request);
+                   
+		if ($form->isValid()) {
+                            
+                            $idprq = $form->get('parroquia_id')->getData();
+                            
+                            $parroquia = $em->getRepository('MisionSucreRipesBundle:Parroquia')->find($idprq);
+                            
+                            $ubch->setParroquia($parroquia);
+                            
+                            $em->persist($ubch);
+                            $em->flush();
+                            
+                            $request->getSession()->getFlashBag()->add(
+                            'notice',
+                            'Centro Electoral Registrado con Éxito'
+                            );            
+                    return $this->redirect($this->generateUrl('politica_ubch_show',array('id'=>$ubch->getId())));
+                            
+		}
+		
+		return $this->render('MisionSucreRipesBundle:Ubch:new.html.twig', array(
+		'form' => $form->createView(),'mensaje_heading'=>'Registro de Centro Electoral',
+                            'sub_heading'=>'Nuevos Datos','prq'=>$prq
+		));
+	}
+  
+public function updateAction(Request $request,$id)
+	{       
+                $em = $this->getDoctrine()->getManager();
+    
+                $ubch= $this->getDoctrine()
+            ->getRepository('MisionSucreRipesBundle:Ubch')
+            ->find($id);            
+            
+                    if(!$ubch){
 
+                    $request->getSession()->getFlashBag()->add(
+                    'notice',
+                    'Centro Electoral con ID: '.$id.' no registrado'
+                    );
+                    return $this->redirect($this->generateUrl('politica_centroelectoral_lista_completa'));
+                    }
+                        
+		$form = $this->createFormBuilder($ubch)
+                ->add('municipio', 'choice', array(
+        'choices' => $this->Municipios() , 'label'=>'Municipios*',
+            'placeholder'=>"Seleccione una",'mapped' => false
+            ))->add('parroquia_id', 'hidden',array('mapped' => false))
+        ->add('direccion', 'textarea',array('label' => 'Dirrección del Centro Electoral','required'=>'false'))
+                        ->add('nombre', 'text',array('label' => 'Nombre del Centro Electoral'))
+                        ->add('codigo', 'text',array('label' => 'Código del Centro Electoral'))
+                        ->add('save', 'submit',array('label' => 'Registrar Centro Electoral'))->getForm();
+                        ;
+                
+                $idprq=$ubch->getParroquia()->getId();
+               
+                
+                if($request->getMethod() == 'POST'){
+                          $idprq=$this->get('request')->request->get('form_parroquia');
+                        
+                          if($idprq!="")
+                            $prq= $em->getRepository('MisionSucreRipesBundle:Parroquia')->find($idprq);
+                }
+                else{
+                     $prq= $em->getRepository('MisionSucreRipesBundle:Parroquia')->find($idprq);
+                }
+                        
+                $form->handleRequest($request);
+                   
+		if ($form->isValid()) {
+                            
+                            $idprq = $form->get('parroquia_id')->getData();
+                            
+                            $parroquia = $em->getRepository('MisionSucreRipesBundle:Parroquia')->find($idprq);
+                            
+                            $ubch->setParroquia($parroquia);
+                            
+                            $em->persist($ubch);
+                            $em->flush();
+                            
+                            $request->getSession()->getFlashBag()->add(
+                            'notice',
+                            'Centro Electoral Actualizo con Éxito'
+                            );            
+                    return $this->redirect($this->generateUrl('politica_ubch_show',array('id'=>$ubch->getId())));
+                            
+		}
+		
+		return $this->render('MisionSucreRipesBundle:Ubch:new.html.twig', array(
+		'form' => $form->createView(),'mensaje_heading'=>'Actualización de Centro Electoral',
+                            'sub_heading'=>'Nuevos Datos','prq'=>$prq
+		));
+	}
+ 
+public function deleteAction(Request $request,$id)
+	{       
+                $em = $this->getDoctrine()->getManager();
+    
+                $ubch= $this->getDoctrine()
+            ->getRepository('MisionSucreRipesBundle:Ubch')
+            ->find($id);            
+            
+                    if(!$ubch){
+
+                    $request->getSession()->getFlashBag()->add(
+                    'notice',
+                    'Centro Electoral con ID: '.$id.' no registrado'
+                    );
+                    return $this->redirect($this->generateUrl('politica_centroelectoral_lista_completa'));
+                    }
+                        
+                $pp= $this->getDoctrine()
+            ->getRepository('MisionSucreRipesBundle:ParticipacionPolitica')
+            ->findByUbch($id);
+               
+                if($pp){
+                    $request->getSession()->getFlashBag()->add(
+                            'notice',
+                            'Centro Electoral No puede ser Borrado. Tiene Votantes Vinculados'
+                            ); 
+                   return $this->redirect($this->generateUrl('politica_ubch_show',array('id'=>$id)));
+                }else
+                    {
+                
+                            
+                            $em->remove($ubch);
+                            
+                            $em->flush();
+                            
+                            $request->getSession()->getFlashBag()->add(
+                            'notice',
+                            'Centro Electoral Borrado con Éxito'
+                            );            
+                    return $this->redirect($this->generateUrl('politica_centroelectoral_lista_completa' ));
+                    }            
+		}
+   public function lista_completaAction(Request $request)
+	{   
+    
+            $em = $this->getDoctrine()->getManager();
+            
+        
+        $centroselectorales=$this->getDoctrine()
+            ->getRepository('MisionSucreRipesBundle:Ubch')->ListaCompleta();
+        
+        
+           if(!$centroselectorales){
+                
+            $request->getSession()->getFlashBag()->add(
+            'notice',
+            'Ningun Registrado'
+            );
+            return $this->redirect($this->generateUrl('usuario'));
+            }
+            
+	return $this->render(
+			'MisionSucreRipesBundle:Ubch:listacompleta.html.twig',
+                array('ubchs'=>$centroselectorales )
+		);		
+            
+		
+} 
+ public function CompletarDataAction(Request $request)
+	{   
+    
+            $em = $this->getDoctrine()->getManager();
+            
+        
+        $usuarios=$this->getDoctrine()
+            ->getRepository('MisionSucreRipesBundle:ParticipacionPolitica')->NoRegistrados();
+        
+//	return $this->render(
+//			'MisionSucreRipesBundle:Ubch:listacompleta.html.twig',
+//                array('ubchs'=>$centroselectorales )
+//		);	
+        
+        $t="";
+         $batchSize = 20;
+         $i=0;
+                foreach ($usuarios as $u) {
+                    
+                    
+            
+                    $persona=$this->getDoctrine()
+            ->getRepository('MisionSucreRipesBundle:Persona')->findOneByUser($u->getId());
+                    
+                    if($persona){
+                       
+                    $centrocne=$this->getDoctrine()
+            ->getRepository('MisionSucreRipesBundle:DataCne')->findOneByCedula($persona->getCedPer());
+                    
+                    if($centrocne){
+                    
+                    $centroelectoral=$this->getDoctrine()
+            ->getRepository('MisionSucreRipesBundle:Ubch')->findOneByCodigo($centrocne->getCentroelectoral());
+                    if($centroelectoral){
+                       // $t.="<tr><td>".$centroelectoral->getId()."<tr><td>";
+                       $pp= new ParticipacionPolitica();
+                        $pp->setAfiliacion("No Definido");
+                        $pp->setCargo("Ninguno");
+                        $pp->setUser($u);
+                        $pp->setUbch($centroelectoral);
+                        $em->merge($pp);
+                        if (($i % $batchSize) == 0) {
+                            $em->flush();
+                            $em->clear();
+                        }
+                        $i++;
+                        }
+                    }
+                }
+                
+                }   
+             $em->flush();
+        $request->getSession()->getFlashBag()->add(
+                            'notice',
+                            'Cantidad de Cuentas Actualizadas'.$i
+                            );            
+                    return $this->redirect($this->generateUrl('politica_centroelectoral_lista_completa' ));
+		
+} 
+                
+    protected function Municipios() {
+        
+    $choices = array();
+    
+    $municipios = $this->getDoctrine()
+            ->getRepository('MisionSucreRipesBundle:Municipio')
+            ->findAll();
+    
+    foreach ($municipios as $m) {
+        $choices[$m->getId()] =$m->getMunicipio();
+    }
+    return $choices;
+    }   
+ 
+   
 }

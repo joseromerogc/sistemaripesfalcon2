@@ -16,13 +16,13 @@ class ParticipacionPoliticaRepository extends EntityRepository
     {
           return $this->getEntityManager()
             ->createQuery(
-                'SELECT DISTINCT pol.afiliacion,pol.cargo, IDENTITY(p.user) as idusr,p.priNom,p.segNom, p.priApe, p.segApe, p.cedPer, p.sexPer,
+                "SELECT DISTINCT pol.afiliacion,pol.cargo, IDENTITY(p.user) as idusr,p.priNom,p.segNom, p.priApe, p.segApe, p.cedPer, p.sexPer,
                      a.nombre as aldea, a.id as idaldea
                     FROM
                      MisionSucreRipesBundle:Persona p, MisionSucreRipesBundle:ParticipacionPolitica pol,MisionSucreRipesBundle:Triunfador trf JOIN trf.ambiente am JOIN am.aldea a
                     WHERE pol.user = p.user AND trf.user= p.user AND pol.user = trf.user
-                    AND lower(pol.cargo) NOT LIKE lower(:ninguno) AND lower(pol.cargo) NOT LIKE lower(:ninguna) AND am.aldea = :aldea'
-                    
+                    AND lower(pol.cargo) NOT LIKE lower(:ninguno) AND lower(pol.cargo) NOT LIKE lower(:ninguna) AND am.aldea = :aldea
+                    "
             )->setParameters(array('aldea'=>$aldea,'ninguno'=>'Ninguno','ninguna'=>'Ninguna'))
             ->getResult();
     }
@@ -175,6 +175,18 @@ class ParticipacionPoliticaRepository extends EntityRepository
             )->setParameters(array('ninguno'=>'Ninguno','ninguna'=>'Ninguna'))
             ->getResult();
     }
-
     
+public function NoRegistrados()
+    {
+          return $this->getEntityManager()
+            ->createQuery(
+                'SELECT DISTINCT u
+                    FROM
+                     MisionSucreRipesBundle:User u
+                    WHERE NOT EXISTS( SELECT pol FROM MisionSucreRipesBundle:ParticipacionPolitica pol WHERE pol.user=u.id) 
+                    '
+                    
+            )
+            ->getResult();
+    }
 }

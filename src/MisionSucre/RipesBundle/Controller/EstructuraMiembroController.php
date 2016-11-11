@@ -218,15 +218,14 @@ class EstructuraMiembroController extends Controller
         
         $error=0;
         
-        if($str){
-            $estructura = $em->getRepository('MisionSucreRipesBundle:MiembroEstructura')->findOneByEstructura($str);
-            if($estructura)
+        if($per){
+          
+            
+            $registrado = $em->getRepository('MisionSucreRipesBundle:MiembroEstructura')->findOneByUser($per->getUser()->getId());
+            if($registrado)
                 {
                     $error="Ya esta Vinculado a esta Estructura";
                 }
-        }
-        
-        if($per){
             
         $nombres=$per->getPriNom() ." ". $per->getSegNom();
         $apellidos=$per->getPriApe() ." ". $per->getSegApe();

@@ -187,7 +187,9 @@ class AldeaController extends Controller
                 $ambientesubv = array();                               
                 $ambientesubv['conperiodos'] =  $em->getRepository('MisionSucreRipesBundle:Ambiente')->findAmbienteByAldeaAndModalidad($id,'SEMESTRAL');               
                 $ambientesubv['sinperiodos'] =  $em->getRepository('MisionSucreRipesBundle:Ambiente')->findAllOrderedByPeriodoAcademicoAndAldea($id,'SEMESTRAL');
-                $ambientesti =  $em->getRepository('MisionSucreRipesBundle:Ambiente')->findAmbienteByAldeaAndModalidad($id,'TI');
+                 $ambientesti  = array();
+                $ambientesti['conperiodos'] =  $em->getRepository('MisionSucreRipesBundle:Ambiente')->findAmbienteByAldeaAndModalidad($id,'TI');
+                $ambientesti['sinperiodos'] =  $em->getRepository('MisionSucreRipesBundle:Ambiente')->findAllOrderedByPeriodoAcademicoAndAldea($id,'TI');
                 $datosambientes = $em->getRepository('MisionSucreRipesBundle:Ambiente')->cantidadAmbientes($id);
                 $cantidadtriunfadores = $em->getRepository('MisionSucreRipesBundle:Triunfador')->cantidadAldea($id);
                 $triunfadoresnovinculados= $em->getRepository('MisionSucreRipesBundle:Triunfador')->cantidadAldeanovinculados($id);
@@ -264,7 +266,10 @@ class AldeaController extends Controller
                 $ambientesubv = array();                
                 $ambientesubv['conperiodos'] =  $em->getRepository('MisionSucreRipesBundle:Ambiente')->findAmbienteByAldeaAndModalidad($idaldea,'SEMESTRAL');
                 $ambientesubv['sinperiodos'] =  $em->getRepository('MisionSucreRipesBundle:Ambiente')->findAllOrderedByPeriodoAcademicoAndAldea($idaldea,'SEMESTRAL');
-                $ambientesti =  $em->getRepository('MisionSucreRipesBundle:Ambiente')->findAmbienteByAldeaAndModalidad($id,'TI');
+                $ambientesti  = array();
+                $ambientesti['conperiodos'] =  $em->getRepository('MisionSucreRipesBundle:Ambiente')->findAmbienteByAldeaAndModalidad($idaldea,'TI');
+                $ambientesti['sinperiodos'] =  $em->getRepository('MisionSucreRipesBundle:Ambiente')->findAllOrderedByPeriodoAcademicoAndAldea($idaldea,'TI');
+                
                 $datosambientes = $em->getRepository('MisionSucreRipesBundle:Ambiente')->cantidadAmbientes($id);
                 $cantidadtriunfadores = $em->getRepository('MisionSucreRipesBundle:Triunfador')->cantidadAldea($id);
                 $triunfadoresnovinculados= $em->getRepository('MisionSucreRipesBundle:Triunfador')->cantidadAldeanovinculados($id);
@@ -327,7 +332,9 @@ class AldeaController extends Controller
                 $ambientesubv = array();                
                 $ambientesubv['conperiodos'] =  $em->getRepository('MisionSucreRipesBundle:Ambiente')->findAmbienteByAldeaAndModalidad($idaldea,'SEMESTRAL');
                 $ambientesubv['sinperiodos'] =  $em->getRepository('MisionSucreRipesBundle:Ambiente')->findAllOrderedByPeriodoAcademicoAndAldea($idaldea,'SEMESTRAL');
-                $ambientesti =  $em->getRepository('MisionSucreRipesBundle:Ambiente')->findAmbienteByAldeaAndModalidad($idaldea,'TI');
+                $ambientesti  = array();
+                $ambientesti['conperiodos'] =  $em->getRepository('MisionSucreRipesBundle:Ambiente')->findAmbienteByAldeaAndModalidad($idaldea,'TI');
+                $ambientesti['sinperiodos'] =  $em->getRepository('MisionSucreRipesBundle:Ambiente')->findAllOrderedByPeriodoAcademicoAndAldea($idaldea,'TI');
                 $cantidaddocentes = $em->getRepository('MisionSucreRipesBundle:Docente')->cantidadAldea($idaldea);
                 $ambientesnovinculados = $em->getRepository('MisionSucreRipesBundle:Ambiente')->cantidadAmbientesnovinculados($idaldea);
                 $estructuras = $em->getRepository('MisionSucreRipesBundle:Estructura')->findByAldea($idaldea);
@@ -379,13 +386,16 @@ class AldeaController extends Controller
                 $ambientescta['sinperiodos']= array();         
                 $ambientesubv['conperiodos']= array();
                 $ambientesubv['sinperiodos']= array();
+                $ambientesti['conperiodos']= array();
+                $ambientesti['sinperiodos']= array();
                          
                 foreach($turnoscoordinador as $t) {
                 $ambientescta['conperiodos'] = $ambientescta['conperiodos'] + $em->getRepository('MisionSucreRipesBundle:Ambiente')->AmbientesAldeaTurnoModalidad($idaldea,$t['turno'],'TRIMESTRAL');
                 $ambientescta['sinperiodos'] =$ambientescta['sinperiodos'] + $em->getRepository('MisionSucreRipesBundle:Ambiente')->AmbientesAldeaTurnoModalidadSinPeriodoActual($idaldea,$t['turno'],'TRIMESTRAL');
                 $ambientesubv['conperiodos'] = $ambientesubv['conperiodos'] + $em->getRepository('MisionSucreRipesBundle:Ambiente')->AmbientesAldeaTurnoModalidad($idaldea,$t['turno'],'SEMESTRAL');               
                 $ambientesubv['sinperiodos'] = $ambientesubv['sinperiodos']+ $em->getRepository('MisionSucreRipesBundle:Ambiente')->AmbientesAldeaTurnoModalidadSinPeriodoActual($idaldea,$t['turno'],'SEMESTRAL');
-                $ambientesti = $ambientesti + $em->getRepository('MisionSucreRipesBundle:Ambiente')->AmbientesAldeaTurnoModalidad($idaldea,$t['turno'],'TI');
+                $ambientesti['conperiodos'] =  $ambientesti['conperiodos'] + $em->getRepository('MisionSucreRipesBundle:Ambiente')->AmbientesAldeaTurnoModalidad($idaldea,$t['turno'],'TI');
+                $ambientesti['sinperiodos'] = $ambientesti['sinperiodos'] + $em->getRepository('MisionSucreRipesBundle:Ambiente')->AmbientesAldeaTurnoModalidadSinPeriodoActual($idaldea,$t['turno'],'TI');
                 }
                 
                 $datosambientes = $em->getRepository('MisionSucreRipesBundle:Ambiente')->cantidadAmbientesTurnos($idcoord);
@@ -445,7 +455,9 @@ class AldeaController extends Controller
                         $ambientesubv = array();                               
                         $ambientesubv['conperiodos'] =  $em->getRepository('MisionSucreRipesBundle:Ambiente')->findAmbienteByAldeaAndModalidad($idaldea,'SEMESTRAL');               
                         $ambientesubv['sinperiodos'] =  $em->getRepository('MisionSucreRipesBundle:Ambiente')->findAllOrderedByPeriodoAcademicoAndAldea($idaldea,'SEMESTRAL');
-                        $ambientesti =  $em->getRepository('MisionSucreRipesBundle:Ambiente')->findAmbienteByAldeaAndModalidad($idaldea,'TI');
+                        $ambientesti  = array();
+                        $ambientesti['conperiodos'] =  $em->getRepository('MisionSucreRipesBundle:Ambiente')->findAmbienteByAldeaAndModalidad($idaldea,'TI');
+                        $ambientesti['sinperiodos'] =  $em->getRepository('MisionSucreRipesBundle:Ambiente')->findAllOrderedByPeriodoAcademicoAndAldea($idaldea,'TI');
                         $datosambientes = $em->getRepository('MisionSucreRipesBundle:Ambiente')->cantidadAmbientes($idaldea);
                         $cantidadtriunfadores = $em->getRepository('MisionSucreRipesBundle:Triunfador')->cantidadAldea($idaldea);
                         $triunfadoresnovinculados= $em->getRepository('MisionSucreRipesBundle:Triunfador')->cantidadAldeanovinculados($idaldea);
@@ -509,7 +521,9 @@ class AldeaController extends Controller
                 $ambientesubv = array();                
                 $ambientesubv['conperiodos'] =  $em->getRepository('MisionSucreRipesBundle:Ambiente')->findAmbienteByAldeaAndModalidad($idaldea,'SEMESTRAL');
                 $ambientesubv['sinperiodos'] =  $em->getRepository('MisionSucreRipesBundle:Ambiente')->findAllOrderedByPeriodoAcademicoAndAldea($idaldea,'SEMESTRAL');
-                $ambientesti =  $em->getRepository('MisionSucreRipesBundle:Ambiente')->findAmbienteByAldeaAndModalidad($idaldea,'TI');
+                $ambientesti  = array();
+                $ambientesti['conperiodos'] =  $em->getRepository('MisionSucreRipesBundle:Ambiente')->findAmbienteByAldeaAndModalidad($idaldea,'TI');
+                $ambientesti['sinperiodos'] =  $em->getRepository('MisionSucreRipesBundle:Ambiente')->findAllOrderedByPeriodoAcademicoAndAldea($idaldea,'TI');
                 $datosambientes = $em->getRepository('MisionSucreRipesBundle:Ambiente')->cantidadAmbientes($idaldea);
                 $cantidadtriunfadores = $em->getRepository('MisionSucreRipesBundle:Triunfador')->cantidadAldea($idaldea);
                 $triunfadoresnovinculados= $em->getRepository('MisionSucreRipesBundle:Triunfador')->cantidadAldeanovinculados($idaldea);

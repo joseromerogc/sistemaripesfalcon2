@@ -550,9 +550,9 @@ class DocenteController extends Controller
             
                 $usr = $this->getUser();
                 
-                $docente = $em->getRepository('MisionSucreRipesBundle:Docente')->findOneByUser($id);
+                $docenteinfo = $em->getRepository('MisionSucreRipesBundle:Docente')->findOneByUser($id);
                 
-                if($docente)   {
+                if($docenteinfo)   {
                 switch($usr->getTipUsr()){
                     
                     case 8:
@@ -562,7 +562,7 @@ class DocenteController extends Controller
                         
                         $eje = $coordeje->getEje()->getId();
                         
-                        if($eje!=$docente->getAldea()->getParroquia()->getEje()->getId()){
+                        if($eje!=$docenteinfo->getAldea()->getParroquia()->getEje()->getId()){
                         $request->getSession()->getFlashBag()->add(
                         'notice',
                         'Acceso Retringido a este Eje'
@@ -576,7 +576,7 @@ class DocenteController extends Controller
                         ->findOneByUser($usr->getId());
                         
                         
-                        $docente_aldea = $em->getRepository('MisionSucreRipesBundle:Docente')->findByAldeaAndUser($coordaldea->getAldea()->getId(),$docente->getUser()->getId());
+                        $docente_aldea = $em->getRepository('MisionSucreRipesBundle:Docente')->findByAldeaAndUser($coordaldea->getAldea()->getId(),$docenteinfo->getUser()->getId());
                         
                         if(!$docente_aldea)
                         {
@@ -589,6 +589,7 @@ class DocenteController extends Controller
                         break;
                        
                 }
+                $docente=$em->getRepository('MisionSucreRipesBundle:Docente')->findByUser($id);
                 }
                 $usuario =  $em->getRepository('MisionSucreRipesBundle:Role')->findOneByRole($id);    
                 $sociales =  $em->getRepository('MisionSucreRipesBundle:Social')->findOneByUser($id); 

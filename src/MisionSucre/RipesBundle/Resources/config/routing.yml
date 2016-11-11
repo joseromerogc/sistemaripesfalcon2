@@ -27,7 +27,7 @@ usuario_resumen:
   path: usuarios/resumen
   defaults: { _controller: MisionSucreRipesBundle:Usuario:resumen }
 usuario_delete:
-  path: admin/usuario/delete/{id}
+  path: coord/usuario/delete/{id}
   defaults: { _controller: MisionSucreRipesBundle:Usuario:delete }
 usuario_novinculados:
   path: coord/usuario/listanovinculados
@@ -38,7 +38,11 @@ usuario_password:
 nombreusuario:
   path: nombreusuario
   defaults: { _controller: MisionSucreRipesBundle:Usuario:nombreusuario }
-  
+ 
+# *********************SISTEMA****************************************#
+sistema_resumen:
+  path: eje/sistema/resumen
+  defaults: { _controller: MisionSucreRipesBundle:Sistema:resumen }
 # *********************PERSONA****************************************#
 persona_update:
   path: persona/update/{id}
@@ -173,12 +177,30 @@ politica_ubch_resumen:
 ubch_cambiar_parroquia:
   path: persona/parroquias/{id}
   defaults: { _controller: MisionSucreRipesBundle:UbicacionVivienda:cambiarparroquia } 
+ubch_cambiar_parroquia_2:
+  path: admin/persona/parroquias/{id}
+  defaults: { _controller: MisionSucreRipesBundle:UbicacionVivienda:cambiarparroquia } 
 politica_ubch_show:
   path: coord/ubch/show/{id}
   defaults: { _controller: MisionSucreRipesBundle:Ubch:show }
 politica_ubch_lista:
   path: coord/ubch/lista
   defaults: { _controller: MisionSucreRipesBundle:Ubch:Lista}
+politica_centroelectoral_new:
+  path: admin/politica/centroelectoral/new
+  defaults: { _controller: MisionSucreRipesBundle:Ubch:new }
+politica_centroelectoral_update:
+  path: admin/politica/centroelectoral/update/{id}
+  defaults: { _controller: MisionSucreRipesBundle:Ubch:update }
+politica_centroelectoral_delete:
+  path: admin/politica/centroelectoral/delete/{id}
+  defaults: { _controller: MisionSucreRipesBundle:Ubch:delete }
+politica_centroelectoral_lista_completa:
+  path: admin/politica/listacompleta
+  defaults: { _controller: MisionSucreRipesBundle:Ubch:lista_completa }
+politica_centroelectoral_completardata:
+  path: admin/politica/completar_data
+  defaults: { _controller: MisionSucreRipesBundle:Ubch:CompletarData }
 
 ########################### CONTROL DE PARROQUIAS Y SECTORES#######################################
 
@@ -377,7 +399,37 @@ coordinador_turno_delete:
   path: eje/coordinador/turno/delete/{idturno}
   defaults: { _controller: MisionSucreRipesBundle:CoordinadorTurno:delete}
 
+#######################################################################################################
+#                                      ATENCION                                                    #
+#######################################################################################################
 
+atencion_new:
+  path: atencion/new
+  defaults: { _controller: MisionSucreRipesBundle:Atencion:new } 
+atencion_data:
+  path: atencion/data/{ced}
+  defaults: { _controller: MisionSucreRipesBundle:Atencion:datapersona}  
+atencion_data_update:
+  path: atencion/update/data/{ced}
+  defaults: { _controller: MisionSucreRipesBundle:Atencion:datapersona}  
+atencion_show:
+  path: atencion/show/{id}
+  defaults: { _controller: MisionSucreRipesBundle:Atencion:show}  
+atencion_lista:
+  path: atencion/lista
+  defaults: { _controller: MisionSucreRipesBundle:Atencion:lista}  
+atencion_delete:
+  path: atencion/delete/{id}
+  defaults: { _controller: MisionSucreRipesBundle:Atencion:delete}  
+atencion_buscar:
+  path: atencion/buscar
+  defaults: { _controller: MisionSucreRipesBundle:Atencion:buscar}  
+atencion_busqueda:
+  path: atencion/busqueda
+  defaults: { _controller: MisionSucreRipesBundle:Atencion:busqueda}  
+atencion_update:
+  path: atencion/update/{id}
+  defaults: { _controller: MisionSucreRipesBundle:Atencion:update}
 #######################################################################################################
 #                                      ESTRUCTURAS                                                    #
 #######################################################################################################
@@ -411,17 +463,29 @@ estructura_show:
   defaults: { _controller: MisionSucreRipesBundle:Estructura:show }  
 estructura_lista:
   path: admin/estructura/lista
-  defaults: { _controller: MisionSucreRipesBundle:Estructura:new }  
+  defaults: { _controller: MisionSucreRipesBundle:Estructura:lista }  
 
 estructura_actividad_new:
   path: coord/estructuraactividad/new/{idstr}
   defaults: { _controller: MisionSucreRipesBundle:EstructuraActividad:new } 
+estructura_actividad_lista:
+  path: coord/estructuraactividad/lista
+  defaults: { _controller: MisionSucreRipesBundle:EstructuraActividad:lista } 
+estructura_actividad_lista_fecha:
+  path: coord/estructuraactividad/lista/buscarFecha
+  defaults: { _controller: MisionSucreRipesBundle:EstructuraActividad:buscarFechalista } 
 estructura_actividad_update:
   path: coord/estructuraactividad/update/{id}
   defaults: { _controller: MisionSucreRipesBundle:EstructuraActividad:update } 
 estructura_actividad_delete:
   path: coord/estructuraactividad/delete/{id}
   defaults: { _controller: MisionSucreRipesBundle:EstructuraActividad:delete } 
+estructura_actividad_porfecha:
+  path: coord/estructuraactividad/buscarfecha
+  defaults: { _controller: MisionSucreRipesBundle:EstructuraActividad:buscarFecha } 
+estructura_actividad_porfecha_aldea:
+  path: coord/estructuraactividad/aldea/buscarfecha
+  defaults: { _controller: MisionSucreRipesBundle:EstructuraActividad:buscarFechaAldea } 
 
 #######################################################################################################
 #                                      AMBIENTES                                                      #
@@ -520,7 +584,14 @@ busqueda_ambiente:
   path: triunfador/busquedaambiente
   defaults: { _controller: MisionSucreRipesBundle:Triunfador:busquedaambiente   } 
 
- 
+
+#######################################################################################################
+#                                      TRAYECTO INICIAL FINALIZADO                                    #
+#######################################################################################################
+
+finalizar_triunfador:
+  path: coord/finalizarambiente/{idtrf}/{idperiodo}
+  defaults: { _controller: MisionSucreRipesBundle:TIFinalizado:finalizarTriunfador   } 
 
 #######################################################################################################
 #                                      CARGA DE USUARIO                                               #

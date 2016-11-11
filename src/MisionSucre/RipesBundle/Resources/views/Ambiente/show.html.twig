@@ -34,12 +34,15 @@
 		<li><a href="#triunfadores">Triunfadores</a></li>
 		<li><a href="#periodosacademicos">Periodos Académicos</a></li>
                 <li><a href="#vocero">Vocero</a></li>
-                
+                {% if modalidad =="TI"%}
+                <li><a href="#finalizados">Finalizados</a></li>
+                {% endif%}
     </ul>
 <div id="info">    
     <h1 class="heading_style">Información de Ambiente</h1> 
     <table cellspacing='0' style='margin-top: 0px; margin-bottom: 0px;margin-left: 0px;'> <!-- cellspacing='0' is important, must stay -->
-                <tr><th>ID</th><th>P.N.F.</th><th>Turno</th><th>Anexo</th><th>Nombre</th><th>Promoción</th><th>Condición</th>
+                <tr><th>ID</th><th>Ambiente</th><th>P.N.F.</th><th>Turno</th><th>Anexo</th><th>Nombre</th><th>Promoción</th><th>Condición</th>
+                    <th>Ingreso</th><th>Egreso</th>
                     <th></th>
                 </tr><!-- Table Header -->  
             <tr>
@@ -52,9 +55,10 @@
                 {% endif %}	
 
                     
-                <td>{{ambiente.id}}</td><td>{{ambiente.pnf.nombre}}</td> <td>{{turno}}</td><td>{%if ambiente.anexo %} {{ambiente.anexo.nombre}} {%endif%}</td>
+                <td>{{ambiente.id}}</td><td><a href="{{path('aldea_show',{'id': ambiente.aldea.id})}}">{{ambiente.aldea.nombre}}<a></td><td>{{ambiente.pnf.nombre}}</td> <td>{{turno}}</td><td>{%if ambiente.anexo %} {{ambiente.anexo.nombre}} {%endif%}</td>
                 <td>{{ambiente.nombre}}</td>
                 <td>{{ambiente.promocion}}</td><td>{{ambiente.condicion}}</td>
+                <td>{{ambiente.ingreso}}</td><td>{{ambiente.egreso}}</td>
                 {% if is_granted('ROLE_COORD') %}
                 <td><a class="enlace" href="{{path('ambiente_update',{'idamb': ambiente.id})}}">Actualizar</a></td>
                 {% endif%}
@@ -78,8 +82,9 @@
                 {% if is_granted('ROLE_COORD') %}
                 <td><a class="enlace" href="{{path('periodo_academico_update_ambiente',{'idper': p.id})}}">Actualizar</a></td>
                 {% endif%}
+                 </tr><!-- Table Row -->
             {% endfor%}
-            </tr><!-- Table Row -->
+           
     </table>  
             <a style='margin-left: 12px;' class="enlace" href="{{path('periodo_academico_new_ambiente',{'idamb':ambiente.id})}}"> 
                    <span class='icon'><img src="{{asset('img/add-1-icon.png')}}"/></span> Agregar</a> 
@@ -105,6 +110,11 @@
                         <th >Vinculado al </br> Sistema Sucre</th>
                         <th >Becado</th>
                         <th >Condición</th>
+                        <th ></th>
+                        <th ></th>
+                         {% if modalidad =="TI"%}
+                        <th >Finalizar</th>
+                        {% endif %}
 		</tr>
                 
 	<tbody>
@@ -128,12 +138,24 @@
         <td>{{t.telPer}}</td>
          <td>{{t.sistema}}</td>
     <td>{{t.becamision}}</td>
+    
     <td>{{t.condicion}}</td>
-   
+    
     {% if is_granted('ROLE_COORD') %}
         <td><a class="enlace" href="{{path('usuario_show',{'id': t.idusr})}}">Mostrar</a></td>
-        <td><a class="enlace" onclick="return confirm('******Confirmar Borrar******')" href="{{path('triunfador_delete',{'idtrf': t.id})}}">Borrar</a></td>
+        <td><a class="enlace" onclick="return confirm('******Confirmar Borrar******')" href="{{path('triunfador_delete',{'idtrf': t.id})}}">Desvincular</a></td>
+        {% if modalidad =="TI"%} <td>
+                    <select onchange="document.getElementById('e{{i}}').href='../../finalizarambiente/'+{{t.id}}+'/'+this.value;" id="form_pnf" required="required" class="periodo">
+                        <option value=""> Seleccione Periodo Académico</option>
+                        {% for p in periodosacademicos %}
+                        <option value="{{p.id}}">{{p.periodoacademico.nombre}}</option>
+                        {% endfor %}
+                    </select>
+            <a href='#' id='e{{i}}'>Finalizar</a>
+        </td>
+        {% endif %}
     {% endif %} 
+    
 {% set i = i+1 %}
 {% endfor %}    
 		</tr>
@@ -168,7 +190,33 @@
     {% endif %}
     
 </div>
-  
+{% if  modalidad=="TI" %}    
+<div id="finalizados">
+    <h1 class="heading_style">Finalización Trayecto Inicial</h1> 
+    
+    
+    {% if  finalizados %}
+    <table cellspacing='0' style='margin-top: 0px; margin-bottom: 0px;margin-left: 0px;'> <!-- cellspacing='0' is important, must stay -->
+		<tr>
+			<th>Id</th><th>Nombre de Usuario</th><th>Cédula</th><th>Nombres y Apellidos</th><th>Periodo Académico</th>
+		</tr>
+    <tr>
+     {% for f in finalizados %}   
+    <td>{{f.id}}</td><td>{{ f.username}}</td><td>{{ f.cedPer}}</td>
+    <td>{{ f.priNom |upper}} {{ f.segNom |upper}}
+    {{ f.priApe |upper}} {{ f.segApe |upper}}</td>
+    <td>{{f.nombre}}</td>
+        {% if is_granted('ROLE_COORD') %}
+            <td><a class="enlace" href="{{path('usuario_show',{'id': f.idusr})}}">Mostrar</a></td>
+            <td><a class="enlace" href="{{path('asignar_vocero_update',{'idamb': f.id})}}">Actualizar</a></td>
+        {% endif %}
+    </tr><!-- Table Row -->
+    {% endfor %} 
+    </table>
+    {%endif %}
+    
+</div>
+ {%endif %} 
 </div>
 {% endblock %}
 

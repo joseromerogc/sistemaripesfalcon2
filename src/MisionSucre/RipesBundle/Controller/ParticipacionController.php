@@ -533,23 +533,6 @@ public function listaPoliticaAction(Request $request)
             $politicasoperarios = $em->getRepository('MisionSucreRipesBundle:ParticipacionPolitica')->findAllOrderedByOperariosAndAldea($coordinador->getAldea()->getId());
             break;
             
-            if(!$politicastriunfadores && !$politicasdocentes && !$politicasoperarios){
-                
-            $request->getSession()->getFlashBag()->add(
-            'notice',
-            'Ningun Registrado'
-            );
-            return $this->redirect($this->generateUrl('usuario'));
-            }
-            
-            return $this->render(
-			'MisionSucreRipesBundle:Politica:lista.html.twig',
-                array('politicastriunfadores' => $politicastriunfadores,
-                        'politicasdocentes' => $politicasdocentes,
-                     'politicasoperarios' => $politicasoperarios
-                        )
-		);	
-            
         case 8:    
         
         $usreje = $em->getRepository('MisionSucreRipesBundle:CoordinadorEje')->findOneByUser($user->getId());
@@ -565,7 +548,8 @@ public function listaPoliticaAction(Request $request)
         $politicascoordinadores = $em->getRepository('MisionSucreRipesBundle:ParticipacionPolitica')->findAllOrderedByCoordinadores();
         break;
         }
-           if(!$politicastriunfadores && !$politicasdocentes && !$politicastriunfadores){
+        
+        if(!$politicastriunfadores && !$politicasdocentes && !$politicastriunfadores){
                 
             $request->getSession()->getFlashBag()->add(
             'notice',
@@ -581,7 +565,8 @@ public function listaPoliticaAction(Request $request)
                      'politicasoperarios' => $politicasoperarios,
                      'politicascoordinadores' => $politicascoordinadores
                         )
-		);		
+		);	
+           	
             
 		
 }                

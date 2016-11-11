@@ -1,0 +1,76 @@
+{% extends 'MisionSucreRipesBundle::layout.html.twig' %}
+{% block stylesheets %}
+{{ parent() }}
+	<link rel="stylesheet" type="text/css" href="{{asset('css/demo_table.css')}}">
+	<link rel="stylesheet" type="text/css" href="{{asset('css/demo_page.css')}}">
+	<link rel="stylesheet" type="text/css" href="{{asset('css/botones.css')}}">
+	<link rel="stylesheet" type="text/css" href="{{asset('css/dataTables.tableTools.css')}}">
+	
+	
+{% endblock %}
+
+{% block content %}
+
+<h1 class="heading_style">Lista de Centros Electorales</h1> 
+<div id="dt_example">
+<div id="container" style="width: 100%">
+   
+<table cellpadding="0" cellspacing="0" border="0" class="display" id="example">
+	<thead>
+		<tr>
+			<th>#</th></th><th>Eje</th><th>Municipio</th><th>Parroquia</th><th>Centro Electoral</th><th>Código</th><th></th><th></th>
+		</tr>
+	</thead>
+	<tbody>
+	
+{% set i = 1 %}
+{% for u in ubchs %}
+        <tr> 
+    <td>{{i}} </td>
+    <td>{{u.eje}} </td>
+    <td>{{u.municipio}} </td>
+    <td>{{u.parroquia}} </td>
+    <td><a class="enlace" href="{{path('politica_ubch_show',{'id': u.idubch})}}">{{u.ubch}}</a></td>
+     <td>{{u.codigo}} </td>
+    <td><a class="enlace" href="{{path('politica_centroelectoral_update',{'id': u.idubch})}}">Actualizar</a></td>
+    <td><a class="enlace" onclick="return confirm('******Confirmar Borrar******')" href="{{path('politica_centroelectoral_delete',{'id': u.idubch})}}">Borrar</a></td>
+   
+    </tr>
+    
+{% set i = i+1 %}
+{%endfor %}
+
+</tbody>
+</table>
+</div>
+<a href="new" id="boton_nuevo">Nueva Aldea</a>
+</div>
+</div>
+<script src="{{asset('js/jquery.dataTables.js')}}" type="text/javascript" type="text/javascript"></script>
+<script src="{{asset('js/dataTables.tableTools.js')}}" type="text/javascript" type="text/javascript"></script>
+
+<script>
+$(document).ready(function() {
+$('#example').dataTable( {
+        "oLanguage": {
+            "sLengthMenu": "Mostrar _MENU_ Centros Electorales por Página",
+            "sZeroRecords": "No se encontraron Resultados",
+            "sSearch": "Filtro: ",
+            
+            "sInfo": "Mostrando _START_ a _END_  de un Total de _TOTAL_ Centros Electorales",
+            "sInfoEmpty": "Mostrando 0 de 0 de 0 Centros Electorales",
+            "sInfoFiltered": "(Filtrado de un _MAX_ total de Centros Electorales)",
+            "oPaginate": {
+                "sNext": "Página Siguiente",
+                "sPrevious": "Página Anterior"
+                }
+        },
+        dom: 'T<"clear">lfrtip'
+        ,
+        tableTools:{
+        		"sSwfPath": "{{asset('swf/copy_csv_xls_pdf.swf')}}",
+        }
+    } );
+} );
+</script>
+{% endblock %}

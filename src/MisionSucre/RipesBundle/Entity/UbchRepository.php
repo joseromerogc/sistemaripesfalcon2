@@ -143,5 +143,20 @@ class UbchRepository extends EntityRepository
             )->setParameters(array('ubch'=>$ubch))
             ->getResult();
     }
+ 
+    public function ListaCompleta()
+    {
+          return $this->getEntityManager()
+            ->createQuery(
+                'SELECT m.municipio , prq.parroquia , ub.nombre AS ubch, e.nombre as eje, ub.id AS idubch, ub.codigo
+                              FROM MisionSucreRipesBundle:Ubch ub JOIN ub.parroquia prq JOIN prq.municipio m,
+                              MisionSucreRipesBundle:User u, MisionSucreRipesBundle:Eje e
+                              WHERE e.id=prq.eje
+                            GROUP BY ub.id
+                            ORDER BY m.municipio, prq.parroquia
+                    '
+            )
+            ->getResult();
+    }
     
 }

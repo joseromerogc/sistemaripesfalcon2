@@ -40,6 +40,11 @@ class Ubch
      */
     private $parroquia;
     
+     /**
+     * @ORM\Column(type="string", length=20, nullable=true,unique=true)
+     */
+    private $codigo;
+    
         /**
      * Constructor
      */
@@ -158,5 +163,28 @@ class Ubch
     public function getParroquia()
     {
         return $this->parroquia;
+    }
+
+    /**
+     * Set codigo
+     *
+     * @param string $codigo
+     * @return Ubch
+     */
+    public function setCodigo($codigo)
+    {
+        $this->codigo = $codigo;
+
+        return $this;
+    }
+
+    /**
+     * Get codigo
+     *
+     * @return string 
+     */
+    public function getCodigo()
+    {
+        return $this->codigo;
     }
 }
