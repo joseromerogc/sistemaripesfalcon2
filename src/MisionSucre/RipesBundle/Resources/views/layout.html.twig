@@ -341,11 +341,11 @@
               
               {% if is_granted('ROLE_COORD')%}
                     <li class ={{class}}>
-			<h3><span><img src="{{asset('img/books-icon')}}"/></span>P.N.F.</h3>
+			<h3><span><img src="{{asset('img/books-icon')}}"/></span>Control de Estudio</h3>
 			<ul>
-                            {% if is_granted('ROLE_ADMIN')%}
+                            {% if is_granted('ROLE_CTRL')%}
                                 <li><a href="{{path('pnf_new')}}"><span ><img src="{{asset('img/save-icon.png')}}"/>
-                                        </span>Registrar</a></li>
+                                        </span>Registrar PNF</a></li>
                                 <li><a href="{{path('universidad_new')}}"><span ><img src="{{asset('img/save-icon.png')}}"/>
                                         </span>Registrar Universidad</a></li>        
                                 <li><a href="{{path('universidad_lista')}}"><span ><img src="{{asset('img/Actions-view-list-details-icon-small.png')}}"/>

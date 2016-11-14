@@ -7,6 +7,12 @@
 	
 {% endblock %}
 
+{% block js %}
+        {{ parent() }}
+	<script src="{{asset('js/jquery-ui-1.10.4.custom.js')}}">
+        </script>
+{% endblock %}    
+
 {% block content %}
 	{{ parent() }}
 
@@ -37,6 +43,39 @@
         </tr><!-- Table Row -->
     </table>
     {% endif %}
+
+<div id="tabs">    
+    <ul>
+		<li><a href="#ucs">Unidades Curriculares</a></li>
+    </ul>
+    <div id="ucs">    
+        <h1 class="heading_style">Información de Unidades Curriculares</h1> 
+    </div>
     
+    {% if ucs%}    
+        
+    <table cellspacing='0'> <!-- cellspacing='0' is important, must stay -->
+            <tr><th>ID</th><th>Nombre</th><th>Área</th><th>Código</th><th></th><th></th></tr><!-- Table Header -->          
+    {% for u in ucs%}               
+                <tr><td>{{u.id}}</td><td>{{u.nombre}}</td><td> {{u.area}}</td><td> {{u.codigo}}</td>
+            <td><a class="enlace" href="{{path('usuario_show',{'id':u.id})}}">Actualizar</a></td>
+            <td><a class="enlace" href="{{path('coordinador_turno_new',{'id':u.id})}}">Eliminar</a></td>
+        </tr><!-- Table Row -->
+    {% endfor%}            
+    </table>
+    {% endif %}        
+    <a style='margin-left: 12px;' class="enlace" href="{{path('uc_new',{'idpnf':pnf.id})}}"> 
+    <span class='icon'><img src="{{asset('img/add-1-icon.png')}}"/></span> Registrar Unidad Curricular</a>
+    <a style='margin-left: 12px;' class="enlace" href="{{path('uc_carga',{'idpnf':pnf.id})}}"> 
+    <span class='icon'><img src="{{asset('img/Upload-Folder-icon.png')}}"/></span> Cargar Unidades Curriculares</a>
+</div>
 {% endblock%}
+
+{% block javascripts %}
+{{parent()}}
+$(function() {
+$( "#tabs" ).tabs();
+});
+{% endblock%}
+
        

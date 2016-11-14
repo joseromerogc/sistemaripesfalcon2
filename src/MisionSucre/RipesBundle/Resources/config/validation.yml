@@ -75,3 +75,9 @@ MisionSucre\RipesBundle\Entity\Ubch:
         - Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity:
             fields: codigo
             message: Este código ya existe
+            
+MisionSucre\RipesBundle\Entity\UnidadCurricular:
+  constraints:
+        - Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity:
+            fields: codigo
+            message: Este código ya existe

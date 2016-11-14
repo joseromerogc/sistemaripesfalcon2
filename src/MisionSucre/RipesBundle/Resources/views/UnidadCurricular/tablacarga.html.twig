@@ -1,0 +1,26 @@
+{{tabla|raw}}
+
+<div class="error">
+Rechazados por Código:
+{%for r in rechazadoscodigos%}
+   | {{r}} |
+{% endfor%}
+
+<div class="error">
+Rechazados por repetición de Datos:
+{%for r in rechazadosporrepeticion%}
+   | {{r}} |
+{% endfor%}
+</div>
+<div class="error">
+Rechazados por Falta de Datos:
+{%for r in rechazadosporfaltadatos%}
+   | {{r}} |
+{% endfor%}
+</div>
+<div class="flash-notice" id="msg">
+    
+</div>  
+<div style="margin-top: 50px;" class="centrado">
+ <button onclick="registrar()" class="boton">Registrar Usuarios</button> 
+</div>

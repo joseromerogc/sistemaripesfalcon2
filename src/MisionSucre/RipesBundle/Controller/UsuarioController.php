@@ -1016,7 +1016,7 @@ class UsuarioController extends Controller
             $rezachodefechas=  array();
             $tabla= "";
             
-         // $dir=$_FILES['archivo']['tmp_name'];
+         $dir=$_FILES['archivo']['tmp_name'];
             
            // move_uploaded_file($_FILES['archivo']['tmp_name'],$_SERVER['DOCUMENT_ROOT'].'documentos/'.$FILES['archivo']['name']);
             
@@ -1025,7 +1025,7 @@ class UsuarioController extends Controller
 //            $line = fgetcsv($f);
             
             
-            $dir=$_SERVER['DOCUMENT_ROOT'].'documentos/triunfadores.csv';
+            //$dir=$_SERVER['DOCUMENT_ROOT'].'documentos/triunfadores.csv';
             $em = $this->getDoctrine()->getManager();
             
             

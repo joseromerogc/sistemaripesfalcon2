@@ -122,6 +122,8 @@ class PnfController extends Controller
                         ")->setParameters(array('pnf'=>$pnf->getId())
                         )->getSingleResult();
                 
+                $ucs = $em->getRepository('MisionSucreRipesBundle:UnidadCurricular')->findByPnf($id);
+                
                 if(!$pnf){
                     
                     $request->getSession()->getFlashBag()->add(
@@ -133,7 +135,8 @@ class PnfController extends Controller
                 
                 return $this->render(
 			'MisionSucreRipesBundle:Pnf:show.html.twig',
-                        array('pnf'=>$pnf,'cantidadambientes'=>$cantidadambientes,'cantidadtriunfadores'=>$cantidadtriunfadores)
+                        array('pnf'=>$pnf,'cantidadambientes'=>$cantidadambientes,'cantidadtriunfadores'=>$cantidadtriunfadores,
+                            'ucs' => $ucs)
 		);
         }
         

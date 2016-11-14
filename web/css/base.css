@@ -8,9 +8,8 @@ margin: 10px 25% auto 10%;
 	}
 
 #menulateral{	
-
+float: left;
 padding-top: 10px;
-position: fixed;
 top: 100px; 	
 	}
 
@@ -22,7 +21,7 @@ top: 100px;
 #contenido{
 	float: right;
 	padding: 10px 30px 30px 0px;
-	min-height: 500px;
+	min-height: 800px;
 	width: 75%;
 	}
 

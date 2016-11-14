@@ -851,8 +851,7 @@ class DocenteController extends Controller
                 
                 $form = $this->createFormBuilder($file)
                         ->add('submitFile', 'file', array('label' => 'Cargar Formato'))
-                        ->getForm()
-                        ;
+                        ->getForm();
             
                 $form->handleRequest($request);
                 

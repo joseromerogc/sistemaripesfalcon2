@@ -784,6 +784,20 @@ universidad_show:
 universidad_update:
   path: admin/universidad/update/{id}
   defaults: { _controller: MisionSucreRipesBundle:Universidad:update }  
+############################################### Unidad Curricular ###########################################################################
+
+uc_new:
+  path: control-estudio/unidad-curricular/new/{idpnf}
+  defaults: { _controller: MisionSucreRipesBundle:UnidadCurricular:new }  
+uc_carga:
+  path: control-estudio/unidad-curricular/carga/{idpnf}
+  defaults: { _controller: MisionSucreRipesBundle:UnidadCurricular:carga }  
+uc_tablacarga:
+  path: control-estudio/unidad-curricular/tablacarga
+  defaults: { _controller: MisionSucreRipesBundle:UnidadCurricular:tablacarga }  
+uc_registrarcarga:
+  path: control-estudio/unidad-curricular/registrarcarga
+  defaults: { _controller: MisionSucreRipesBundle:UnidadCurricular:registrarcarga }  
 
 ############################################### GUIA ###########################################################################
 guia:

@@ -75,6 +75,7 @@ security:
     access_control:
         # require ROLE_ADMIN for /admin*
         - { path: ^/admin, roles: ROLE_ADMIN }
+        - { path: ^/control-estudio, roles: ROLE_CTRL }
         - { path: ^/atencion, roles: ROLE_REC }
         - { path: ^/aldea, roles: IS_AUTHENTICATED_FULLY }
         - { path: ^/coord, roles: ROLE_COORD }
