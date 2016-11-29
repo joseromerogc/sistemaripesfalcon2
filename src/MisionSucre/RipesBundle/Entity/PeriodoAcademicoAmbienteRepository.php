@@ -46,4 +46,41 @@ class PeriodoAcademicoAmbienteRepository extends EntityRepository
             )
             ->setParameters(array('ambiente'=>$ambiente))->getOneOrNullResult();
     }
+    public function PeriodosAcademicosDisponibles($modalidad,$ambiente)
+    {
+          return $this->getEntityManager()
+            ->createQuery(
+                "SELECT p FROM MisionSucreRipesBundle:PeriodoAcademico p
+                    WHERE p.modalidad =:modalidad AND NOT EXISTS 
+                   ( SELECT pa FROM MisionSucreRipesBundle:PeriodoAcademicoAmbiente pa 
+                   join pa.periodoacademico pac WHERE pa.ambiente=:ambiente AND p.id=pac.id)
+                "
+            )
+            ->setParameters(array('ambiente'=>$ambiente,'modalidad'=>$modalidad))->getResult();
+    }
+    public function TrayectosPnfDisponibles($ambiente,$pnf)
+    {
+          return $this->getEntityManager()
+            ->createQuery(
+                "SELECT DISTINCT(ppnf.trayecto) as trayecto FROM MisionSucreRipesBundle:PeriodoPnf ppnf
+                    WHERE ppnf.pnf =:pnf AND NOT EXISTS 
+                   ( SELECT p FROM MisionSucreRipesBundle:PeriodoAcademicoAmbiente pa 
+                   join pa.periodopnf p WHERE pa.ambiente=:ambiente AND ppnf.id=p.id)
+                   ORDER BY ppnf.trayecto
+                "
+            )
+            ->setParameters(array('ambiente'=>$ambiente,'pnf'=>$pnf))->getResult();
+    }
+    public function PeriodosPnfDisponibles($ambiente,$pnf,$trayecto)
+    {
+          return $this->getEntityManager()
+            ->createQuery(
+                "SELECT ppnf.periodo,ppnf.id ppnfid  FROM MisionSucreRipesBundle:PeriodoPnf ppnf
+                    WHERE ppnf.pnf =:pnf AND ppnf.trayecto=:trayecto AND NOT EXISTS 
+                   ( SELECT p FROM MisionSucreRipesBundle:PeriodoAcademicoAmbiente pa 
+                   join pa.periodopnf p WHERE pa.ambiente=:ambiente AND p.trayecto=:trayecto AND ppnf.id=p.id)
+                "
+            )
+            ->setParameters(array('ambiente'=>$ambiente,'pnf'=>$pnf,'trayecto'=>$trayecto))->getResult();
+    }
 }

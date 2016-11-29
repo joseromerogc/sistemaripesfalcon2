@@ -12,4 +12,15 @@ use Doctrine\ORM\EntityRepository;
  */
 class RegistrousuarioRepository extends EntityRepository
 {
+    public function CantidadporCoordinador($idcoordinador)
+    {
+          return $this->getEntityManager()
+            ->createQuery(
+                "SELECT COUNT (ru) as cantidad FROM MisionSucreRipesBundle:Registrousuario ru
+                            WHERE ru.registrador=:idusr
+                    "
+            )
+            ->setParameters(array('idusr'=> $idcoordinador))      
+            ->getSingleResult();
+    }
 }

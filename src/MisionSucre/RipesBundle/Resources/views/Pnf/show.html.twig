@@ -47,10 +47,12 @@
 <div id="tabs">    
     <ul>
 		<li><a href="#ucs">Unidades Curriculares</a></li>
+                {% if pnf.modalidad =="TRIMESTRAL" %} {% set p="Periodo"%}{% else %}{% set p="Tramo"%}{% endif%}
+                <li><a href="#periodospnf">Trayectos/{{p}}</a></li>
+                <li><a href="#malla">Malla Curricular</a></li>
     </ul>
     <div id="ucs">    
         <h1 class="heading_style">Información de Unidades Curriculares</h1> 
-    </div>
     
     {% if ucs%}    
         
@@ -58,8 +60,8 @@
             <tr><th>ID</th><th>Nombre</th><th>Área</th><th>Código</th><th></th><th></th></tr><!-- Table Header -->          
     {% for u in ucs%}               
                 <tr><td>{{u.id}}</td><td>{{u.nombre}}</td><td> {{u.area}}</td><td> {{u.codigo}}</td>
-            <td><a class="enlace" href="{{path('usuario_show',{'id':u.id})}}">Actualizar</a></td>
-            <td><a class="enlace" href="{{path('coordinador_turno_new',{'id':u.id})}}">Eliminar</a></td>
+            <td><a class="enlace" href="{{path('uc_update',{'iduc':u.id})}}">Actualizar</a></td>
+            <td><a class="enlace" onclick="return confirm('******Confirmar Eliminar******')" href="{{path('uc_delete',{'iduc':u.id})}}">Eliminar</a></td>
         </tr><!-- Table Row -->
     {% endfor%}            
     </table>
@@ -68,14 +70,122 @@
     <span class='icon'><img src="{{asset('img/add-1-icon.png')}}"/></span> Registrar Unidad Curricular</a>
     <a style='margin-left: 12px;' class="enlace" href="{{path('uc_carga',{'idpnf':pnf.id})}}"> 
     <span class='icon'><img src="{{asset('img/Upload-Folder-icon.png')}}"/></span> Cargar Unidades Curriculares</a>
+    </div>
+    <div id="periodospnf">    
+        <h1 class="heading_style">Información de los Trayecto y {{p}}</h1> 
+            <div id="tablaperiodos">
+                
+            </div>
+            <div id="msg_registro" class="error" style ="margin: 30px">
+                
+            </div>
+            <div>Agregar: <select id="trayecto" >
+                        <option value="" selected>Trayecto</option>
+                        {% for i in range(1, 5) %}
+                         <option value="{{i}}">{{i}}</option>   
+                        {% endfor %}
+                    </select>
+                    <select id="periodo" >
+                        <option value="" selected> {{p}}</option>
+                        {% for i in range(1, 5) %}
+                            <option value="{{i}}">{{i}}</option>   
+                        {% endfor %}
+                    </select>
+                    <button style="background-color: #33cbe0; cursor: pointer" id="b_registrar"> Registrar</button>
+                    
+            </div>                  
+    </div>      
+    <div id="malla">    
+        <h1 class="heading_style">Información de Malla Curricular</h1>               
+        
+        <div id="accordion">
+            
+                {% for m in malla %}
+                          <h3>  Trayecto {{m.periodo.trayecto}} / {{p}} {{m.periodo.periodo}}</h3>
+                          <div>
+                              <div id="dt_example">
+<div id="container" style="width: 100%">
+    
+<table cellpadding="0" cellspacing="0" border="0" class="display" id="example">
+	<thead>
+		<tr>
+			<th>#</th><th>Unidad Curricular</th><th>Área</th><th>Código</th><th>Electiva</th><th>Taller</th>
+                        
+		</tr>
+	</thead>
+	<tbody id="cuerpotabla">
+	
+
+{% set i = 1 %}
+{% for u in m.ucs %}
+
+		<tr >
+    <td>{{i}}</td><td>{{ u.uc.nombre}}</td><td>{{ u.uc.area}}</td><td>{{ u.uc.codigo}}</td><td>{{ u.eselectiva}}</td><td>{{ u.estaller}}</td>
+    </tr>
+ {% set i = i+1 %}   
+{% endfor %}    
+        <tbody>		
+</table>
+                          </div>
+        </div>
+    </div>
+        {% endfor %}
+</div>
+</div>
 </div>
 {% endblock%}
 
 {% block javascripts %}
 {{parent()}}
+{% if pnf.modalidad =="TRIMESTRAL" %} {% set p="Periodo"%}{% else %}{% set p="Tramo"%}{% endif%}
+{#<script>#}
 $(function() {
+
 $( "#tabs" ).tabs();
+$( "#accordion" ).accordion({
+                heightStyle: "content",        
+                collapsible: true,
+                active: false
+                });
+
+$( "#b_registrar" ).click(function() {
+
+var tray=$('#trayecto').val();    
+var per=$('#periodo').val();    
+
+if(tray=="" || per==""){
+    $('#msg_registro').html("Ingrese Trayecto/{{p}}")
+}
+else{
+if(confirm('******Confirmar Registro******')){
+    $.ajax({
+  method: "POST",
+  url: "/control-estudio/periodos-pnf/new",
+  data: { idpnf: {{pnf.id}},trayecto:tray,periodo:per },
+  success: function (html) {$('#msg_registro').html(html);}
 });
+
+$.ajax({
+  method: "POST",
+  url: "/control-estudio/periodos-pnf/tabla",
+  data: { idpnf: {{pnf.id}} },
+  success: function (html) {$('#tablaperiodos').html(html);}
+});
+
+}
+}
+
+});
+
+$.ajax({
+  method: "POST",
+  url: "/control-estudio/periodos-pnf/tabla",
+  data: { idpnf: {{pnf.id}} },
+  success: function (html) {$('#tablaperiodos').html(html);}
+});
+
+});
+{#</script>#}
 {% endblock%}
 
        

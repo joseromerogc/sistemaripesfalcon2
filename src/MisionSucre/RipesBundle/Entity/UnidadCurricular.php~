@@ -38,7 +38,7 @@ class UnidadCurricular
     /**
      * @var string
      *
-     * @ORM\Column(name="codigo", type="string", length=10,unique=true)
+     * @ORM\Column(name="codigo", type="string", length=12,unique=true)
      */
     
     private $codigo;
@@ -51,4 +51,110 @@ class UnidadCurricular
     
     private $area;
     
+    /**
+     * @ORM\OneToMany(targetEntity="Malla", mappedBy="uc")
+     */
+    protected $mallas;
+    
+    /**
+     * Get id
+     *
+     * @return integer 
+     */
+    public function getId()
+    {
+        return $this->id;
     }
+
+    /**
+     * Set nombre
+     *
+     * @param string $nombre
+     * @return UnidadCurricular
+     */
+    public function setNombre($nombre)
+    {
+        $this->nombre = $nombre;
+
+        return $this;
+    }
+
+    /**
+     * Get nombre
+     *
+     * @return string 
+     */
+    public function getNombre()
+    {
+        return $this->nombre;
+    }
+
+    /**
+     * Set codigo
+     *
+     * @param string $codigo
+     * @return UnidadCurricular
+     */
+    public function setCodigo($codigo)
+    {
+        $this->codigo = $codigo;
+
+        return $this;
+    }
+
+    /**
+     * Get codigo
+     *
+     * @return string 
+     */
+    public function getCodigo()
+    {
+        return $this->codigo;
+    }
+
+    /**
+     * Set area
+     *
+     * @param string $area
+     * @return UnidadCurricular
+     */
+    public function setArea($area)
+    {
+        $this->area = $area;
+
+        return $this;
+    }
+
+    /**
+     * Get area
+     *
+     * @return string 
+     */
+    public function getArea()
+    {
+        return $this->area;
+    }
+
+    /**
+     * Set pnf
+     *
+     * @param \MisionSucre\RipesBundle\Entity\Pnf $pnf
+     * @return UnidadCurricular
+     */
+    public function setPnf(\MisionSucre\RipesBundle\Entity\Pnf $pnf = null)
+    {
+        $this->pnf = $pnf;
+
+        return $this;
+    }
+
+    /**
+     * Get pnf
+     *
+     * @return \MisionSucre\RipesBundle\Entity\Pnf 
+     */
+    public function getPnf()
+    {
+        return $this->pnf;
+    }
+}

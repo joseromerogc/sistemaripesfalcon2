@@ -73,22 +73,24 @@ class PeriodoAcademicoAmbienteController extends Controller
                             }
                         break;
                 }
-                
+            if($ambiente->getPnf()->getModalidad()=="TRMESTRAL"){
+            $p="Periodo";
+            }
+            else{
+                $p="Tramo";
+            }
 		$form = $this->createFormBuilder($periodoacademicoambiente)->
         add('_periodoacademico', 'choice', array(
         'choices' => $this->PeriodosAcademicos($ambiente),
             'placeholder'=>"Seleccione una",'label' => 'Periodo Académicos',
             'mapped'=>false
             ))
-             ->add('trayecto', 'choice', array(
-        'choices' => $this->Trayectos(),
-            'placeholder'=>"Seleccione una",'label' => 'Trayecto'
-            ))           
-             ->add('periodo', 'choice', array(
-        'choices' => $this->Periodos($ambiente),
-            'placeholder'=>"Seleccione una",'label' => 'Periodo'
-            ))           
-             ->add('save', 'submit',array('label' => 'Registrar Periodo'))->getForm();
+             ->add('_periodopnf', 'choice', array(
+        'choices' => $this->PeriodoPnf($ambiente),
+            'placeholder'=>"Seleccione una",'label' => "Trayecto/$p", 
+                 'mapped'=>false
+            ))                     
+             ->add('save', 'submit',array('label' => 'Registrar Periodo Académico'))->getForm();
             
                 $form->handleRequest($request);
                 
@@ -98,11 +100,15 @@ class PeriodoAcademicoAmbienteController extends Controller
                             $em = $this->getDoctrine()->getManager();    
                             
                             $idperiodo = $form->get('_periodoacademico')->getData();
+                            $idppnf = $form->get('_periodopnf')->getData();
                             
                             $periodoacademico = $em->getRepository('MisionSucreRipesBundle:PeriodoAcademico')->find($idperiodo);
+                            $periodoPnf= $em->getRepository('MisionSucreRipesBundle:PeriodoPnf')->find($idppnf);
+                            
                             
                             $periodoacademicoambiente->setAmbiente($ambiente);    
                             $periodoacademicoambiente->setPeriodoAcademico($periodoacademico); 
+                            $periodoacademicoambiente->setPeriodoPnf($periodoPnf); 
                             $em->persist($periodoacademicoambiente);
                             $em->flush();
                             
@@ -195,21 +201,27 @@ class PeriodoAcademicoAmbienteController extends Controller
                 
                 $nombreperiodo = $periodoacademicoambiente->getPeriodoAcademico()->getNombre();
                 
+                if($ambiente->getPnf()->getModalidad()=="TRMESTRAL"){
+            $p="Periodo";
+            }
+            else{
+                $p="Tramo";
+            }
+                
 		$form = $this->createFormBuilder($periodoacademicoambiente)->
         add('_periodoacademico', 'choice', array(
         'choices' => $this->PeriodosAcademicos($ambiente),
-            'placeholder'=>"$nombreperiodo",'label' => 'Periodo Académicos',
-            'mapped'=>false,'required' => false
+            'placeholder'=>$nombreperiodo,'label' => 'Periodo Académicos',
+            'empty_data'=>NULL,
+            'required'=>false,
+            'mapped'=>false
             ))
-             ->add('trayecto', 'choice', array(
-        'choices' => $this->Trayectos(),
-            'placeholder'=>"Seleccione una",'label' => 'Trayecto'
-            ))           
-             ->add('periodo', 'choice', array(
-        'choices' => $this->Periodos($ambiente),
-            'placeholder'=>"Seleccione una",'label' => 'Periodo'
-            ))           
-             ->add('save', 'submit',array('label' => 'Actualizar Periodo'))->getForm();
+             ->add('_periodopnf', 'choice', array(
+        'choices' => $this->PeriodoPnf($ambiente),
+            'placeholder'=>"Seleccione una",'label' => "Trayecto/$p", 
+                 'mapped'=>false
+            ))                     
+             ->add('save', 'submit',array('label' => 'Actualizar Periodo Académico'))->getForm();
             
                 $form->handleRequest($request);
                 
@@ -219,14 +231,22 @@ class PeriodoAcademicoAmbienteController extends Controller
                             $em = $this->getDoctrine()->getManager();    
                             
                             $idperiodo = $form->get('_periodoacademico')->getData();
+                            $idppnf = $form->get('_periodopnf')->getData();
+                            
                             if($idperiodo){
-                            $periodoacademico = $em->getRepository('MisionSucreRipesBundle:PeriodoAcademico')->find($idperiodo);
-                            $periodoacademicoambiente->setPeriodoAcademico($periodoacademico); 
-                             }
+                                $periodoacademico = $em->getRepository('MisionSucreRipesBundle:PeriodoAcademico')->find($idperiodo);
+                                $periodoacademicoambiente->setPeriodoAcademico($periodoacademico); 
+                            }
+                            
+                            $periodoPnf= $em->getRepository('MisionSucreRipesBundle:PeriodoPnf')->find($idppnf);
+                            
+                            
                             $periodoacademicoambiente->setAmbiente($ambiente);    
                             
+                            $periodoacademicoambiente->setPeriodoPnf($periodoPnf); 
                             $em->persist($periodoacademicoambiente);
                             $em->flush();
+                            
                             
                             $request->getSession()->getFlashBag()->add(
                             'notice',
@@ -250,8 +270,8 @@ class PeriodoAcademicoAmbienteController extends Controller
         $choices = array();
     
          $periodosacademicos = $this->getDoctrine()
-            ->getRepository('MisionSucreRipesBundle:PeriodoAcademico')
-            ->findByModalidad($modalidad);
+            ->getRepository('MisionSucreRipesBundle:PeriodoAcademicoAmbiente')
+            ->PeriodosAcademicosDisponibles($modalidad,$amb->getId());
     
          foreach ($periodosacademicos as $p) {
         $choices[$p->getId()] =$p->getNombre();
@@ -259,30 +279,80 @@ class PeriodoAcademicoAmbienteController extends Controller
         return $choices;
         }
         
-        protected function trayectos() {
-            
-            $choices=  array();
-            
-            $trayectos= array();
-            for($i=1;$i<6;$i++)
-                $choices["$i"] ="$i";
-            return $choices;
-        }
         
-        protected function periodos($amb) {
+protected function PeriodoPnf($amb) {
             
             $choices= array();
             
-            if($amb->getPnf()->getModalidad()=="SEMESTRAL"){
-            for($i=1;$i<4;$i++)
-                $choices["$i"] ="$i";
+            $pnf = $amb->getPnf()->getId();
+            
+            $trayectos = $this->getDoctrine()
+                ->getRepository('MisionSucreRipesBundle:PeriodoAcademicoAmbiente')
+                ->TrayectosPnfDisponibles($amb,$pnf);
+            
+            if($amb->getPnf()->getModalidad()=="TRIMESTRAL"){
+            $p="Periodo";
             }
             else{
-                for($i=1;$i<4;$i++)
-                    $choices["$i"] ="$i";
+                $p="Tramo";
             }
+            
+            foreach ($trayectos as $t) {
+                
+            $periodos = $this->getDoctrine()
+                ->getRepository('MisionSucreRipesBundle:PeriodoAcademicoAmbiente')
+                ->PeriodosPnfDisponibles($amb,$pnf,$t["trayecto"]);  
+            $array_periodos=array();
+                    foreach ($periodos as $pe)
+                    $array_periodos[$pe['ppnfid']]="{$t["trayecto"]}/ $p ".$pe['periodo'];
+            $choices["Trayecto {$t["trayecto"]}"]=$array_periodos;
+            }
+             
             
             return $choices;
         }
+public function showAction(Request $request,$idpamb)
+	{       
+                $em = $this->getDoctrine()->getManager();
+                
+                $periodoacademicoambiente = $this->getDoctrine()
+                ->getRepository('MisionSucreRipesBundle:PeriodoAcademicoAmbiente')
+                ->find($idpamb);
+                
+                $ambiente = $periodoacademicoambiente->getAmbiente();
+                
+                $idamb =$ambiente->getId();
+                
+                if(!$periodoacademicoambiente){
+                
+            $request->getSession()->getFlashBag()->add(
+            'notice',
+            'Periodo Académico-Ambiente con ID: '.$idpamb.' no registrado'
+                );
+                return $this->redirect($this->generateUrl('ambiente'));
+                }
+                
+                $idaldea = $ambiente->getAldea()->getId();
+                
+                $aldea = $ambiente->getAldea();
+               
+                $periodoacademico = $periodoacademicoambiente->getPeriodoAcademico();
+                $periodopnf = $periodoacademicoambiente->getPeriodoPnf();
+                
+                
+                /* @var $validar \MisionSucre\RipesBundle\Ambiente */
+                $validar = $this->get('servicios.validar');
+                
+                $error = $validar->ValidarAmbiente($ambiente,$aldea->getId(),$request);
+                if($error)
+                    return $this->redirect($this->generateUrl($error['url'],array($error['param']=>$error['valueparam'])));
+                
+                
+		return $this->render(
+			'MisionSucreRipesBundle:PeriodoAcademicoAmbiente:show.html.twig',
+			array('aldea'=>$aldea//,'ambiente'=>$ambiente,'triunfadores'=>$triunfadores,
+//                            'vocero'=>$vocero, 'periodosacademicos' =>$periodosacademicos,'modalidad'=>$modalidad,"finalizados"=>$finalizados
+                        ));
+	}
         
 }

@@ -28,6 +28,8 @@
         </div>
 {% endfor %}
 
+<h1 class="heading_style"> Periodo Académico Ambiente</h1>
+
 <div id="tabs">
     <ul>
 		<li><a href="#info">Información General</a></li>
@@ -65,10 +67,23 @@
                 
             </tr><!-- Table Row -->
     </table>    
-      
+    <table cellspacing='0' style='margin-top: 0px; margin-bottom: 0px;margin-left: 0px;'> <!-- cellspacing='0' is important, must stay -->
+        <tr><th>ID</th><th>Nombre</th><th>Trayecto</th><th>Periodo/Tramo</th><th>Actual</th>
+                </tr><!-- Table Header -->  
+            <tr>
+            
+                <td>{{periodoambiente.id}}</td>
+                <td>{{periodoacademico.nombre}}</td>
+                <td>{{periodopnf.trayecto}}</td><td>{{periodopnf.periodo}}</td>
+                <td>{{periodoacademico.periodoacademico.actual}}</td>
+                {% if is_granted('ROLE_COORD') %}
+                <td><a class="enlace" href="{{path('periodo_academico_update_ambiente',{'idper': p.id})}}">Actualizar</a></td>
+                {% endif%}
+                 </tr><!-- Table Row -->
+    </table>  
 </div>
             
-<div id="periodosacademicos">    
+{#<div id="periodosacademicos">    
     <h1 class="heading_style">Histórico Periodos Académicos</h1> 
     <table cellspacing='0' style='margin-top: 0px; margin-bottom: 0px;margin-left: 0px;'> <!-- cellspacing='0' is important, must stay -->
         <tr><th>ID</th><th>Nombre</th><th>Trayecto</th><th>Periodo/Tramo</th><th>Actual</th>
@@ -216,7 +231,8 @@
     {%endif %}
     
 </div>
- {%endif %} 
+ {%endif %} #}
 </div>
+
 {% endblock %}
 

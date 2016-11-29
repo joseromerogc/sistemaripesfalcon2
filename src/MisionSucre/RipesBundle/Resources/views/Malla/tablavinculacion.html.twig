@@ -1,0 +1,118 @@
+<div class="cajacasos">
+{% if noregistrados %}  
+{% for it in noregistrados %}
+    {{it}},
+{% endfor %}
+No Registrado(s) en el Sistema Ripes<br/>
+{% endif %}
+{% for item in nopnf %}
+    {{item.ced}} [{{item.msg}}] <br/>
+{% endfor %}
+
+{% for item in vinculados %}
+        {{item.ced}} [{{item.pnf}}][{{item.aldea}}]<br/>
+{% endfor %}
+
+</div>
+<div id="dt_example">
+<div id="container" style="width: 100%">
+    
+<table cellpadding="0" cellspacing="0" border="0" class="display" id="example">
+	<thead>
+		<tr>
+			<th>#</th><th>Unidad Curricular</th><th>Área</th><th>Código</th>
+                        <th>Electiva</th><th>Taller</th>
+                        
+		</tr>
+	</thead>
+	<tbody id="cuerpotabla">
+	
+
+{% set i = 1 %}
+{% for f in filas %}
+
+		<tr >
+    <td>{{i}}</td><td>{{ f.nombre}}</td><td>{{ f.area}}</td><td>{{ f.codigo}}</td>
+    <td><div class="center">
+        <input type="radio" name="eselectiva{{i}}" value="Si">Si<input type="radio" name="eselectiva{{i}}" value="No" checked>No
+        </div>
+
+    </td>
+    <td><div class="center">
+        <input type="radio" name="estaller{{i}}" value="Si">Si<input type="radio" name="estaller{{i}}" value="No" checked>No
+        </div>
+    </td>
+
+    </td>
+    <td class="eliminar">Quitar</td>
+    </tr>
+ {% set i = i+1 %}   
+{% endfor %}    
+        <tbody>		
+</table>
+</div>
+</div>
+<input type="button" value="Vincular" class="botonmediano purple" id="vincular"/>
+
+<style>
+    .eliminar{
+        color: red; text-decoration: underline;
+        cursor: pointer;
+    }
+   {% if noregistrados or nopnf or vinculados %} 
+    .cajacasos{
+        background-color: #A4A4A4;
+        padding: 10px 30px 10px 30px;
+        font-size: 0.9em;
+    }
+    {% endif %}
+</style>
+
+<script>    
+    
+$(document).ready(function(){
+
+$('#vincular').click( function () {
+
+var cedulas=[];
+var eselectiva=[];
+var estaller=[];
+var i=0;
+$('#example tbody tr').each(function() {
+    cedulas[i]=$(this).find("td").eq(3).html();    
+    j=i+1;
+    eselectiva[i]=$('input:radio[name=eselectiva'+j+ ']:checked').val();
+    estaller[i]=$('input:radio[name=estaller'+j+ ']:checked').val();
+    i++;
+});
+
+var data=[] ;
+data[0]=cedulas;
+data[1]=eselectiva;
+data[2]=estaller;
+data[3]={{idppnf}};
+
+data= JSON.stringify(data);
+
+var urlajax = '/control-estudio/malla/vinculacion/'+data+'';
+
+$.ajax({
+        url: urlajax,
+        success: function (html) {
+       
+        if(html=="good"){
+        alert("Unidades Curriculares Vinculadas con Éxitos")
+        location.reload();    
+        }
+        else{
+        $('.flash-notice').html(html);
+        }
+        }
+    });
+    //[["Política","Matematica","Contabilidad"],["No","No","No"],["No","No","No"],1]
+});
+
+
+
+});
+</script>

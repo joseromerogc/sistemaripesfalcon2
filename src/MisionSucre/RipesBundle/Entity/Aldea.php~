@@ -26,7 +26,7 @@ class Aldea
      * @ORM\JoinColumn(name="parroquia_id", referencedColumnName="id")
      */
     protected $parroquia;
-
+//, unique=true
     /**
      * @var string
      *
@@ -37,7 +37,7 @@ class Aldea
     /**
      * @var string
      *
-     * @ORM\Column(name="nombre", type="string", length=70, unique=true)
+     * @ORM\Column(name="nombre", type="string", length=70)
      */
     
     private $nombre;
@@ -45,7 +45,7 @@ class Aldea
     /**
      * @var string
      *
-     * @ORM\Column(name="direccion", type="string", length=70)
+     * @ORM\Column(name="direccion", type="string", length=150)
      */
     
     private $direccion;

@@ -1,0 +1,152 @@
+{% extends 'MisionSucreRipesBundle::layout.html.twig' %}
+{% block stylesheets %}
+{{ parent() }}
+	<link rel="stylesheet" type="text/css" href="{{asset('css/demo_table.css')}}">
+	<link rel="stylesheet" type="text/css" href="{{asset('css/demo_page.css')}}">
+	<link rel="stylesheet" type="text/css" href="{{asset('css/botones.css')}}">
+	<link rel="stylesheet" type="text/css" href="{{asset('css/dataTables.tableTools.css')}}">	
+        <link rel="stylesheet" type="text/css" href="{{asset('css/table/littletable.css')}}">
+{% endblock %}
+
+{% block content %}
+{% for flashMessage in app.session.flashbag.get('notice') %}
+        <div class="flash-notice">
+        {{ flashMessage }}
+        </div>
+{% endfor %}  
+
+ <div class="flash-notice">
+</div>
+<h1 class="heading_style">Vincular Unidades Curriculares</h1> 
+
+<h1 class="sub_heading_style">Información de Trayecto/{{periodo}} PNF</h1> 
+    <table cellspacing='0'> <!-- cellspacing='0' is important, must stay -->
+            <tr><th>ID</th><th>PNF</th><th>Trayecto</th><th>{{periodo}}</th></tr><!-- Table Header -->
+
+
+        <tr><td>{{pp.id}}</td><td>{{pnf.nombre}}</td><td>{{pp.trayecto}}</td><td>{{pp.periodo}}</td>
+            
+        </tr><!-- Table Row -->
+    </table>
+
+
+                <h1 class="sub_heading_style">Unidades Curriculares Vinculadas   <a href="#" id="ocultar">Ocultar</a></h1>                 
+{% if  ucs %}
+    <table cellspacing='0' style='margin-top: 0px; margin-bottom: 0px;margin-left: 0px;' id="tablatriunfadores"> <!-- cellspacing='0' is important, must stay -->
+		<tr>
+			<th >#</th>
+                        <th >Nombre</th>
+                        <th>Área</th>
+                        <th >Código</th>
+                        <th >Electiva</th>
+                        <th >Taller</th>
+		</tr>
+                
+	<tbody>
+    {% else %}
+    <div class="error">Ninguna Unidad Curricular Vinculada</div>
+    {% endif %}
+    
+	
+{% set i = 1 %}
+
+{% for u in ucs %}
+
+		<tr >
+    <td>{{i}}</td>  
+    <td>{{u.uc.nombre}}</td>
+    <td>{{u.uc.area}}</td>
+    <td>{{u.uc.codigo}}</td>
+    <td>{{u.eselectiva}}</td>
+    <td>{{u.estaller}}</td>
+   
+        {#<td><a class="enlace" href="{{path('usuario_show',{'id': t.idusr})}}">Mostrar</a></td>#}
+        <td><a class="enlace" onclick="return confirm('******Confirmar Desvincular******')" href="{{path('malla_delete',{'iducmalla': u.id})}}">Desvincular</a></td>
+    
+{% set i = i+1 %}
+{% endfor %}    
+		</tr>
+      </tbody>
+</table>
+            
+            
+<h1 class="heading_style">Unidades Curriculares no Vinculados</h1> 
+
+<h1 class="sub_heading_style">Códigos: </h1> 
+
+ <textarea class="codigos" id="codigos"></textarea>
+<br/>
+<input type="button" value="Buscar" class="botonmediano blue" id="b_buscar"/>
+
+<div class="tabla_uc">
+    
+</div>
+
+<script>    
+    
+$(document).ready(function(){
+
+
+$('#b_buscar').click( function () {
+
+if($('.codigos').val()==""){
+    $('.error').html("Parámetro de Busqueda Vacio");
+}
+else{
+
+$('.error').html("");
+
+$('.tabla_uc').html('<img src="{{asset('img/ajax-loader.gif')}}" width="16" height="16" alt="cargando" />');
+
+var codigos=$('.codigos').val();
+
+var query='{"query":{"codigos":"'+ codigos +'","ppnf":"'+{{pp.id}}+'"}}';
+
+$.ajax({
+        url: "/control-estudio/malla/tablavinculacion/"+query+"",
+        success: function (html) {
+            $('.tabla_uc').html(html);
+        }
+    });
+var altura = $(document).height();
+$("html, body").animate({scrollTop:altura+"px"});
+
+}
+});
+
+// Evento que selecciona la fila y la elimina 
+	$(document).on("click",".eliminar",function(){
+		var parent = $(this).parents().get(0);
+		$(parent).remove();
+	});
+        
+$('#ocultar').click(function() {        
+         $('#tablatriunfadores').fadeToggle('10000');
+         if($(this).text()=="Ocultar"){
+             $(this).text("Mostrar")
+         }
+         else{
+             $(this).text("Ocultar")
+         }
+    });
+
+});
+
+</script>
+
+<style>
+    .codigos{
+        width:600px;
+        height:100px;
+        border: 2px solid #990000;
+        font-size: 1.2em;
+    } 
+    
+    #ocultar{
+        text-align: right;
+        margin-left: 25px;
+    }
+    
+</style>
+
+{% endblock %}

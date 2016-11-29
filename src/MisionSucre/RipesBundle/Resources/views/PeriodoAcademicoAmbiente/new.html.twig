@@ -52,23 +52,14 @@
             <div class="error">
                     {{ form_errors(form._periodoacademico) }}
             </div>
-            
-            <div>
-            {{ form_label(form.trayecto) }}
+            {{ form_label(form._periodopnf) }}
             <div class="styled">
-            {{ form_widget(form.trayecto) }}
+            {{ form_widget(form._periodopnf) }}
             </div>
             <div class="error">
-                    {{ form_errors(form.trayecto) }}
+                    {{ form_errors(form._periodopnf) }}
             </div>
             
-            {{ form_label(form.periodo) }}
-            <div class="styled">
-            {{ form_widget(form.periodo) }}
-            </div>
-            <div class="error">
-                    {{ form_errors(form.periodo) }}
-            </div>
         
 		{{ form_widget(form.save) }}
 	</div>

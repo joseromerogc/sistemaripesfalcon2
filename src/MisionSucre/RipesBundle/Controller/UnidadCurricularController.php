@@ -221,5 +221,88 @@ public function registrarcargaAction(Request $request)
                 else{
                     return new Response("<h1><img src='http://icons.iconarchive.com/icons/designcontest/ecommerce-business/48/alert-icon.png'/>Sin Data que cargar</h1>");
                 }   
+	}
+        
+        public function updateAction(Request $request,$iduc)
+	{       
+		
+                $em = $this->getDoctrine()->getManager();
+                
+                $uc =  $em->getRepository('MisionSucreRipesBundle:UnidadCurricular')->find($iduc);
+                
+                if(!$uc){
+                    
+                    $request->getSession()->getFlashBag()->add(
+                    'notice',
+                    'Unidad Curricular con ID: '.$id.' no registrado'
+                    );    
+                    return $this->redirect($this->generateUrl('pnf_lista'));
+                }
+                
+		$form = $this->createForm(new UnidadCurricularType(),$uc)
+                        ->add('save', 'submit',array('label' => 'Actualizar Unidad Curricular'))
+                        ;
+            
+                $form->handleRequest($request);
+                
+		if ($form->isValid()) {
+                            $em->persist($uc);
+                            $em->flush();
+                            
+                            $request->getSession()->getFlashBag()->add(
+                            'notice',
+                            'Unidad Curricular Actualizada con Éxito'
+                            );            
+                    return $this->redirect($this->generateUrl('pnf_show',array('id'=>$uc->getPnf()->getId())));
+		}
+		
+		return $this->render('MisionSucreRipesBundle:UnidadCurricular:new.html.twig', array(
+		'form' => $form->createView(),'mensaje_heading'=>'Actualizar Unidad Curricular',
+                    'sub_heading'=>"P.N.F. ".$uc->getPnf()->getNombre()
+		));
 	}        
+        
+        public function deleteAction(Request $request,$iduc)
+	{       
+		
+                $em = $this->getDoctrine()->getManager();
+                
+                $uc =  $em->getRepository('MisionSucreRipesBundle:UnidadCurricular')->find($iduc);
+                
+                if(!$uc){
+                    
+                    $request->getSession()->getFlashBag()->add(
+                    'notice',
+                    'Unidad Curricular con ID: '.$id.' no registrado'
+                    );    
+                    return $this->redirect($this->generateUrl('pnf_lista'));
+                }
+                
+                $pnf=$uc->getPnf();
+                
+                $ucmalla = $this->getDoctrine()
+                ->getRepository('MisionSucreRipesBundle:Malla')
+                ->findByUc($uc->getId());
+                
+                if($ucmalla){
+                    $request->getSession()->getFlashBag()->add(
+                    'notice',
+                    'Unidad Curricular Vinculada. No se puede Eliminar'
+                    );    
+                    return $this->redirect($this->generateUrl('pnf_show'));
+                }
+                
+                    $em->remove($uc);
+                    $em->flush();
+                            
+                            $request->getSession()->getFlashBag()->add(
+                            'notice',
+                            'Unidad Curricular Borrada con Éxito'
+                            );
+
+                    return $this->redirect($this->generateUrl('pnf_show',array('id'=>$pnf->getId())));
+		
+                            
+		}
+		
 }

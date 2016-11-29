@@ -54,7 +54,7 @@
                                 <a href="{{path('periodo_academico_lista')}}"><span ><img src="{{asset('img/Apps-preferences-contact-list-icon.png')}}"/> </span>Periodos Académicos</a>
                             </li>
                             <li>
-                                <a href="{{path('estructura_lista')}}"><span ><img src="{{asset('img/Business-Tree-Structure-icon')}}"/> </span>Estructuras</a>
+                                <a href="{{path('estructura_lista')}}"><span ><img src="{{asset('img/Business-Tree-Structure-icon.png')}}"/> </span>Estructuras</a>
                             </li>
                             <li>
                                 <a href="{{path('sistema_resumen')}}"><span ><img src="{{asset('img/Resume-icon-small.png')}}"/> </span>Resumen Sistema</a>
@@ -119,7 +119,7 @@
                             {% endif %}            
                         {% if is_granted('ROLE_EJE') %}
                             <li><a href="{{ asset('documentos/ManualUsuarioResponsableEje.pdf') }}" download>
-                                        <span ><img src="{{asset('img/Mimetypes-application-pdf-icon')}}"/>
+                                        <span ><img src="{{asset('img/Mimetypes-application-pdf-icon.png')}}"/>
                                         </span>
                                         Manual de usuario</a></li>
                         {% endif %}            
@@ -216,7 +216,7 @@
                 {% endif %}
                 
                 <li class ={{class}}>
-			<h3><span><img src="{{asset('img/Notebook-Photo-Sunflower-icon')}}"/></span>Triunfador</h3>
+			<h3><span><img src="{{asset('img/Notebook-Photo-Sunflower-icon.png')}}"/></span>Triunfador</h3>
 			<ul>
                             {% if not is_granted('ROLE_COORD') and  is_granted('ROLE_TRF')%}
                                 <li><a href="{{path('triunfador_info_academica')}}"><span ><img src="{{asset('img/Button-Info-icon.png')}}"/>
@@ -230,7 +230,7 @@
                                         </span>
                                         Lista de Triunfadores</a></li>
 				<li><a href="{{path('triunfador_carga')}}">
-                                        <span ><img src="{{asset('img/Upload-Folder-icon')}}"/>
+                                        <span ><img src="{{asset('img/Upload-Folder-icon.png')}}"/>
                                         </span>
                                         Cargar Triunfadores</a></li>
 				<li><a href="{{path('triunfador_egresado_lista')}}">
@@ -277,7 +277,7 @@
                                         </span>
                                         Lista de Docente</a></li>
                                 <li><a href="{{path('docente_carga')}}">
-                                        <span ><img src="{{asset('img/Upload-Folder-icon')}}"/>
+                                        <span ><img src="{{asset('img/Upload-Folder-icon.png')}}"/>
                                         </span>
                                         Cargar Docentes</a></li>
                                 <li><a href="{{path('docente_buscar')}}">
@@ -304,7 +304,7 @@
               
                 {% if is_granted('ROLE_OP')%}
                     <li class ={{class}}>
-			<h3><span><img src="{{asset('img/Key-icon')}}"/></span>Operario</h3>
+			<h3><span><img src="{{asset('img/Key-icon.png')}}"/></span>Operario</h3>
 			<ul>
                             {% if not is_granted('ROLE_COORD') and  is_granted('ROLE_OP')%}
                                 <li><a href="{{path('operario_info')}}"><span ><img src="{{asset('img/Button-Info-icon.png')}}"/>
@@ -341,7 +341,7 @@
               
               {% if is_granted('ROLE_COORD')%}
                     <li class ={{class}}>
-			<h3><span><img src="{{asset('img/books-icon')}}"/></span>Control de Estudio</h3>
+			<h3><span><img src="{{asset('img/books-icon.png')}}"/></span>Control de Estudio</h3>
 			<ul>
                             {% if is_granted('ROLE_CTRL')%}
                                 <li><a href="{{path('pnf_new')}}"><span ><img src="{{asset('img/save-icon.png')}}"/>

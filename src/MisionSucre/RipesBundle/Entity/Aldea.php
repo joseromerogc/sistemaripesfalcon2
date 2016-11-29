@@ -45,7 +45,7 @@ class Aldea
     /**
      * @var string
      *
-     * @ORM\Column(name="direccion", type="string", length=70)
+     * @ORM\Column(name="direccion", type="string", length=150)
      */
     
     private $direccion;

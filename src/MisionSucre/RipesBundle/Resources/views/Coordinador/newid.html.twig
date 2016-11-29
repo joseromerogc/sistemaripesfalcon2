@@ -49,46 +49,11 @@
         </table>    
         
         {{ form_start(form) }}
-	
-        <div>   
-                <label >
-                    Turno
-                </label>
-                <div class="styled">
-                    <select id="form_turno" required="required" >
-                        <option value=""> Seleccione Aldea</option>
-                    </select>
-                    
-                </div>
-            
-        </div>    
-            
+	    
         <div>
 		{{ form_widget(form.save) }}
 	</div>
 		{{ form_end(form) }}		
-</div>
-
-<script>    
-    
-$(document).ready(function(){
-    
-    $('#form_turno').html('<option>Cargando........</option>');
-    
-    var id=$('#form_aldea').val();
-    $.ajax({
-        url: "../../turno/"+{{aldea.id}}+"",
-        success: function (html) {$('#form_turno').html(html);}
-    });
-    
-$('#form_turno').change( function () {    
-    document.getElementById("form_turno_").value=$('#form_turno').val();
-});
-
-});
-
-</script>
-
-                
+</div>                
 {% endblock %}
 

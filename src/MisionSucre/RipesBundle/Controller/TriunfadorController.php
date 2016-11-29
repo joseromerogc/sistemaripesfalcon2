@@ -414,7 +414,6 @@ class TriunfadorController extends Controller
                    );
                    return $this->redirect($this->generateUrl('periodo_academico_new_ambiente',array('idamb'=>$ambiente->getId())));
                    }
-
                 }
                else
                 {

@@ -751,11 +751,14 @@ periodo_academico_new_ambiente:
 periodo_academico_update_ambiente:
   path: coord/periodoacademicoambiente/update/{idper}
   defaults: { _controller: MisionSucreRipesBundle:PeriodoAcademicoAmbiente:update }  
+periodo_academico_ambiente_show:
+  path: coord/periodoacademicoambiente/show/{idpamb}
+  defaults: { _controller: MisionSucreRipesBundle:PeriodoAcademicoAmbiente:show }  
   
 ############################################### PNF ###########################################################################
 
 pnf_new:
-  path: admin/pnf/new
+  path: control-estudio/pnf/new
   defaults: { _controller: MisionSucreRipesBundle:Pnf:new }  
 pnf_lista:
   path: coord/pnf/lista
@@ -764,7 +767,7 @@ pnf_show:
   path: coord/pnf/show/{id}
   defaults: { _controller: MisionSucreRipesBundle:Pnf:show }  
 pnf_update:
-  path: admin/pnf/update/{id}
+  path: control-estudio/pnf/update/{id}
   defaults: { _controller: MisionSucreRipesBundle:Pnf:update }  
 pnf_resumen:
   path: coord/pnf/resumen
@@ -773,22 +776,28 @@ pnf_resumen:
 ############################################### UNIVERSIDAD ###########################################################################
 
 universidad_new:
-  path: admin/universidad/new
+  path: control-estudio/universidad/new
   defaults: { _controller: MisionSucreRipesBundle:Universidad:new }  
 universidad_lista:
-  path: coord/universidad/lista
+  path: control-estudio/universidad/lista
   defaults: { _controller: MisionSucreRipesBundle:Universidad:lista }  
 universidad_show:
-  path: coord/universidad/show/{id}
+  path: control-estudio/universidad/show/{id}
   defaults: { _controller: MisionSucreRipesBundle:Universidad:show }  
 universidad_update:
-  path: admin/universidad/update/{id}
+  path: control-estudio/universidad/update/{id}
   defaults: { _controller: MisionSucreRipesBundle:Universidad:update }  
 ############################################### Unidad Curricular ###########################################################################
 
 uc_new:
   path: control-estudio/unidad-curricular/new/{idpnf}
   defaults: { _controller: MisionSucreRipesBundle:UnidadCurricular:new }  
+uc_update:
+  path: control-estudio/unidad-curricular/update/{iduc}
+  defaults: { _controller: MisionSucreRipesBundle:UnidadCurricular:update }  
+uc_delete:
+  path: control-estudio/unidad-curricular/delete/{iduc}
+  defaults: { _controller: MisionSucreRipesBundle:UnidadCurricular:delete }  
 uc_carga:
   path: control-estudio/unidad-curricular/carga/{idpnf}
   defaults: { _controller: MisionSucreRipesBundle:UnidadCurricular:carga }  
@@ -798,6 +807,38 @@ uc_tablacarga:
 uc_registrarcarga:
   path: control-estudio/unidad-curricular/registrarcarga
   defaults: { _controller: MisionSucreRipesBundle:UnidadCurricular:registrarcarga }  
+############################################### PeriodosPnf ###########################################################################
+
+periodos_pnf_tabla:
+  path: control-estudio/periodos-pnf/tabla
+  defaults: { _controller: MisionSucreRipesBundle:PeriodoPnf:listapnf }  
+periodos_pnf_new:
+  path: control-estudio/periodos-pnf/new
+  defaults: { _controller: MisionSucreRipesBundle:PeriodoPnf:new }  
+periodos_pnf_update:
+  path: control-estudio/periodos-pnf/update/{idppnf}
+  defaults: { _controller: MisionSucreRipesBundle:PeriodoPnf:update }  
+periodos_pnf_delete:
+  path: control-estudio/periodos-pnf/delete/{idppnf}
+  defaults: { _controller: MisionSucreRipesBundle:PeriodoPnf:delete }  
+#periodos_pnf_registrar_vinculacion:
+#  path: control-estudio/periodos-pnf/registrarvinculacion/{json}
+#  defaults: { _controller: MisionSucreRipesBundle:PeriodoPnf:new }  
+
+############################################### MALLA ###########################################################################
+
+malla_registrar_ucs:
+  path: control-estudio/malla/registrar-ucs/{idpp}
+  defaults: { _controller: MisionSucreRipesBundle:Malla:vincularUC }  
+malla_registrar_vinculacion:
+  path: control-estudio/malla/vinculacion/{json}
+  defaults: { _controller: MisionSucreRipesBundle:Malla:registrarVinculacionUC }  
+malla_tabla_vinculacion:
+  path: control-estudio/malla/tablavinculacion/{param}
+  defaults: { _controller: MisionSucreRipesBundle:Malla:tablaVinculacion }  
+malla_delete:
+  path: control-estudio/malla/delete/{iducmalla}
+  defaults: { _controller: MisionSucreRipesBundle:Malla:delete }  
 
 ############################################### GUIA ###########################################################################
 guia:

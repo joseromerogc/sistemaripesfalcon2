@@ -54,6 +54,7 @@ class SistemaController extends Controller
         $resumen[$i]['triunfadores']=$em->getRepository('MisionSucreRipesBundle:Triunfador')->cantidadAldeaTurno($idc);
         $resumen[$i]['operarios']=$em->getRepository('MisionSucreRipesBundle:Operario')->cantidadCoordinador($idc);
         $resumen[$i]['docente']=$em->getRepository('MisionSucreRipesBundle:Docente')->cantidadAldea($c['idaldea']);
+        $resumen[$i]['registrados']=$em->getRepository('MisionSucreRipesBundle:Registrousuario')->CantidadporCoordinador($c['id']);
         $i++;
         }
         

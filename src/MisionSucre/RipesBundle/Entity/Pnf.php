@@ -53,6 +53,11 @@ class Pnf
      */
     protected $ucs;
     
+    /**
+     * @ORM\OneToMany(targetEntity="Ambiente", mappedBy="pnf")
+     */
+    protected $periodos;
+    
         /**
      * Constructor
      */
@@ -204,5 +209,38 @@ class Pnf
     public function getUcs()
     {
         return $this->ucs;
+    }
+
+    /**
+     * Add periodos
+     *
+     * @param \MisionSucre\RipesBundle\Entity\Ambiente $periodos
+     * @return Pnf
+     */
+    public function addPeriodo(\MisionSucre\RipesBundle\Entity\Ambiente $periodos)
+    {
+        $this->periodos[] = $periodos;
+
+        return $this;
+    }
+
+    /**
+     * Remove periodos
+     *
+     * @param \MisionSucre\RipesBundle\Entity\Ambiente $periodos
+     */
+    public function removePeriodo(\MisionSucre\RipesBundle\Entity\Ambiente $periodos)
+    {
+        $this->periodos->removeElement($periodos);
+    }
+
+    /**
+     * Get periodos
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getPeriodos()
+    {
+        return $this->periodos;
     }
 }

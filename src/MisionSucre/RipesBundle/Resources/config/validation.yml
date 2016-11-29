@@ -61,8 +61,8 @@ MisionSucre\RipesBundle\Entity\Persona:
 MisionSucre\RipesBundle\Entity\Aldea:
   constraints:
         - Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity: 
-            fields: nombre
-            message: Este Nombre de Aldea ya Existe
+            fields: codigo
+            message: Este Código ya Existe
 
 MisionSucre\RipesBundle\Entity\AldeaComunal:
  constraints:
@@ -80,4 +80,9 @@ MisionSucre\RipesBundle\Entity\UnidadCurricular:
   constraints:
         - Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity:
             fields: codigo
+            message: Este código ya existe
+MisionSucre\RipesBundle\Entity\UnidadCurricular:
+  constraints:
+        - Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity:
+            fields: [ambiente, periodoacademico, periodopnf]
             message: Este código ya existe

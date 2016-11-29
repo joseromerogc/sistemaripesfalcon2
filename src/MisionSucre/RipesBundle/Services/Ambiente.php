@@ -183,6 +183,7 @@ class CoordinadorController extends Controller
                 }
                         
 		$form = $this->createFormBuilder($caldea)                           
+        ->add('turno_', 'hidden',array('mapped' => false))                
         ->add('save', 'submit',array('label' => 'Registrar Coordinador de Aldea'))->getForm();
             
                 $form->handleRequest($request);
@@ -191,8 +192,12 @@ class CoordinadorController extends Controller
 		if ($form->isValid()) {
                             
                             $em = $this->getDoctrine()->getManager();    
+                            
+                            $turno = $form->get('turno_')->getData();
+                                
                             $caldea->setUser($usuario);    
                             $caldea->setAldea($aldea);    
+                            $caldea->setTurno($turno);
                             $em->persist($caldea);
                             $em->flush();
                             

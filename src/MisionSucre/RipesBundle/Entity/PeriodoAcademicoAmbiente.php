@@ -34,21 +34,10 @@ class PeriodoAcademicoAmbiente
     protected $periodoacademico;
     
     /**
-     * @var string
-     *
-     * @ORM\Column(name="trayecto", type="string", length=2,nullable=true)
+     * @ORM\ManyToOne(targetEntity="PeriodoPnf", inversedBy="periodosacademicosambientes")
+     * @ORM\JoinColumn(name="pacadamb_id", referencedColumnName="id")
      */
-    
-    private $trayecto;
-    
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="periodo", type="string", length=2,nullable=true)
-     */
-    
-    private $periodo;
-    
+    protected $periodopnf;
     
     /**
      * Get id
@@ -58,52 +47,6 @@ class PeriodoAcademicoAmbiente
     public function getId()
     {
         return $this->id;
-    }
-
-    /**
-     * Set trayecto
-     *
-     * @param string $trayecto
-     * @return PeriodoAcademicoAmbiente
-     */
-    public function setTrayecto($trayecto)
-    {
-        $this->trayecto = $trayecto;
-
-        return $this;
-    }
-
-    /**
-     * Get trayecto
-     *
-     * @return string 
-     */
-    public function getTrayecto()
-    {
-        return $this->trayecto;
-    }
-
-    /**
-     * Set periodo
-     *
-     * @param string $periodo
-     * @return PeriodoAcademicoAmbiente
-     */
-    public function setPeriodo($periodo)
-    {
-        $this->periodo = $periodo;
-
-        return $this;
-    }
-
-    /**
-     * Get periodo
-     *
-     * @return string 
-     */
-    public function getPeriodo()
-    {
-        return $this->periodo;
     }
 
     /**
@@ -153,25 +96,25 @@ class PeriodoAcademicoAmbiente
     }
 
     /**
-     * Set actual
+     * Set periodopnf
      *
-     * @param string $actual
+     * @param \MisionSucre\RipesBundle\Entity\PeriodoPnf $periodopnf
      * @return PeriodoAcademicoAmbiente
      */
-    public function setActual($actual)
+    public function setPeriodopnf(\MisionSucre\RipesBundle\Entity\PeriodoPnf $periodopnf = null)
     {
-        $this->actual = $actual;
+        $this->periodopnf = $periodopnf;
 
         return $this;
     }
 
     /**
-     * Get actual
+     * Get periodopnf
      *
-     * @return string 
+     * @return \MisionSucre\RipesBundle\Entity\PeriodoPnf 
      */
-    public function getActual()
+    public function getPeriodopnf()
     {
-        return $this->actual;
+        return $this->periodopnf;
     }
 }

@@ -133,10 +133,20 @@ class PnfController extends Controller
                     return $this->redirect($this->generateUrl('pnf_lista'));
                 }
                 
+                $periodospnf = $em->getRepository('MisionSucreRipesBundle:PeriodoPnf')->findByPnf($pnf->getId());
+                
+                $malla=  array();
+                
+                foreach ($periodospnf as $i => $p) {
+                    $malla[$i]['periodo']=$p;
+                    $ucsmalla = $em->getRepository('MisionSucreRipesBundle:Malla')->findByPeriodopnf($p->getId());
+                    $malla[$i]['ucs']=$ucsmalla;
+                }
+                
                 return $this->render(
 			'MisionSucreRipesBundle:Pnf:show.html.twig',
                         array('pnf'=>$pnf,'cantidadambientes'=>$cantidadambientes,'cantidadtriunfadores'=>$cantidadtriunfadores,
-                            'ucs' => $ucs)
+                            'ucs' => $ucs,'malla'=>$malla)
 		);
         }
         
@@ -160,7 +170,7 @@ class PnfController extends Controller
                             GROUP BY am.pnf
                         ")
                         ->getResult();
-                     
+                     break;
                     case 8:
                         $usreje = $em->getRepository('MisionSucreRipesBundle:CoordinadorEje')->findOneByUser($usr->getId());
                         $eje = $usreje->getEje()->getId();

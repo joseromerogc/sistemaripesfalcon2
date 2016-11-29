@@ -7,10 +7,10 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Ambiente
  *
- * @ORM\Table(name="unidad_curricular")
- * @ORM\Entity(repositoryClass="MisionSucre\RipesBundle\Entity\UnidadCurricularRepository")
+ * @ORM\Table(name="periodo_pnf")
+ * @ORM\Entity(repositoryClass="MisionSucre\RipesBundle\Entity\PeriodoPndRepository")
  */
-class UnidadCurricular
+class PeriodoPnf
 {   
     /**
      * @var integer
@@ -22,39 +22,34 @@ class UnidadCurricular
     private $id;
     
     /**
-     * @ORM\ManyToOne(targetEntity="Pnf", inversedBy="ucs")
+     * @ORM\ManyToOne(targetEntity="Pnf", inversedBy="periodos")
      * @ORM\JoinColumn(name="pnf_id", referencedColumnName="id")
      */
     protected $pnf;
     
     /**
-     * @var string
+     * @var integer
      *
-     * @ORM\Column(name="nombre", type="string", length=70)
+     * @ORM\Column(name="trayecto", type="integer", length=3)
      */
     
-    private $nombre;
-    
+    private $trayecto;
     /**
-     * @var string
+     * @var integer
      *
-     * @ORM\Column(name="codigo", type="string", length=12,unique=true)
+     * @ORM\Column(name="periodo", type="integer", length=3)
      */
     
-    private $codigo;
+    private $periodo;
     
     /**
-     * @var string
-     *
-     * @ORM\Column(name="area", type="string", length=70,unique=true)
-     */
-    
-    private $area;
-    
-    /**
-     * @ORM\OneToMany(targetEntity="Malla", mappedBy="uc")
+     * @ORM\OneToMany(targetEntity="Malla", mappedBy="periodopnf")
      */
     protected $mallas;
+    /**
+     * @ORM\OneToMany(targetEntity="PeriodoAcademicoAmbiente", mappedBy="periodopnf")
+     */
+    protected $periodosacademicosambientes;
     
     /**
      * Get id
@@ -67,79 +62,56 @@ class UnidadCurricular
     }
 
     /**
-     * Set nombre
+     * Set trayecto
      *
-     * @param string $nombre
-     * @return UnidadCurricular
+     * @param integer $trayecto
+     * @return PeriodoPnf
      */
-    public function setNombre($nombre)
+    public function setTrayecto($trayecto)
     {
-        $this->nombre = $nombre;
+        $this->trayecto = $trayecto;
 
         return $this;
     }
 
     /**
-     * Get nombre
+     * Get trayecto
      *
-     * @return string 
+     * @return integer 
      */
-    public function getNombre()
+    public function getTrayecto()
     {
-        return $this->nombre;
+        return $this->trayecto;
     }
 
     /**
-     * Set codigo
+     * Set periodo
      *
-     * @param string $codigo
-     * @return UnidadCurricular
+     * @param integer $periodo
+     * @return PeriodoPnf
      */
-    public function setCodigo($codigo)
+    public function setPeriodo($periodo)
     {
-        $this->codigo = $codigo;
+        $this->periodo = $periodo;
 
         return $this;
     }
 
     /**
-     * Get codigo
+     * Get periodo
      *
-     * @return string 
+     * @return integer 
      */
-    public function getCodigo()
+    public function getPeriodo()
     {
-        return $this->codigo;
-    }
-
-    /**
-     * Set area
-     *
-     * @param string $area
-     * @return UnidadCurricular
-     */
-    public function setArea($area)
-    {
-        $this->area = $area;
-
-        return $this;
-    }
-
-    /**
-     * Get area
-     *
-     * @return string 
-     */
-    public function getArea()
-    {
-        return $this->area;
+        return $this->periodo;
     }
 
     /**
      * Set pnf
      *
      * @param \MisionSucre\RipesBundle\Entity\Pnf $pnf
-     * @return UnidadCurricular
+     * @return PeriodoPnf
      */
     public function setPnf(\MisionSucre\RipesBundle\Entity\Pnf $pnf = null)
     {
@@ -169,7 +141,7 @@ class UnidadCurricular
      * Add mallas
      *
      * @param \MisionSucre\RipesBundle\Entity\Malla $mallas
-     * @return UnidadCurricular
+     * @return PeriodoPnf
      */
     public function addMalla(\MisionSucre\RipesBundle\Entity\Malla $mallas)
     {

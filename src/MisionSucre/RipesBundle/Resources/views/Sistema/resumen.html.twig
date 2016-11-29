@@ -16,7 +16,7 @@
 <div id="container" style="width: 100%">
 <table cellpadding="0" cellspacing="0" border="0" class="display" id="example" width="100%">
 	<thead>
-		<tr><th>Aldea</th><th>Coordinador</th><th>Ambientes</th><th>Triunfadores</th><th>Docente</th><th>Operario</th>
+		<tr><th>Aldea</th><th>Coordinador</th><th>Ambientes</th><th>Triunfadores</th><th>Docente</th><th>Operario</th><th>Usuarios </br>Registrados</th>
                 </tr><!-- Table Header -->  
 	</thead>
 	<tbody>
@@ -28,6 +28,7 @@
             <td><a href="{{path('aldea_show',{'id':r.idaldea})}}">{{r.aldea}}</td><td><a href="{{path('usuario_show',{'id':r.idusr})}}">{{r.coordinador |upper}}</a></td>
             <td>{{r.ambientes.cantidadambiente}}</td><td>{{r.triunfadores.cantidadtriunfadores}}</td>
             <td>{{r.docente.cantidaddocentes}}</td><td>{{r.operarios.cantidadoperarios}}</td>
+            <td>{{r.registrados.cantidad}}</td>
             
         </tr><!-- Table Row -->
     
