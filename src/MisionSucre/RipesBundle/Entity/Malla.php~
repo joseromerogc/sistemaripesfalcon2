@@ -47,4 +47,111 @@ class Malla
      */
     
     private $estaller;
+
+    /**
+     * Get id
+     *
+     * @return integer 
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+    
+    /**
+     * @ORM\OneToMany(targetEntity="ActaNota", mappedBy="unidadcurricular")
+     */
+    protected $actasnotas;
+
+    /**
+     * Set eselectiva
+     *
+     * @param string $eselectiva
+     * @return Malla
+     */
+    public function setEselectiva($eselectiva)
+    {
+        $this->eselectiva = $eselectiva;
+
+        return $this;
+    }
+
+    /**
+     * Get eselectiva
+     *
+     * @return string 
+     */
+    public function getEselectiva()
+    {
+        return $this->eselectiva;
+    }
+
+    /**
+     * Set estaller
+     *
+     * @param string $estaller
+     * @return Malla
+     */
+    public function setEstaller($estaller)
+    {
+        $this->estaller = $estaller;
+
+        return $this;
+    }
+
+    /**
+     * Get estaller
+     *
+     * @return string 
+     */
+    public function getEstaller()
+    {
+        return $this->estaller;
+    }
+
+    /**
+     * Set uc
+     *
+     * @param \MisionSucre\RipesBundle\Entity\UnidadCurricular $uc
+     * @return Malla
+     */
+    public function setUc(\MisionSucre\RipesBundle\Entity\UnidadCurricular $uc = null)
+    {
+        $this->uc = $uc;
+
+        return $this;
+    }
+
+    /**
+     * Get uc
+     *
+     * @return \MisionSucre\RipesBundle\Entity\UnidadCurricular 
+     */
+    public function getUc()
+    {
+        return $this->uc;
+    }
+
+    /**
+     * Set periodopnf
+     *
+     * @param \MisionSucre\RipesBundle\Entity\PeriodoPnf $periodopnf
+     * @return Malla
+     */
+    public function setPeriodopnf(\MisionSucre\RipesBundle\Entity\PeriodoPnf $periodopnf = null)
+    {
+        $this->periodopnf = $periodopnf;
+
+        return $this;
+    }
+
+    /**
+     * Get periodopnf
+     *
+     * @return \MisionSucre\RipesBundle\Entity\PeriodoPnf 
+     */
+    public function getPeriodopnf()
+    {
+        return $this->periodopnf;
+    }
 }

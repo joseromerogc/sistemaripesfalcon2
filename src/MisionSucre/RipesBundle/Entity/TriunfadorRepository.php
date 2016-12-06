@@ -105,19 +105,48 @@ class TriunfadorRepository extends EntityRepository
             ->setParameter('eje', $eje)      
             ->getResult();
     }
+    public function TriunfadoresCedulaEje($eje,$cedula)
+    {
+          return $this->getEntityManager()
+            ->createQuery(
+                'SELECT  IDENTITY(p.user) AS u, p.priNom,p.segNom, p.priApe, p.segApe, p.cedPer, p.sexPer
+                    ,p.celPer,p.telPer, trf AS t FROM MisionSucreRipesBundle:PeriodoAcademicoAmbiente pacd JOIN pacd.ambiente am JOIN am.aldea a JOIN a.parroquia prq,
+                    MisionSucreRipesBundle:Triunfador trf, MisionSucreRipesBundle:Persona p
+                    WHERE prq.eje = :eje AND trf.ambiente = am.id  AND trf.user = p.user
+                    AND p.cedPer LIKE :cedula
+                    '
+            )
+            ->setParameters(array('eje'=> $eje,'cedula'=>"%$cedula%"))      
+            ->getResult();
+    }
     
     public function findAllOrderedByUser()
     {
           return $this->getEntityManager()
             ->createQuery(
                 'SELECT DISTINCT usr.id,usr.username,p.priNom,p.segNom, p.priApe, p.segApe, p.cedPer, p.sexPer
-                    ,p.celPer,p.telPer, trf as t, pacd.trayecto, pacd.periodo
+                    ,p.celPer,p.telPer, trf as t
                     FROM
                     MisionSucreRipesBundle:Triunfador trf, MisionSucreRipesBundle:Persona p JOIN p.user usr,
                     MisionSucreRipesBundle:PeriodoAcademicoAmbiente pacd JOIN pacd.ambiente am
                     WHERE trf.user = p.user AND usr.id = p.user AND trf.user = usr.id AND am.id=trf.ambiente
                     '
             )
+            ->getResult();
+    }
+    public function TriunfadoresCedula($cedula)
+    {
+          return $this->getEntityManager()
+            ->createQuery(
+                'SELECT DISTINCT usr.id,usr.username,p.priNom,p.segNom, p.priApe, p.segApe, p.cedPer, p.sexPer
+                    ,p.celPer,p.telPer, trf as t
+                    FROM
+                    MisionSucreRipesBundle:Triunfador trf, MisionSucreRipesBundle:Persona p JOIN p.user usr,
+                    MisionSucreRipesBundle:PeriodoAcademicoAmbiente pacd JOIN pacd.ambiente am
+                    WHERE trf.user = p.user AND usr.id = p.user AND trf.user = usr.id AND am.id=trf.ambiente
+                    AND p.cedPer LIKE :cedula
+                    '
+            )->setParameters(array('cedula'=>"%$cedula%"))
             ->getResult();
     }
     public function findAllOrderedByEgresado()

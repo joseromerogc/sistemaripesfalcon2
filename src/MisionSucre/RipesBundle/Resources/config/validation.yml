@@ -81,8 +81,13 @@ MisionSucre\RipesBundle\Entity\UnidadCurricular:
         - Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity:
             fields: codigo
             message: Este código ya existe
-MisionSucre\RipesBundle\Entity\UnidadCurricular:
+MisionSucre\RipesBundle\Entity\PeriodoAcademicoAmbiente:
   constraints:
         - Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity:
             fields: [ambiente, periodoacademico, periodopnf]
-            message: Este código ya existe
+            message: Este Periodo Académico Ya Existe
+MisionSucre\RipesBundle\Entity\PeriodoTriunfador:
+  constraints:
+        - Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity:
+            fields: [periodoacademicoambiente, user]
+            message: Ya esta vinculado en este Periodo Académico

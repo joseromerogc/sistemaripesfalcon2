@@ -1,0 +1,69 @@
+<div id="dt_example">
+<div id="container">
+<h1 class="heading_style">Triunfadores a Vincular</h1>     
+<table cellpadding="0" cellspacing="0" border="0" class="display" id="example">
+	<thead>
+		<tr>
+			<th>#</th></th><th>Cédula</th><th>Nombres</th><th>Apellidos</th>
+                        <th>Aldea</th><th>Ambiente</th>
+                        <th></th>
+		</tr>
+	</thead>
+	<tbody>
+	
+{% set i = 1 %}
+
+
+{% for t in triunfadores %}
+    
+    
+	{% if t.sexPer == 'm' %}
+			{% set class = 'gradeA' %}
+	{% else %}	
+			{% set class = 'gradeU' %}		
+{% endif %}	
+
+	
+		<tr class="{{class}}">
+    <td>{{i}}</td><td>{{ t.cedPer}}</td>
+    <td>{{ t.priNom |upper}} {{ t.segNom |upper}}</td>
+    <td>{{ t.priApe |upper}} {{ t.segApe |upper}}</td>
+    <td><a class="enlace" href="{{path('aldea_show',{'id': t.t.ambiente.aldea.id})}}">{{t.t.ambiente.aldea.nombre}}</a></td>
+    <td><a class="enlace" href="{{path('ambiente_show',{'idamb': t.t.ambiente.id})}}">({{t.t.ambiente.id}}) {{t.t.ambiente.pnf.nombre}} </a></td>
+    <td><a class="enlace" href="{{path('usuario_show',{'id': t.id})}}">Mostrar</a></td>
+{% set i = i+1 %}
+
+{% endfor %}    
+
+</tr>
+        </tbody>        
+</table>
+</div>
+</div>
+
+<script src="{{asset('js/jquery.dataTables.js')}}" type="text/javascript" type="text/javascript"></script>
+<script src="{{asset('js/dataTables.tableTools.js')}}" type="text/javascript" type="text/javascript"></script>
+
+<script>
+$(document).ready(function() {
+$('#example').dataTable( {
+        "oLanguage": {
+            "sLengthMenu": "Mostrar _MENU_ Usuarios por Página",
+            "sZeroRecords": "No se encontraron Resultados",
+            "sSearch": "Filtro: ",
+            "sInfo": "Mostrando _START_ a _END_  de un Total de _TOTAL_ Usuarios",
+            "sInfoEmpty": "Mostrando 0 de 0 de 0 Usuarios",
+            "sInfoFiltered": "(Filtrado de un _MAX_ total de Usuarios)",
+            "oPaginate": {
+                "sNext": "Página Siguiente",
+                "sPrevious": "Página Anterior"
+                }
+        },
+        dom: 'T<"clear">lfrtip'
+        ,
+        tableTools:{
+        		"sSwfPath": "{{asset('swf/copy_csv_xls_pdf.swf')}}",
+        }
+    } );
+} );
+</script>

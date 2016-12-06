@@ -1,17 +1,20 @@
 <div id="dt_example">
 <div id="container">
-    
+<h1 class="heading_style">Usuarios Registrados</h1>     
 <table cellpadding="0" cellspacing="0" border="0" class="display" id="example">
 	<thead>
 		<tr>
-			<th>#</th><th>Nombre de Usuario</th><th>Tipo de Usuario</th><th></th><th></th>
+			<th>#</th><th>Nombre de Usuario</th><th>Cédula</th>
+                        <th>Nombres</th><th>Apellidos</th>
+                        <th>Tipo de Usuario</th>
+                        <th>Vinculado</th><th></th><th></th>
 		</tr>
 	</thead>
 	<tbody>
 	
 {% set i = 1 %}
 
-{% for user in usuarios %}
+{% for user in usuarios.vinculados %}
 
 	{% if user.idrole == 1 %}
 			{% set class = 'gradeA' %}
@@ -24,13 +27,38 @@
 {% endif %}	
 	
 		<tr class="{{class}}">
-<td>{{i}}</td><td>{{user.username | lower}}</td><td>{{user.name}}</td><td><a class="enlace" href="{{path('usuario_show',{'id':user.id})}}">Mostrar</a></td>
+<td>{{i}}</td><td>{{user.username | lower}}</td>
+<td>{{user.cedPer | lower}}</td><td>{{ user.priNom |upper}} {{ user.segNom |upper}}</td>
+    <td>{{ user.priApe |upper}} {{ user.segApe |upper}}</td><td>{{user.name}}</td>
+    <td>SI</td>
+    <td><a class="enlace" href="{{path('usuario_show',{'id':user.id})}}">Mostrar</a></td>
     <td><a class="enlace" href="{{path('usuario_update',{'id':user.id})}}">Actualizar</a></td>
     
 {% set i = i+1 %}
 {% endfor %}    
+{% for user in usuarios.novinculados %}
+
+	{% if user.idrole == 1 %}
+			{% set class = 'gradeA' %}
+	{% elseif  user.idrole == 2 %}	
+			{% set class = 'gradeC' %}
+	{% elseif  user.idrole == 5 %}	
+			{% set class = 'gradeX' %}
+	{% else %}	
+			{% set class = 'gradeU' %}		
+{% endif %}	
+	
+		<tr class="{{class}}">
+<td>{{i}}</td><td>{{user.username | lower}}</td>
+<td>{{user.cedPer | lower}}</td><td>{{ user.priNom |upper}} {{ user.segNom |upper}}</td>
+    <td>{{ user.priApe |upper}} {{ user.segApe |upper}}</td><td>{{user.name}}</td>
+    <td>NO</td>
+    <td><a class="enlace" href="{{path('usuario_show',{'id':user.id})}}">Mostrar</a></td>
+    <td><a class="enlace" href="{{path('usuario_update',{'id':user.id})}}">Actualizar</a></td>
     
-		</tr>
+{% set i = i+1 %}
+{% endfor %}    
+</tr>
         </tbody>        
 </table>
 </div>

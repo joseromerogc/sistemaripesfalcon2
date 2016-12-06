@@ -109,4 +109,17 @@ class CoordinadorTurnoRepository extends EntityRepository
             )
             ->setParameters(array('idcoordinador'=>$idcoordinador))->getResult();
     }
+    public function TriunfadoresCoordinadorCedula($idcoordinador,$cedula)
+    {
+          return $this->getEntityManager()
+            ->createQuery(
+                'SELECT  IDENTITY(p.user) AS id,p.priNom,p.segNom, p.priApe, p.segApe, p.cedPer, p.sexPer
+                    ,p.celPer,p.telPer, trf AS t FROM MisionSucreRipesBundle:PeriodoAcademicoAmbiente pacd JOIN pacd.ambiente a JOIN a.pnf pnf,
+                    MisionSucreRipesBundle:Triunfador trf, MisionSucreRipesBundle:Persona p,MisionSucreRipesBundle:CoordinadorTurno tu JOIN tu.coordinador c
+                    WHERE trf.ambiente = a.id AND trf.user = p.user AND p.cedPer LIKE :cedula
+                    AND c.id = :idcoordinador AND c.aldea = a.aldea AND tu.turno=a.turno
+                '
+            )
+            ->setParameters(array('idcoordinador'=>$idcoordinador,'cedula'=>"%$cedula%"))->getResult();
+    }
 }

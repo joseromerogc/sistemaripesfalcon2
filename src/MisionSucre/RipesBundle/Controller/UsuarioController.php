@@ -523,7 +523,7 @@ class UsuarioController extends Controller
 	{         
 		return $this->render(
 			'MisionSucreRipesBundle:Usuario:buscar.html.twig',
-                        array('roles'=>$this->TiposUsers())
+                        array()
 		);	
 	}
     public function busquedaAction($param)
@@ -533,6 +533,7 @@ class UsuarioController extends Controller
                 
                 $query=$parametros['query'];
                 
+                
                 $em = $this->getDoctrine()->getManager();
                 
                 $usr = $this->getUser();
@@ -540,7 +541,9 @@ class UsuarioController extends Controller
                 switch($usr->getTipUsr()){
                     
                     case 1:
-                        $usrs = $em->getRepository('MisionSucreRipesBundle:Role')->findAllByRoleAndName($query['username'],$query['role']);
+                    case 2:
+                        $usrs['vinculados'] = $em->getRepository('MisionSucreRipesBundle:Role')->findAllByRoleAndNameAndCedula($query['username'],$query['cedula']);
+                        $usrs['novinculados'] = $em->getRepository('MisionSucreRipesBundle:Role')->NoVinculados($query['username'],$query['cedula']);
                         break;
                     case 8:
                         $coordeje = $this->getDoctrine()
@@ -555,7 +558,8 @@ class UsuarioController extends Controller
                         );
                         return $this->redirect($this->generateUrl('eje_new',array('id'=>$usr->getId())));
                         } 
-                        $usrs = $em->getRepository('MisionSucreRipesBundle:CoordinadorEje')->findAllByEjeAndUser($coordeje->getEje(),$query['username'],$query['role']);
+                        $usrs['vinculados'] = $em->getRepository('MisionSucreRipesBundle:CoordinadorEje')->findAllByEjeAndUser($coordeje->getEje(),$query['username'],$query['cedula']);
+                        $usrs['novinculados'] = array();
                         break;
                     case 5:
                         $coordaldea = $this->getDoctrine()
@@ -570,10 +574,10 @@ class UsuarioController extends Controller
                         );
                         return $this->redirect($this->generateUrl('eje_new',array('id'=>$usr->getId())));
                         } 
-                        $usrs = $em->getRepository('MisionSucreRipesBundle:CoordinadorAldea')->findAllByAldeaAndUser($coordaldea->getAldea(),$query['username'],$query['role']);
+                        $usrs['vinculados'] = $em->getRepository('MisionSucreRipesBundle:CoordinadorAldea')->findAllByAldeaAndUser($coordaldea->getAldea(),$query['username'],$query['cedula']);
+                        $usrs['novinculados'] = array();
                         break;
                 }
-                
                 
 		return $this->render(
 			'MisionSucreRipesBundle:Usuario:busqueda.html.twig',

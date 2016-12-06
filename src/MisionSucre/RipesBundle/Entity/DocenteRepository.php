@@ -23,6 +23,22 @@ class DocenteRepository extends EntityRepository
             ->setParameters(array('user'=>$user,'aldea'=>$aldea))->getOneOrNullResult();
     }
     
+    public function findDocenteByUserAndEje($eje,$user)
+    {
+          return $this->getEntityManager()
+            ->createQuery(
+                'SELECT  IDENTITY(p.user) AS u, p.priNom,p.segNom, p.priApe, p.segApe, p.cedPer, p.sexPer
+                    ,p.celPer,p.telPer, doc AS d FROM MisionSucreRipesBundle:Aldea a JOIN a.parroquia prq,
+                    MisionSucreRipesBundle:Docente doc, MisionSucreRipesBundle:Persona p
+                    WHERE prq.eje = :eje AND doc.aldea = a.id  AND doc.user = p.user
+                    AND d.user=:user
+                    '
+            )
+            ->setParameters(array('eje'=>$eje,'user'=>$user))      
+            ->getResult();
+    }
+    
+    
     public function findAllOrderedByAldea($idaldea){
         
         return $this->getEntityManager()

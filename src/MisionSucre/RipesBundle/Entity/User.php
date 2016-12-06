@@ -284,7 +284,12 @@ class User implements UserInterface, \Serializable
      * @ORM\OneToMany(targetEntity="EstructuraActividad", mappedBy="responsable")
      */
     protected $responsablesactividades;
-
+    
+    /**
+     * @ORM\OneToMany(targetEntity="PeriodoTriunfador", mappedBy="user")
+     */
+    protected $periodostriunfadores;
+    
     /**
      * Add docentes
      *
@@ -503,5 +508,38 @@ class User implements UserInterface, \Serializable
     public function getResponsablesactividades()
     {
         return $this->responsablesactividades;
+    }
+
+    /**
+     * Add periodostriunfadores
+     *
+     * @param \MisionSucre\RipesBundle\Entity\PeriodoTriunfador $periodostriunfadores
+     * @return User
+     */
+    public function addPeriodostriunfadore(\MisionSucre\RipesBundle\Entity\PeriodoTriunfador $periodostriunfadores)
+    {
+        $this->periodostriunfadores[] = $periodostriunfadores;
+
+        return $this;
+    }
+
+    /**
+     * Remove periodostriunfadores
+     *
+     * @param \MisionSucre\RipesBundle\Entity\PeriodoTriunfador $periodostriunfadores
+     */
+    public function removePeriodostriunfadore(\MisionSucre\RipesBundle\Entity\PeriodoTriunfador $periodostriunfadores)
+    {
+        $this->periodostriunfadores->removeElement($periodostriunfadores);
+    }
+
+    /**
+     * Get periodostriunfadores
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getPeriodostriunfadores()
+    {
+        return $this->periodostriunfadores;
     }
 }

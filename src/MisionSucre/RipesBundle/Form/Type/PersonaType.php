@@ -23,14 +23,16 @@ class PersonaType extends AbstractType
             ));
         
         $builder->add('edoCiv', 'choice', array(
-        'choices' => array('solter@'=>'Solter@','casad@'=>'Casad@','viud@'=>'Viud@','concubinato'=>'Concubinato'),'label' => 'Estado Civil'
+        'choices' => array('solter@'=>'Solter@','casad@'=>'Casad@','viud@'=>'Viud@','concubinato'=>'Concubinato',
+            'Divorciad@'=>'Divorciad@'
+            ),'label' => 'Estado Civil'
             ));
         $builder->add('sexPer', 'choice', array(
         'choices' => array('f'=>'Femenino','m'=>'Masculino'),'label' => 'Sexo*','placeholder'=>'Seleccione'
             ));
         $builder->add('cedPer', 'number',array('max_length'=>'9'));
         $builder->add('edadPer', 'number',array('max_length'=>'2','label' => 'Edad','required'=>'false'));
-        $builder->add('fechPer','date', array('label' => 'Fecha de Nacimiento','years'=>range(1950,1998)));
+        $builder->add('fechPer','date', array('label' => 'Fecha de Nacimiento','years'=>range(1920,1998)));
     }
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)

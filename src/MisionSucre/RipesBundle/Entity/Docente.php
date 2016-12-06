@@ -83,6 +83,11 @@ class Docente
     private $exclusividad;
     
     /**
+     * @ORM\OneToMany(targetEntity="ActaNota", mappedBy="docente")
+     */
+    protected $actasnotas;
+    
+    /**
      * Get id
      *
      * @return integer 
@@ -274,5 +279,45 @@ class Docente
     public function getExclusividad()
     {
         return $this->exclusividad;
+    }
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->actasnotas = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+
+    /**
+     * Add actasnotas
+     *
+     * @param \MisionSucre\RipesBundle\Entity\ActaNota $actasnotas
+     * @return Docente
+     */
+    public function addActasnota(\MisionSucre\RipesBundle\Entity\ActaNota $actasnotas)
+    {
+        $this->actasnotas[] = $actasnotas;
+
+        return $this;
+    }
+
+    /**
+     * Remove actasnotas
+     *
+     * @param \MisionSucre\RipesBundle\Entity\ActaNota $actasnotas
+     */
+    public function removeActasnota(\MisionSucre\RipesBundle\Entity\ActaNota $actasnotas)
+    {
+        $this->actasnotas->removeElement($actasnotas);
+    }
+
+    /**
+     * Get actasnotas
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getActasnotas()
+    {
+        return $this->actasnotas;
     }
 }

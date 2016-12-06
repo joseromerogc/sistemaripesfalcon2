@@ -53,7 +53,6 @@ class TriunfadorController extends Controller
                 
                 $idaldea = $ambiente->getAldea()->getId();
                 
-                
                 $aldea = $this->getDoctrine()
                 ->getRepository('MisionSucreRipesBundle:Aldea')
                 ->find($idaldea);
@@ -1139,6 +1138,36 @@ class TriunfadorController extends Controller
         $em = $this->getDoctrine()->getManager();
         
         $triunfadores= array();
+        
+        $user = $this->getUser();
+        
+        switch($user->getTipUsr()){
+        
+        case 5:
+            $coordinador = $em->getRepository('MisionSucreRipesBundle:CoordinadorAldea')->findOneByUser($user->getId());
+                        if(!$coordinador){
+                            $request->getSession()->getFlashBag()->add(
+                            'notice',
+                            'Coordinador No Vinculado a una Aldea'
+                            );            
+                            return $this->redirect($this->generateUrl('aldea_coordinador_info'));
+                        }
+            $triunfadores = $em->getRepository('MisionSucreRipesBundle:CoordinadorTurno')->TriunfadoresCoordinador($coordinador->getId());
+            break;
+        case 8:    
+        
+        $usreje = $em->getRepository('MisionSucreRipesBundle:CoordinadorEje')->findOneByUser($user->getId());
+        $triunfadores = $em->getRepository('MisionSucreRipesBundle:Triunfador')->findAllOrderedByEje($usreje->getEje()->getId());
+        break;
+        case 1:
+        $triunfadores = $em->getRepository('MisionSucreRipesBundle:Triunfador')->findAllOrderedByUser();
+        break;
+        }
+        return $triunfadores;
+    }
+    public function listacedulaAction(Request $request,$cedula)
+    {   
+        $em = $this->getDoctrine()->getManager();
         
         $user = $this->getUser();
         

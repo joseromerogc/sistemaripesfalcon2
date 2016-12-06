@@ -80,6 +80,7 @@ security:
         - { path: ^/aldea, roles: IS_AUTHENTICATED_FULLY }
         - { path: ^/coord, roles: ROLE_COORD }
         - { path: ^/usuario, roles: IS_AUTHENTICATED_FULLY }
+        - { path: ^/usuarios, roles: ROLE_COORD }
         - { path: ^/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/ambiente, roles: IS_AUTHENTICATED_FULLY }
         - { path: ^/persona, roles: IS_AUTHENTICATED_FULLY }

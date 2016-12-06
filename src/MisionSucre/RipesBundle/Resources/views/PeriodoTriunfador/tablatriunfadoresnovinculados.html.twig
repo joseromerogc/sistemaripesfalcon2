@@ -1,0 +1,47 @@
+<div>
+{% if  triunfadores %}
+    <table cellspacing='0' style='margin-top: 0px; margin-bottom: 0px;margin-left: 0px;'> <!-- cellspacing='0' is important, must stay -->
+		<tr>
+			<th >#</th>
+                        <th >Cédula</th><th>Nombres y Apellidos</th>
+                        <th >Vinculado al </br> Sistema Sucre</th>
+                        <th >Condición</th>
+                        <th ></th>
+                        <th ></th>
+		</tr>
+                
+	<tbody>
+    {% else %}
+    <h1 class="heading_style">No hay Triunfadores sin vincular o el Ambiente no tiene Triunfadores</h1> 
+    {% endif %}
+	
+{% set i = 1 %}
+
+{% for t in triunfadores %}
+
+	{% if t.sexPer == 'm' %}
+			{% set class = 'gradeA' %}
+	{% else %}	
+			{% set class = 'gradeU' %}		
+        {% endif %}	
+        	
+		<tr class="{{class}}">
+    <td>{{i}}</td>  <td>{{ t.cedPer}}</td>
+    <td>{{ t.priNom |upper}} 
+    {{ t.priApe |upper}}</td>
+         <td>{{t.sistema}}</td>
+    
+    <td>{{t.condicion}}</td>
+    
+    {% if is_granted('ROLE_COORD') %}
+        <td><a class="enlace" href="{{path('usuario_show',{'id': t.idusr})}}">Mostrar</a></td>
+        <td><a class="enlace" onclick="vincularTriunfador(event,{{t.idusr}})" href="#">Vincular</a></td>
+    {% endif %} 
+    
+{% set i = i+1 %}
+{% endfor %}    
+		</tr>
+      </tbody>
+</table>
+</div>
+                

@@ -42,4 +42,5 @@ class MallaRepository extends EntityRepository
             )
             ->setParameters(array('pnf'=>$pnf))->getResult();
     }
+    
 }

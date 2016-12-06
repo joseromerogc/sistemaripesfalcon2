@@ -4,19 +4,15 @@
 {{ parent() }}
 	<link rel="stylesheet" type="text/css" href="{{asset('css/table/littletable.css')}}">
 	<link rel="stylesheet" type="text/css" href="{{asset('css/blitzer/jquery-ui-1.10.4.custom.css')}}">
+        <link rel="stylesheet" type="text/css" href="{{asset('css/dataTables.tableTools.css')}}">	
+        <link rel="stylesheet" type="text/css" href="{{asset('css/demo_table.css')}}">
+	<link rel="stylesheet" type="text/css" href="{{asset('css/demo_page.css')}}">
 	
 {% endblock %}
 
 {% block js %}
         {{ parent() }}
 	<script src="{{asset('js/jquery-ui-1.10.4.custom.js')}}"></script>
-        <script>
-            
-            $(function() {
-                $( "#tabs" ).tabs();
-            });            
-            
-        </script>
 {% endblock %}    
 
 {% block content %}
@@ -34,11 +30,10 @@
     <ul>
 		<li><a href="#info">Información General</a></li>
 		<li><a href="#triunfadores">Triunfadores</a></li>
-		<li><a href="#periodosacademicos">Periodos Académicos</a></li>
-                <li><a href="#vocero">Vocero</a></li>
-                {% if modalidad =="TI"%}
-                <li><a href="#finalizados">Finalizados</a></li>
-                {% endif%}
+		<li><a href="#ucs">Unidades Curriculares</a></li>
+		{#<li><a href="#periodosacademicos">Periodos Académicos</a></li>
+                <li><a href="#vocero">Vocero</a></li>#}
+                
     </ul>
 <div id="info">    
     <h1 class="heading_style">Información de Ambiente</h1> 
@@ -57,7 +52,10 @@
                 {% endif %}	
 
                     
-                <td>{{ambiente.id}}</td><td><a href="{{path('aldea_show',{'id': ambiente.aldea.id})}}">{{ambiente.aldea.nombre}}<a></td><td>{{ambiente.pnf.nombre}}</td> <td>{{turno}}</td><td>{%if ambiente.anexo %} {{ambiente.anexo.nombre}} {%endif%}</td>
+                <td>{{ambiente.id}}</td>
+                <td><a href="{{path('aldea_show',{'id': ambiente.aldea.id})}}">{{ambiente.aldea.nombre}}<a></td>
+                <td><a class="enlace" href="{{path('pnf_show',{'id': periodopnf.pnf.id})}}">{{periodopnf.pnf.nombre}}</a></td>
+                <td>{{turno}}</td><td>{%if ambiente.anexo %} {{ambiente.anexo.nombre}} {%endif%}</td>
                 <td>{{ambiente.nombre}}</td>
                 <td>{{ambiente.promocion}}</td><td>{{ambiente.condicion}}</td>
                 <td>{{ambiente.ingreso}}</td><td>{{ambiente.egreso}}</td>
@@ -67,117 +65,141 @@
                 
             </tr><!-- Table Row -->
     </table>    
+    <h1 class="heading_style">Información de Periodo Académico</h1>             
     <table cellspacing='0' style='margin-top: 0px; margin-bottom: 0px;margin-left: 0px;'> <!-- cellspacing='0' is important, must stay -->
-        <tr><th>ID</th><th>Nombre</th><th>Trayecto</th><th>Periodo/Tramo</th><th>Actual</th>
+        <tr><th>ID</th><th>Nombre</th><th>PNF</th><th>Trayecto</th><th>Periodo/Tramo</th><th>Actual</th>
                 </tr><!-- Table Header -->  
             <tr>
             
                 <td>{{periodoambiente.id}}</td>
                 <td>{{periodoacademico.nombre}}</td>
                 <td>{{periodopnf.trayecto}}</td><td>{{periodopnf.periodo}}</td>
-                <td>{{periodoacademico.periodoacademico.actual}}</td>
+                <td>{{periodoacademico.actual}}</td>
                 {% if is_granted('ROLE_COORD') %}
-                <td><a class="enlace" href="{{path('periodo_academico_update_ambiente',{'idper': p.id})}}">Actualizar</a></td>
+                <td><a class="enlace" href="{{path('periodo_academico_update_ambiente',{'idper': periodoambiente.id})}}">Actualizar</a></td>
                 {% endif%}
                  </tr><!-- Table Row -->
     </table>  
 </div>
             
-{#<div id="periodosacademicos">    
-    <h1 class="heading_style">Histórico Periodos Académicos</h1> 
-    <table cellspacing='0' style='margin-top: 0px; margin-bottom: 0px;margin-left: 0px;'> <!-- cellspacing='0' is important, must stay -->
-        <tr><th>ID</th><th>Nombre</th><th>Trayecto</th><th>Periodo/Tramo</th><th>Actual</th>
-                </tr><!-- Table Header -->  
-            <tr>
-            {% for p in periodosacademicos %}   
-                <td>{{p.id}}</td>
-                <td>{{p.periodoacademico.nombre}}</td>
-                <td>{{p.periodopnf.trayecto}}</td><td>{{p.periodopnf.periodo}}</td>
-                <td>{{p.periodoacademico.actual}}</td>
-                {% if is_granted('ROLE_COORD') %}
-                <td><a class="enlace" href="{{path('periodo_academico_update_ambiente',{'idper': p.id})}}">Actualizar</a></td>
-                {% endif%}
-                 </tr><!-- Table Row -->
-            {% endfor%}
+<div id="triunfadores">    
+    <h1 class="heading_style">Triunfadores</h1> 
+    <div id="msg_registro" class="error" style ="margin: 30px">
+        </div>
+    <div id="accordion">
+        <h3>Vinculados</h3>    
+            <div id="vinculados">
            
-    </table>  
-            <a style='margin-left: 12px;' class="enlace" href="{{path('periodo_academico_new_ambiente',{'idamb':ambiente.id})}}"> 
-                   <span class='icon'><img src="{{asset('img/add-1-icon.png')}}"/></span> Agregar</a> 
+            </div>
+        <h3> No Vinculados</h3>    
+            <div id="novinculados">
+           
+            </div>
+    </div>    
+    
+    <h1 class="sub_heading_style">Anexar</h1> 
+    Cédula: <input type="search" class="cedula" />
+    <input type="submit" value="Buscar" id="b_buscar" required/>
+<div class="errorbusqueda error">
+</div>
+
+<div class="tabla_anexar">
+    
+</div>    
+            
             
             
       
 </div>
 
         
-<div id="triunfadores" >
-    <h1 class="heading_style">Triunfadores</h1> 
-    {% if is_granted('ROLE_COORD') %}
-    <a style='margin-left: 12px;' class="enlace" href="{{path('triunfador_vincular',{'idamb':ambiente.id})}}"> 
-    <span class='icon'><img src="{{asset('img/add-1-icon.png')}}"/></span> Vincular Triunfadores</a> 
-    {% endif%}
-   {% if  triunfadores %}
+<div id="ucs" >
+    <h1 class="heading_style">Unidades Curriculares</h1> 
+    <div id="msg_registro" class="error" style ="margin: 30px">
+        </div>
+    <div id="accordion2">
+
+        <h3>Vinculadas</h3>    
+        <div>
+{% if  ucs.vinculadas %}
     <table cellspacing='0' style='margin-top: 0px; margin-bottom: 0px;margin-left: 0px;'> <!-- cellspacing='0' is important, must stay -->
 		<tr>
 			<th >#</th>
-                        <th >Cédula</th><th>Nombres y Apellidos</th>
-                        <th >Celular</th>
-                        <th>Teléfono</th>
-                        <th >Vinculado al </br> Sistema Sucre</th>
-                        <th >Becado</th>
-                        <th >Condición</th>
+                        <th >ID</th><th>Nombre</th>
+                        <th >Área</th>
+                        <th >Código</th>
+                        <th >Docente</th>
+                        <th >Cédula</th>
                         <th ></th>
-                        <th ></th>
-                         {% if modalidad =="TI"%}
-                        <th >Finalizar</th>
-                        {% endif %}
 		</tr>
-                
-	<tbody>
-    {% endif %}
-	
+    <tbody>
+        
 {% set i = 1 %}
 
-{% for t in triunfadores %}
-
-	{% if t.sexPer == 'm' %}
-			{% set class = 'gradeA' %}
-	{% else %}	
-			{% set class = 'gradeU' %}		
-        {% endif %}	
+{% for u in ucs.vinculadas %}
         	
-		<tr class="{{class}}">
-    <td>{{i}}</td>  <td>{{ t.cedPer}}</td>
-    <td>{{ t.priNom |upper}} 
-    {{ t.priApe |upper}}</td>
-    <td>{{t.celPer}}</td>
-        <td>{{t.telPer}}</td>
-         <td>{{t.sistema}}</td>
-    <td>{{t.becamision}}</td>
-    
-    <td>{{t.condicion}}</td>
-    
-    {% if is_granted('ROLE_COORD') %}
-        <td><a class="enlace" href="{{path('usuario_show',{'id': t.idusr})}}">Mostrar</a></td>
-        <td><a class="enlace" onclick="return confirm('******Confirmar Borrar******')" href="{{path('triunfador_delete',{'idtrf': t.id})}}">Desvincular</a></td>
-        {% if modalidad =="TI"%} <td>
-                    <select onchange="document.getElementById('e{{i}}').href='../../finalizarambiente/'+{{t.id}}+'/'+this.value;" id="form_pnf" required="required" class="periodo">
-                        <option value=""> Seleccione Periodo Académico</option>
-                        {% for p in periodosacademicos %}
-                        <option value="{{p.id}}">{{p.periodoacademico.nombre}}</option>
-                        {% endfor %}
-                    </select>
-            <a href='#' id='e{{i}}'>Finalizar</a>
-        </td>
-        {% endif %}
-    {% endif %} 
+<tr>
+    <td>{{i}}</td>  <td>{{ u.a.malla.id}}</td>
+    <td>{{ u.a.malla.uc.nombre |upper}} </td>
+    <td>{{ u.a.malla.uc.area |upper}} </td>
+    <td>{{ u.a.malla.uc.codigo |upper}} </td>    
+    <td><a class="enlace" href="{{path('usuario_show',{'id': u.a.docente.user.id})}}">
+        {{u.priNom|capitalize}} {{u.segNom|capitalize}}{{u.priApe|capitalize}} {{u.segApe|capitalize}}
+        </a>
+    <td> {{u.cedPer}}</td>    
+    <td><a class="enlace" href="{{path('acta_nota_update',{'idan': u.a.id})}}">Cambiar Docente</a>
+            
+    </td>
     
 {% set i = i+1 %}
 {% endfor %}    
+
 		</tr>
       </tbody>
 </table>
+{% else %}
+<h4>Sin Unidades Curriculares Vinculadas</h4>
+{% endif %}
+
+        </div>
+    <h3> No Vinculadas</h3>    
+            <div>
+           {% if  ucs.novinculadas %}
+    <table cellspacing='0' style='margin-top: 0px; margin-bottom: 0px;margin-left: 0px;'> <!-- cellspacing='0' is important, must stay -->
+		<tr>
+			<th >#</th>
+                        <th >ID</th><th>Nombre</th>
+                        <th >Área</th>
+                        <th >Código</th>
+                        <th ></th>
+		</tr>
+    <tbody>
+
+
+{% set i = 1 %}
+
+{% for u in ucs.novinculadas %}
+        	
+	<tr>	
+    <td>{{i}}</td>  <td>{{ u.id}}</td>
+    <td>{{ u.uc.nombre |upper}} </td>
+    <td>{{ u.uc.area |upper}} </td>
+    <td>{{ u.uc.codigo |upper}} </td>
+    <td><a class="enlace" href="{{path('acta_nota_new',{'idpamb': periodoambiente.id,'idm': u.id})}}">Vincular</a></td>
+    	</tr>
+{% set i = i+1 %}
+{% endfor %}
+	
+      </tbody>
+</table>
+{% else %}
+<h4>Sin Unidades Curriculares Por Vincular</h4>
+{% endif %}
+            </div>
+    </div>                
+                
 </div>
-  
+{#  
 <div id="vocero">
     <h1 class="heading_style">Vocero</h1> 
     
@@ -233,6 +255,111 @@
 </div>
  {%endif %} #}
 </div>
+</div>
 
 {% endblock %}
+
+{% block javascripts %}
+{{parent()}}
+{% if ambiente.pnf.modalidad =="TRIMESTRAL" %} {% set p="Periodo"%}{% else %}{% set p="Tramo"%}{% endif%}
+
+function vincularTriunfador(event,idusr){
+
+
+event.preventDefault();
+idppamb={{periodoambiente.id}};
+$.ajax({
+  method: "POST",
+  url: "/coord/periodos-triunfadores/new",
+  data: { pidppamb: idppamb , pidusr: idusr },
+  success: function (html) {$('#msg_registro').html(html);}
+});
+ActualizarTablaTriunfadores();
+
+}
+
+function desVincularTriunfador(event,idpt){
+if(confirm('******Confirmar Desvincular******')){
+event.preventDefault();
+$.ajax({
+  method: "POST",
+  url: "/coord/periodos-triunfadores/delete",
+  data: { pidpt: idpt },
+  success: function (html) {$('#msg_registro').html(html);}
+});
+ActualizarTablaTriunfadores();
+}
+}
+
+function ActualizarTablaTriunfadores(){
+$.ajax({
+  method: "POST",
+  url: "/coord/periodos-triunfadores/tablatriunfadoresvinculados",
+  data: { idppamb: {{periodoambiente.id}} },
+  success: function (html) {$('#vinculados').html(html);}
+});
+$.ajax({
+  method: "POST",
+  url: "/coord/periodos-triunfadores/tablatriunfadoresnovinculados",
+  data: { idppamb: {{periodoambiente.id}} },
+  success: function (html) {$('#novinculados').html(html);}
+});
+}
+
+$(function() {
+
+$( "#tabs" ).tabs();
+$( "#accordion,#accordion2" ).accordion({
+                heightStyle: "content",        
+                collapsible: true,
+                active: false
+                });
+$( "#b_registrar" ).click(function() {
+
+{#var tray=$('#trayecto').val();    
+var per=$('#periodo').val();    
+
+if(tray=="" || per==""){
+    $('#msg_registro').html("Ingrese Trayecto/{{p}}")
+}
+else{
+if(confirm('******Confirmar Registro******')){
+    $.ajax({
+  method: "POST",
+  url: "/control-estudio/periodos-pnf/new",
+  data: { idpnf: {{pnf.id}},trayecto:tray,periodo:per },
+  success: function (html) {$('#msg_registro').html(html);}
+});#}
+
+ActualizarTablaTriunfadores();
+
+});
+
+ActualizarTablaTriunfadores();
+
+$('#b_buscar').click( function () {
+
+if($('.cedula').val()==""){
+    $('.errorbusqueda').html("Parámetros de Busqueda Vacios.");
+}
+else{
+
+$('.errorbusqueda').html("");
+
+$('.tabla_anexar').html('<img src="{{asset('img/ajax-loader.gif')}}" width="16" height="16" alt="cargando" />');
+
+var cedula=$('.cedula').val();
+
+$.ajax({
+        url: "/coord/periodotriunfador/cedula/"+cedula+"",
+        success: function (html) {$('.tabla_anexar').html(html);}
+    });
+$('html, body').animate({scrollTop:220});
+}
+ActualizarTablaTriunfadores();
+});
+
+});
+
+{% endblock%}
 

@@ -80,6 +80,7 @@
                 <td>{{p.periodopnf.trayecto}}</td><td>{{p.periodopnf.periodo}}</td>
                 <td>{{p.periodoacademico.actual}}</td>
                 {% if is_granted('ROLE_COORD') %}
+                <td><a class="enlace" href="{{path('periodo_academico_ambiente_show',{'idpamb': p.id})}}">Mostrar</a></td>
                 <td><a class="enlace" href="{{path('periodo_academico_update_ambiente',{'idper': p.id})}}">Actualizar</a></td>
                 {% endif%}
                  </tr><!-- Table Row -->

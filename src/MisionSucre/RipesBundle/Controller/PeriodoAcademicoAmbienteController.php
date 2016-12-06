@@ -94,7 +94,6 @@ class PeriodoAcademicoAmbienteController extends Controller
             
                 $form->handleRequest($request);
                 
-                
 		if ($form->isValid()) {
                             
                             $em = $this->getDoctrine()->getManager();    
@@ -339,7 +338,6 @@ public function showAction(Request $request,$idpamb)
                 $periodoacademico = $periodoacademicoambiente->getPeriodoAcademico();
                 $periodopnf = $periodoacademicoambiente->getPeriodoPnf();
                 
-                
                 /* @var $validar \MisionSucre\RipesBundle\Ambiente */
                 $validar = $this->get('servicios.validar');
                 
@@ -347,11 +345,17 @@ public function showAction(Request $request,$idpamb)
                 if($error)
                     return $this->redirect($this->generateUrl($error['url'],array($error['param']=>$error['valueparam'])));
                 
+                $ucs['vinculadas'] =$this->getDoctrine()
+                ->getRepository('MisionSucreRipesBundle:ActaNota')
+                ->UCVinculadasPeriodoAmbiente($idpamb);
+                $ucs['novinculadas'] =$this->getDoctrine()
+                ->getRepository('MisionSucreRipesBundle:ActaNota')
+                ->UCnoVinculadasPeriodoAmbiente($idpamb,$periodopnf->getId());
                 
 		return $this->render(
 			'MisionSucreRipesBundle:PeriodoAcademicoAmbiente:show.html.twig',
-			array('aldea'=>$aldea//,'ambiente'=>$ambiente,'triunfadores'=>$triunfadores,
-//                            'vocero'=>$vocero, 'periodosacademicos' =>$periodosacademicos,'modalidad'=>$modalidad,"finalizados"=>$finalizados
+			array('ambiente'=>$ambiente,'periodoacademico'=>$periodoacademico,'periodoambiente'=>$periodoacademicoambiente,
+                            'periodopnf'=>$periodopnf,'ucs'=>$ucs
                         ));
 	}
         

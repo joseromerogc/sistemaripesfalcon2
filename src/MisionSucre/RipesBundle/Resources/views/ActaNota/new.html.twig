@@ -1,0 +1,136 @@
+{% extends 'MisionSucreRipesBundle::layout.html.twig' %}
+
+{% block stylesheets %}
+{{ parent() }}
+	<link rel="stylesheet" type="text/css" href="{{asset('css/form/responsiveform.css')}}">
+	<link rel="stylesheet" media="screen and (max-width: 1200px) and (min-width: 601px)" href="{{asset('css/form/responsiveform1.css')}}" />
+	<link rel="stylesheet" media="screen and (max-width: 600px) and (min-width: 351px)" href="{{asset('css/form/responsiveform2.css')}}" />
+	<link rel="stylesheet" media="screen and (max-width: 350px)" href="{{asset('css/form/responsiveform3.css')}}" />
+        <link rel="stylesheet" type="text/css" href="{{asset('css/table/littletable.css')}}">
+{% endblock %}
+
+{% block content %}
+
+{% for f in form %}
+                {% if f.vars.block_prefixes[0]!="button" %}
+                    <div class="flash-notice">
+                        {{f.vars.errors}}
+                    </div>
+                {% endif %}
+    {% endfor %}
+    
+    <div>    
+    <h1 class="heading_style">Información de Ambiente</h1> 
+    <table cellspacing='0' style='margin-top: 0px; margin-bottom: 0px;margin-left: 0px;'> <!-- cellspacing='0' is important, must stay -->
+                <tr><th>ID</th><th>Ambiente</th><th>P.N.F.</th><th>Turno</th><th>Anexo</th><th>Nombre</th><th>Promoción</th><th>Condición</th>
+                    <th>Ingreso</th><th>Egreso</th>
+                    <th></th>
+                </tr><!-- Table Header -->  
+            <tr>
+                    
+                {% if ambiente.turno == 'n' %}
+                        {% set turno = 'Nocturno' %}
+
+                {% else%}	
+                        {% set turno = 'Fines de Semana' %}
+                {% endif %}	
+
+                    
+                <td>{{ambiente.id}}</td>
+                <td><a href="{{path('aldea_show',{'id': ambiente.aldea.id})}}">{{ambiente.aldea.nombre}}<a></td>
+                <td><a class="enlace" href="{{path('pnf_show',{'id': periodopnf.pnf.id})}}">{{periodopnf.pnf.nombre}}</a></td>
+                <td>{{turno}}</td><td>{%if ambiente.anexo %} {{ambiente.anexo.nombre}} {%endif%}</td>
+                <td>{{ambiente.nombre}}</td>
+                <td>{{ambiente.promocion}}</td><td>{{ambiente.condicion}}</td>
+                <td>{{ambiente.ingreso}}</td><td>{{ambiente.egreso}}</td>
+                {% if is_granted('ROLE_COORD') %}
+                <td><a class="enlace" href="{{path('ambiente_update',{'idamb': ambiente.id})}}">Actualizar</a></td>
+                {% endif%}
+                
+            </tr><!-- Table Row -->
+    </table>    
+    <h1 class="heading_style">Información de Periodo Académico-Unidad Curricular</h1>             
+    <table cellspacing='0' style='margin-top: 0px; margin-bottom: 0px;margin-left: 0px;'> <!-- cellspacing='0' is important, must stay -->
+        <tr><th>ID</th><th>Nombre</th><th>PNF</th><th>Trayecto</th><th>Periodo/Tramo</th><th>Actual</th>
+                </tr><!-- Table Header -->  
+            <tr>
+            
+                <td>{{periodoambiente.id}}</td>
+                <td>{{periodoacademico.nombre}}</td>
+                <td>{{periodopnf.trayecto}}</td><td>{{periodopnf.periodo}}</td>
+                <td>{{periodoacademico.actual}}</td>
+                {% if is_granted('ROLE_COORD') %}
+                <td><a class="enlace" href="{{path('periodo_academico_update_ambiente',{'idper': periodoambiente.id})}}">Actualizar</a></td>
+                {% endif%}
+                 </tr><!-- Table Row -->
+    </table>  
+</div>
+    
+	<div id="envelope">
+	<header>
+	    <h2>{{mensaje_heading | raw}}</h2>
+	    <p>{{sub_heading | raw}}</p>
+	</header>
+	<hr>
+        
+        {{ form_start(form) }}
+        
+        
+        <div>
+		{{ form_label(form.cedula) }}
+		{{ form_widget(form.cedula) }}
+                <div class="error">
+                    {{ form_errors(form.cedula) }}
+                </div>
+	</div>
+                <div id="info">
+                 </div>   
+                
+        <div>
+		{{ form_widget(form.save) }}
+	</div>
+		{{ form_end(form) }}		
+</div>
+
+<script>    
+    
+$(document).ready(function(){
+
+$('#form_cedula').keypress( function (event) {
+
+    return event.charCode >= 48 && event.charCode <= 57  || event.charCode ==0  ||event.charCode ==45;
+});
+
+error=0;
+
+$('#form_cedula').keyup( function () {
+
+    var cedula=$('#form_cedula').val();
+    
+    $.ajax({
+        url: "/coord/actanota/datadocente/"+cedula+"/"+{{ambiente.aldea.id}}+"",
+        success: function (data) {
+         if(data['error']==0){
+             $('#info').html("<p><strong>Nombres y Apellidos: </strong>"+data['nombres']+" "+data['apellidos']+"</br></p>");
+            $('#form_iddoc').val(data['iddoc']);
+            error=0;
+         }
+         else
+         {   error=1;
+             $('#info').html("<p> <img src='{{asset('img/alerta.png')}}'>ATENCIÓN: "+data['error']+"</p>");
+         }
+        }
+    });
+});
+
+$("form[name=form]").submit( function (e) {
+
+if(error) 
+    e.preventDefault();
+});
+
+});
+
+</script>
+{% endblock %}
+

@@ -1,0 +1,36 @@
+<?php
+
+namespace MisionSucre\RipesBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * Ambiente
+ *
+ * @ORM\Table(name="periodo_triunfador")
+ * @ORM\Entity(repositoryClass="MisionSucre\RipesBundle\Entity\PeriodoTriunfadorRepository")
+ */
+class PeriodoTriunfador
+{   
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="id", type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="AUTO")
+     */
+    private $id;
+    
+    /**
+     * @ORM\ManyToOne(targetEntity="PeriodoAcademicoAmbiente", inversedBy="periodostriunfadores")
+     * @ORM\JoinColumn(name="periodoacademico_id", referencedColumnName="id")
+     */
+    protected $periodoacademicoambiente;
+    
+    /**
+     * @ORM\ManyToOne(targetEntity="User", inversedBy="periodostriunfadores")
+     * @ORM\JoinColumn(name="periodoacademico_id", referencedColumnName="id")
+     */
+    protected $user;
+    
+}

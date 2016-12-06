@@ -1,0 +1,41 @@
+<?php
+
+namespace MisionSucre\RipesBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * PeriodoAcademicoAmbiente
+ *
+ * @ORM\Table(name="acta_nota")
+ * @ORM\Entity(repositoryClass="MisionSucre\RipesBundle\Entity\ActaNotaRepository")
+ */
+class ActaNota
+{   
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="id", type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="AUTO")
+     */
+    private $id;
+    
+    /**
+     * @ORM\ManyToOne(targetEntity="PeriodoAcademicoAmbiente", inversedBy="actasnotas")
+     * @ORM\JoinColumn(name="periodoacademicoambiente_id", referencedColumnName="id")
+     */
+    protected $periodoacademicoambiente;
+    
+    /**
+     * @ORM\ManyToOne(targetEntity="Docente", inversedBy="actasnotas")
+     * @ORM\JoinColumn(name="docente_id", referencedColumnName="id")
+     */
+    protected $docente;
+    /**
+     * @ORM\ManyToOne(targetEntity="Malla", inversedBy="actasnotas")
+     * @ORM\JoinColumn(name="malla_id", referencedColumnName="id")
+     */
+    protected $malla;
+    
+}

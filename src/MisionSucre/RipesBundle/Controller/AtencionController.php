@@ -24,7 +24,6 @@ class AtencionController extends Controller
         
         $atencion= new Atencion();
         
-        
         $form = $this->createForm(new AtencionType(),$atencion)->
                
         add('save', 'submit',array('label' => 'Registrar Atención'));

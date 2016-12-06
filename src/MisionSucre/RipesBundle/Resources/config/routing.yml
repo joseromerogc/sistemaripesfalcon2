@@ -582,7 +582,10 @@ busqueda_vincular:
   defaults: { _controller: MisionSucreRipesBundle:Triunfador:busquedatriunfador   }    
 busqueda_ambiente:
   path: triunfador/busquedaambiente
-  defaults: { _controller: MisionSucreRipesBundle:Triunfador:busquedaambiente   } 
+  defaults: { _controller: MisionSucreRipesBundle:Triunfador:busquedaambiente} 
+list_triunfador_cedula:
+  path: triunfador/cedula/{ced}
+  defaults: { _controller: MisionSucreRipesBundle:Triunfador:listacedula} 
 
 
 #######################################################################################################
@@ -825,6 +828,25 @@ periodos_pnf_delete:
 #  path: control-estudio/periodos-pnf/registrarvinculacion/{json}
 #  defaults: { _controller: MisionSucreRipesBundle:PeriodoPnf:new }  
 
+############################################### Periodos Triunfadores ###########################################################################
+
+periodos_triunfadores_new:
+  path: coord/periodos-triunfadores/new
+  defaults: { _controller: MisionSucreRipesBundle:PeriodoTriunfador:new }  
+periodos_triunfadores_delete:
+  path: coord/periodos-triunfadores/delete
+  defaults: { _controller: MisionSucreRipesBundle:PeriodoTriunfador:delete }  
+periodos_triunfadores_tabla_triunfadores_vinculados:
+  path: coord/periodos-triunfadores/tablatriunfadoresvinculados
+  defaults: { _controller: MisionSucreRipesBundle:PeriodoTriunfador:tablaTriunfadoresvinculados }  
+periodos_triunfadores_tabla_triunfadores_novinculados:
+  path: coord/periodos-triunfadores/tablatriunfadoresnovinculados
+  defaults: { _controller: MisionSucreRipesBundle:PeriodoTriunfador:tablaTriunfadoresnovinculados }  
+periodo_lista_triunfador_cedula:
+  path: coord/periodotriunfador/cedula/{ced}
+  defaults: { _controller: MisionSucreRipesBundle:PeriodoTriunfador:listacedula} 
+
+
 ############################################### MALLA ###########################################################################
 
 malla_registrar_ucs:
@@ -839,6 +861,18 @@ malla_tabla_vinculacion:
 malla_delete:
   path: control-estudio/malla/delete/{iducmalla}
   defaults: { _controller: MisionSucreRipesBundle:Malla:delete }  
+
+############################################### ACTA NOTAS ###########################################################################
+
+acta_nota_new:
+  path: coord/actanota/new/{idpamb}/{idm}
+  defaults: { _controller: MisionSucreRipesBundle:ActaNota:new }  
+acta_nota_update:
+  path: coord/actanota/update/{an}
+  defaults: { _controller: MisionSucreRipesBundle:ActaNota:update }  
+acta_nota_data_docente:
+  path: coord/actanota/datadocente/{cedula}/{aldea}
+  defaults: { _controller: MisionSucreRipesBundle:ActaNota:dataDocente }  
 
 ############################################### GUIA ###########################################################################
 guia:

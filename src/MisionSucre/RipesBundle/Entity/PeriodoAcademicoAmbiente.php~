@@ -39,4 +39,133 @@ class PeriodoAcademicoAmbiente
      */
     protected $periodopnf;
     
+    /**
+     * @ORM\OneToMany(targetEntity="PeriodoTriunfador", mappedBy="periodoacademicoambiente")
+     */
+    protected $periodostriunfadores;
+    /**
+     * @ORM\OneToMany(targetEntity="ActaNota", mappedBy="periodoacademicoambiente")
+     */
+    protected $actasnotas;
+    
+    
+    
+    /**
+     * Get id
+     *
+     * @return integer 
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * Set ambiente
+     *
+     * @param \MisionSucre\RipesBundle\Entity\Ambiente $ambiente
+     * @return PeriodoAcademicoAmbiente
+     */
+    public function setAmbiente(\MisionSucre\RipesBundle\Entity\Ambiente $ambiente = null)
+    {
+        $this->ambiente = $ambiente;
+
+        return $this;
+    }
+
+    /**
+     * Get ambiente
+     *
+     * @return \MisionSucre\RipesBundle\Entity\Ambiente 
+     */
+    public function getAmbiente()
+    {
+        return $this->ambiente;
+    }
+
+    /**
+     * Set periodoacademico
+     *
+     * @param \MisionSucre\RipesBundle\Entity\PeriodoAcademico $periodoacademico
+     * @return PeriodoAcademicoAmbiente
+     */
+    public function setPeriodoacademico(\MisionSucre\RipesBundle\Entity\PeriodoAcademico $periodoacademico = null)
+    {
+        $this->periodoacademico = $periodoacademico;
+
+        return $this;
+    }
+
+    /**
+     * Get periodoacademico
+     *
+     * @return \MisionSucre\RipesBundle\Entity\PeriodoAcademico 
+     */
+    public function getPeriodoacademico()
+    {
+        return $this->periodoacademico;
+    }
+
+    /**
+     * Set periodopnf
+     *
+     * @param \MisionSucre\RipesBundle\Entity\PeriodoPnf $periodopnf
+     * @return PeriodoAcademicoAmbiente
+     */
+    public function setPeriodopnf(\MisionSucre\RipesBundle\Entity\PeriodoPnf $periodopnf = null)
+    {
+        $this->periodopnf = $periodopnf;
+
+        return $this;
+    }
+
+    /**
+     * Get periodopnf
+     *
+     * @return \MisionSucre\RipesBundle\Entity\PeriodoPnf 
+     */
+    public function getPeriodopnf()
+    {
+        return $this->periodopnf;
+    }
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->periodostriunfadores = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+
+    /**
+     * Add periodostriunfadores
+     *
+     * @param \MisionSucre\RipesBundle\Entity\PeriodoTriunfador $periodostriunfadores
+     * @return PeriodoAcademicoAmbiente
+     */
+    public function addPeriodostriunfadore(\MisionSucre\RipesBundle\Entity\PeriodoTriunfador $periodostriunfadores)
+    {
+        $this->periodostriunfadores[] = $periodostriunfadores;
+
+        return $this;
+    }
+
+    /**
+     * Remove periodostriunfadores
+     *
+     * @param \MisionSucre\RipesBundle\Entity\PeriodoTriunfador $periodostriunfadores
+     */
+    public function removePeriodostriunfadore(\MisionSucre\RipesBundle\Entity\PeriodoTriunfador $periodostriunfadores)
+    {
+        $this->periodostriunfadores->removeElement($periodostriunfadores);
+    }
+
+    /**
+     * Get periodostriunfadores
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getPeriodostriunfadores()
+    {
+        return $this->periodostriunfadores;
+    }
 }

@@ -40,6 +40,17 @@ class PeriodoAcademicoAmbiente
     protected $periodopnf;
     
     /**
+     * @ORM\OneToMany(targetEntity="PeriodoTriunfador", mappedBy="periodoacademicoambiente")
+     */
+    protected $periodostriunfadores;
+    /**
+     * @ORM\OneToMany(targetEntity="ActaNota", mappedBy="periodoacademicoambiente")
+     */
+    protected $actasnotas;
+    
+    
+    
+    /**
      * Get id
      *
      * @return integer 
@@ -116,5 +127,78 @@ class PeriodoAcademicoAmbiente
     public function getPeriodopnf()
     {
         return $this->periodopnf;
+    }
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->periodostriunfadores = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+
+    /**
+     * Add periodostriunfadores
+     *
+     * @param \MisionSucre\RipesBundle\Entity\PeriodoTriunfador $periodostriunfadores
+     * @return PeriodoAcademicoAmbiente
+     */
+    public function addPeriodostriunfadore(\MisionSucre\RipesBundle\Entity\PeriodoTriunfador $periodostriunfadores)
+    {
+        $this->periodostriunfadores[] = $periodostriunfadores;
+
+        return $this;
+    }
+
+    /**
+     * Remove periodostriunfadores
+     *
+     * @param \MisionSucre\RipesBundle\Entity\PeriodoTriunfador $periodostriunfadores
+     */
+    public function removePeriodostriunfadore(\MisionSucre\RipesBundle\Entity\PeriodoTriunfador $periodostriunfadores)
+    {
+        $this->periodostriunfadores->removeElement($periodostriunfadores);
+    }
+
+    /**
+     * Get periodostriunfadores
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getPeriodostriunfadores()
+    {
+        return $this->periodostriunfadores;
+    }
+
+    /**
+     * Add actasnotas
+     *
+     * @param \MisionSucre\RipesBundle\Entity\ActaNota $actasnotas
+     * @return PeriodoAcademicoAmbiente
+     */
+    public function addActasnota(\MisionSucre\RipesBundle\Entity\ActaNota $actasnotas)
+    {
+        $this->actasnotas[] = $actasnotas;
+
+        return $this;
+    }
+
+    /**
+     * Remove actasnotas
+     *
+     * @param \MisionSucre\RipesBundle\Entity\ActaNota $actasnotas
+     */
+    public function removeActasnota(\MisionSucre\RipesBundle\Entity\ActaNota $actasnotas)
+    {
+        $this->actasnotas->removeElement($actasnotas);
+    }
+
+    /**
+     * Get actasnotas
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getActasnotas()
+    {
+        return $this->actasnotas;
     }
 }

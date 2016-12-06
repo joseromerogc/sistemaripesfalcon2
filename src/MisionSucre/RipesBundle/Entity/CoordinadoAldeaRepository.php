@@ -114,12 +114,18 @@ class CoordinadoAldeaRepository extends EntityRepository
             ->setParameter('aldea',$aldea)      
             ->getResult();
     }
-    public function findAllByAldeaAndUser($aldea,$username,$role)
+    public function findAllByAldeaAndUser($aldea,$username,$cedula)
     {
+        if($cedula=="")
+        {
+            $cedula="%%";
+        }
           return $this->getEntityManager()
             ->createQuery(
-                "SELECT u.username, u.id,r.id AS idrole, r.name FROM MisionSucreRipesBundle:Role r, MisionSucreRipesBundle:User u 
-                    WHERE r.id=u.tip_usr AND u.username LIKE :username AND r.id=:role AND(
+                "SELECT u.username, u.id,r.id AS idrole, p.priNom,p.segNom, p.priApe, p.segApe,r.name,p.cedPer FROM MisionSucreRipesBundle:Role r, 
+                    MisionSucreRipesBundle:Persona p JOIN p.user u
+                    WHERE p.cedPer LIKE :cedula 
+                    AND r.id=u.tip_usr AND u.username LIKE :username AND(
                             (u.tip_usr=6 AND EXISTS ( SELECT t FROM MisionSucreRipesBundle:Triunfador t JOIN t.ambiente am
                             WHERE u.id=t.user AND am.aldea =:aldea ))
                             OR
@@ -133,7 +139,7 @@ class CoordinadoAldeaRepository extends EntityRepository
                             ORDER BY u.username
                         "
             )
-            ->setParameters(array('aldea' => $aldea,'username'=>"%$username%",'role'=>$role ))      
+            ->setParameters(array('aldea' => $aldea,'username'=>"%$username%",'cedula'=>"%$cedula%"))      
             ->getResult();
     }
 }

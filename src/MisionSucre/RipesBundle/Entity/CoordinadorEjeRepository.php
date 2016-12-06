@@ -60,12 +60,17 @@ class CoordinadorEjeRepository extends EntityRepository
             ->getResult();
     }
     
-    public function findAllByEjeAndUser($eje,$username,$role)
+    public function findAllByEjeAndUser($eje,$username,$cedula)
     {
+        if($cedula=="")
+        {
+            $cedula="%%";
+        }
           return $this->getEntityManager()
             ->createQuery(
-                "SELECT u.username, u.id,r.id AS idrole, r.name FROM MisionSucreRipesBundle:Role r, MisionSucreRipesBundle:User u 
-                    WHERE r.id=u.tip_usr AND u.username LIKE :username AND r.id=:role AND(
+                "SELECT u.username, u.id,r.id AS idrole, p.priNom,p.segNom, p.priApe, p.segApe,r.name,p.cedPer FROM MisionSucreRipesBundle:Role r, 
+                    MisionSucreRipesBundle:Persona p JOIN p.user u
+                    WHERE p.cedPer LIKE :cedula AND r.id=u.tip_usr AND u.username LIKE :username AND(
                             (u.tip_usr=5 AND EXISTS 
                             ( SELECT ca FROM MisionSucreRipesBundle:CoordinadorAldea ca JOIN ca.aldea a JOIN a.parroquia prq
                             WHERE u.id=ca.user AND prq.eje =:eje )) OR
@@ -83,7 +88,7 @@ class CoordinadorEjeRepository extends EntityRepository
                             )
                             ORDER BY u.username
                         "
-            )->setParameters(array('username'=>"%$username%",'role'=>$role,'eje'=>$eje))      
+            )->setParameters(array('username'=>"%$username%",'eje'=>$eje,'cedula'=>"%$cedula%"))      
             ->getResult();
     }
     

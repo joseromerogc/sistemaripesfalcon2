@@ -57,6 +57,11 @@ class Malla
     {
         return $this->id;
     }
+    
+    /**
+     * @ORM\OneToMany(targetEntity="ActaNota", mappedBy="unidadcurricular")
+     */
+    protected $actasnotas;
 
     /**
      * Set eselectiva
@@ -148,5 +153,45 @@ class Malla
     public function getPeriodopnf()
     {
         return $this->periodopnf;
+    }
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->actasnotas = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+
+    /**
+     * Add actasnotas
+     *
+     * @param \MisionSucre\RipesBundle\Entity\ActaNota $actasnotas
+     * @return Malla
+     */
+    public function addActasnota(\MisionSucre\RipesBundle\Entity\ActaNota $actasnotas)
+    {
+        $this->actasnotas[] = $actasnotas;
+
+        return $this;
+    }
+
+    /**
+     * Remove actasnotas
+     *
+     * @param \MisionSucre\RipesBundle\Entity\ActaNota $actasnotas
+     */
+    public function removeActasnota(\MisionSucre\RipesBundle\Entity\ActaNota $actasnotas)
+    {
+        $this->actasnotas->removeElement($actasnotas);
+    }
+
+    /**
+     * Get actasnotas
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getActasnotas()
+    {
+        return $this->actasnotas;
     }
 }
