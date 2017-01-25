@@ -20,7 +20,7 @@ class ConsejoComunalRepository extends EntityRepository
                 'SELECT m.municipio , prq.parroquia , c.nombre AS consejocomunal, e.nombre as eje, 
                              SUM ( CASE WHEN (
                              EXISTS 
-                            ( SELECT cs FROM MisionSucreRipesBundle:CoordinadorAldea ca WHERE u.id=ca.user) OR
+                            ( SELECT ca FROM MisionSucreRipesBundle:CoordinadorAldea ca WHERE u.id=ca.user) OR
                              EXISTS 
                             ( SELECT d FROM MisionSucreRipesBundle:Docente d WHERE u.id=d.user ) OR
                             EXISTS
@@ -90,6 +90,32 @@ class ConsejoComunalRepository extends EntityRepository
                             ORDER BY m.municipio, prq.parroquia
                     '
             ) ->setParameters(array('aldea'=>$aldea))
+            ->getResult();
+    }
+    public function buscarPorNombreParroquia($nombre,$prq){
+        
+        return $this->getEntityManager()
+            ->createQuery(
+                'SELECT DISTINCT cc
+                    FROM MisionSucreRipesBundle:ConsejoComunal cc
+                    WHERE LOWER(cc.nombre)=LOWER(:nombre) AND cc.parroquia=:prq
+                    '
+            )
+            ->setParameters(array('nombre'=>$nombre,'prq'=>$prq))     
+            ->getResult();
+    }
+    
+    public function sinParticipacion(){
+        
+        return $this->getEntityManager()
+            ->createQuery(
+                'SELECT DISTINCT m.municipio , prq.parroquia , cc.nombre AS consejocomunal, e.nombre as eje
+                    FROM MisionSucreRipesBundle:ConsejoComunal cc JOIN cc.parroquia prq JOIN prq.municipio m,
+                    MisionSucreRipesBundle:Eje e
+                    WHERE  NOT EXISTS ( SELECT pac FROM MisionSucreRipesBundle:ParticipacionComunitaria pac WHERE pac.cc=cc.id)
+                    AND e.id=prq.eje
+                    '
+            )
             ->getResult();
     }
 }

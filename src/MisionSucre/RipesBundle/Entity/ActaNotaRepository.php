@@ -16,9 +16,11 @@ class ActaNotaRepository extends EntityRepository
     {
           return $this->getEntityManager()
             ->createQuery(
-                'SELECT an as a,p.priNom,p.segNom, p.priApe, p.segApe, p.cedPer FROM MisionSucreRipesBundle:ActaNota an JOIN an.docente d, MisionSucreRipesBundle:Persona p
-                    WHERE an.periodoacademicoambiente=:idpamb AND d.user=p.user
-                '
+                'SELECT an as a, SUBSTRING( u.codigo, LENGTH(u.codigo)-3 ) codigo, p.priNom,p.segNom, p.priApe, p.segApe, p.cedPer FROM MisionSucreRipesBundle:ActaNota an JOIN an.docente d, MisionSucreRipesBundle:Persona p,
+                    MisionSucreRipesBundle:Malla m JOIN m.uc u
+                    WHERE an.periodoacademicoambiente=:idpamb AND d.user=p.user AND m.id=an.malla
+                    ORDER BY codigo
+                    '
             )
             ->setParameters(array('idpamb'=>$idpamb))->getResult();
     }
@@ -42,5 +44,26 @@ class ActaNotaRepository extends EntityRepository
                 '
             )
             ->setParameters(array('idpamb'=>$idpamb,'idm'=>$idm))->getResult();
+    }
+    public function Docente($idusr,$idan)
+    {
+          return $this->getEntityManager()
+            ->createQuery(
+                'SELECT an FROM MisionSucreRipesBundle:ActaNota an JOIN an.docente d JOIN d.user u
+                    WHERE an.id :=idan AND u.id=:idusr
+                '
+            )
+            ->setParameters(array('idan'=>$idan,'idusr'=>$idusr))->getResult();
+    }
+    public function Triunfador($idan,$idtrf)
+    {
+          return $this->getEntityManager()
+            ->createQuery(
+                'SELECT pt FROM MisionSucreRipesBundle:ActaNota an JOIN an.periodoacademicoambiente pa,
+                    MisionSucreRipesBundle:PeriodoTriunfador pt
+                    WHERE an.id =:idan AND pt.id=:idtrf AND pa.id = pt.periodoacademicoambiente
+                '
+            )
+            ->setParameters(array('idan'=>$idan,'idtrf'=>$idtrf))->getResult();
     }
 }

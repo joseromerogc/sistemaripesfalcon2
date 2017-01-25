@@ -4,6 +4,7 @@
 {{ parent() }}
 	<link rel="stylesheet" type="text/css" href="{{asset('css/table/littletable.css')}}">
 	<link rel="stylesheet" type="text/css" href="{{asset('css/blitzer/jquery-ui-1.10.4.custom.css')}}">
+        <link rel="stylesheet" type="text/css" href="{{asset('css/botones.css')}}">
 	
 {% endblock %}
 
@@ -58,7 +59,7 @@
             {% endif%}
         </tr><!-- Table Row -->
     </table>
-    
+  <a href="{{path('bloquear_new')}}" id="boton_nuevo" class='red' >Bloquear Usuario</a>  
       
   {% if  coordinador %}  
       <h1 class="heading_style">Coordinador de Aldea</h1> 

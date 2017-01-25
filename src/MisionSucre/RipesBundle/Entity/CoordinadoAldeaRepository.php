@@ -28,12 +28,27 @@ class CoordinadoAldeaRepository extends EntityRepository
           return $this->getEntityManager()
             ->createQuery(
                 'SELECT DISTINCT u.id,u.username,p.priNom,p.segNom, p.priApe, p.segApe, p.cedPer, p.sexPer, a.nombre,
-                    c.turno
+                    t.turno
                     FROM MisionSucreRipesBundle:Persona p, MisionSucreRipesBundle:User u,
-                    MisionSucreRipesBundle:CoordinadorAldea c JOIN c.aldea a
+                    MisionSucreRipesBundle:CoordinadorTurno t JOIN t.coordinador c JOIN c.aldea a
                     WHERE p.user=u.id AND c.user=u.id
+                    GROUP BY u.username
                 '
             )
+            ->getResult();
+    }
+    public function findAllOrderedByIdEje($eje)
+    {
+          return $this->getEntityManager()
+            ->createQuery(
+                'SELECT DISTINCT u.id,u.username,p.priNom,p.segNom, p.priApe, p.segApe, p.cedPer, p.sexPer, a.nombre,
+                    t.turno
+                    FROM MisionSucreRipesBundle:Persona p, MisionSucreRipesBundle:User u,
+                    MisionSucreRipesBundle:CoordinadorTurno t JOIN t.coordinador c JOIN c.aldea a JOIN a.parroquia prq
+                    WHERE p.user=u.id AND c.user=u.id AND prq.eje=:eje
+                    GROUP BY u.username
+                '
+            )->setParameter('eje',$eje)
             ->getResult();
     }
     

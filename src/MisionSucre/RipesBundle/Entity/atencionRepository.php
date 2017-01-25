@@ -100,9 +100,9 @@ class atencionRepository extends EntityRepository
             ->createQuery(
                 "SELECT p.cedPer AS cedula,u.id AS idusr, u.tip_usr AS tipo, CONCAT(p.priNom,' ', p.priApe) AS nombre, a.nombre AS aldea, a.id AS aldeaid,
                     r.name AS perfil
-                    FROM MisionSucreRipesBundle:Atencion at JOIN at.user u, 
-                    MisionSucreRipesBundle:Persona p, MisionSucreRipesBundle:Aldea a, MisionSucreRipesBundle:Role r
-                    WHERE p.user=u.id AND r.id=u.tip_usr AND u.id=:id
+                    FROM MisionSucreRipesBundle:Persona p JOIN p.user u, 
+                    MisionSucreRipesBundle:Aldea a, MisionSucreRipesBundle:Role r
+                    WHERE r.id=u.tip_usr AND u.id=:id
                     AND
                     (
                               u.id IN 

@@ -46,7 +46,7 @@ class UnidadCurricular
     /**
      * @var string
      *
-     * @ORM\Column(name="area", type="string", length=70,unique=true)
+     * @ORM\Column(name="area", type="string", length=70)
      */
     
     private $area;

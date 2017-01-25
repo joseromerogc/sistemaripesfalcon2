@@ -153,6 +153,26 @@ class DocenteController extends Controller
 		}
 		
                 $per =  $em->getRepository('MisionSucreRipesBundle:Persona')->findOneByUser($idusr);
+                
+                if(!$per){
+                $request->getSession()->getFlashBag()->add(
+                            'notice',
+                            'Datos Personales no Registrado'
+                            );            
+                    return $this->redirect($this->generateUrl('persona_new'),array('id'=>$idusr));
+                }
+                
+                $bloqueo = $this->getDoctrine()
+                ->getRepository('MisionSucreRipesBundle:Bloqueado')
+                ->findOneByCedulas($per->getCedPer());
+                
+                if($bloqueo){
+                $request->getSession()->getFlashBag()->add(
+                            'notice',
+                            'Persona Bloqueada por '.$bloqueo->getMotivo()
+                            );            
+                    return $this->redirect($this->generateUrl('usuario_lista'));
+                }
                
 		return $this->render('MisionSucreRipesBundle:Docente:new.html.twig', array(
 		'form' => $form->createView(),'mensaje_heading'=>'Nuevo Docente',
@@ -602,13 +622,14 @@ class DocenteController extends Controller
                 $comunitaria =  $em->getRepository('MisionSucreRipesBundle:ParticipacionComunitaria')->findOneByUser($id);       
                 $politica =  $em->getRepository('MisionSucreRipesBundle:ParticipacionPolitica')->findOneByUser($id);   
                 $ubicacionvivienda = $em->getRepository('MisionSucreRipesBundle:UbicacionVivienda')->findOneByUser($id); 
+                $bloqueo =  $em->getRepository('MisionSucreRipesBundle:Bloqueado')->findOneByCedulas($per->getCedPer());
                 
                 return $this->render(
 			'MisionSucreRipesBundle:Docente:show.html.twig',
 			array('usuario' => $usuario,'persona' => $per,'sociales'=> $sociales,'enfermedades'=>$enfermedades,
                         'discapacidad'=>$discapacidad,'arte'=>$arte,'deporte'=>$deporte,'trabajo'=>$trabajo,
                             'comunitaria'=>$comunitaria,'politica'=>$politica,'academico'=>$academico,'docente'=>$docente,
-                            'ubicacionvivienda'=>$ubicacionvivienda
+                            'ubicacionvivienda'=>$ubicacionvivienda,'bloqueo'=>$bloqueo
                         )
 		);
         }

@@ -51,7 +51,8 @@
     </table>    
     <h1 class="heading_style">Información de Periodo Académico-Unidad Curricular</h1>             
     <table cellspacing='0' style='margin-top: 0px; margin-bottom: 0px;margin-left: 0px;'> <!-- cellspacing='0' is important, must stay -->
-        <tr><th>ID</th><th>Nombre</th><th>PNF</th><th>Trayecto</th><th>Periodo/Tramo</th><th>Actual</th>
+        <tr><th>ID</th><th>Nombre</th><th>Trayecto</th><th>Periodo/Tramo</th><th>Actual</th><th>Nombre Unidad Curricular</th>
+            <th>Código</th>
                 </tr><!-- Table Header -->  
             <tr>
             
@@ -59,13 +60,14 @@
                 <td>{{periodoacademico.nombre}}</td>
                 <td>{{periodopnf.trayecto}}</td><td>{{periodopnf.periodo}}</td>
                 <td>{{periodoacademico.actual}}</td>
+                <td>{{malla.uc.nombre}}</td>
+                <td>{{malla.uc.codigo}}</td>
                 {% if is_granted('ROLE_COORD') %}
                 <td><a class="enlace" href="{{path('periodo_academico_update_ambiente',{'idper': periodoambiente.id})}}">Actualizar</a></td>
                 {% endif%}
                  </tr><!-- Table Row -->
     </table>  
 </div>
-    
 	<div id="envelope">
 	<header>
 	    <h2>{{mensaje_heading | raw}}</h2>
@@ -90,8 +92,9 @@
 		{{ form_widget(form.save) }}
 	</div>
 		{{ form_end(form) }}		
-</div>
+</div>                 
 
+                 
 <script>    
     
 $(document).ready(function(){

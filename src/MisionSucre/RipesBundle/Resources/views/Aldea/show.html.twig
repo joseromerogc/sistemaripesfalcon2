@@ -54,9 +54,12 @@
         <div id="lienzoMapa" ></div>
         <a style='margin-left: 12px;' class="enlace" href="{{path('coordenadas_aldea_update',{'id':coordenadas.id})}}"> 
                    <span class='icon'><img src="{{asset('img/Actions-edit-redo-icon')}}"/></span> Actualizar Coordenadas</a>
-    {% else%}        
+    {% else%}
+        {% if is_granted('ROLE_COORD')%}    
         <a style='margin-left: 12px;' class="enlace" href="{{path('coordenadas_aldea_new',{'id':aldea.id})}}"> 
                    <span class='icon'><img src="{{asset('img/add-1-icon.png')}}"/></span> Registrar Coordenadas</a>
+                   
+    {% endif%}    
     {% endif%}    
     {% if coord%}    
         
@@ -102,16 +105,24 @@
  {% endif%}     
 </div>
 
-        
+{#
+************************
+* AMBIENTES COMUNALES  *     
+************************
+En la Base de datos aparacen como AnexoAldea
+#}
 <div id="anexos" >
     <h1 class="heading_style">Ambientes Comunales</h1> 
     
     {% if anexos %}
     
     <table cellspacing='0'> <!-- cellspacing='0' is important, must stay --> 
-             <tr><th>ID</th><th>Nombre</th><th>Dirreción</th><th>Parroquia</th><th>Sector</th><th></th></tr><!-- Table Header -->
+             <tr><th>ID</th><th>Nombre</th><th>Dirreción</th><th>Parroquia</th><th>Sector</th>
+                 <th>Cantidad de Ambientes</th><th></th></tr><!-- Table Header -->
     {% for a in anexos %}
-                 <tr><td>{{a.id}}</td><td>{{a.nombre}}</td><td>{{a.direccion}}</td><td>{% if  a.sector %}{{a.sector.parroquia.parroquia}}</td><td>{{a.sector.nombre}}</td>{% else %}<td></td><td></td>{% endif %}
+                 <tr><td>{{a.id}}</td><td>{{a.nombre}}</td><td>{{a.direccion}}</td><td>{% if  a.sector %}{{a.parroquia}}</td><td>{{a.sector}}</td>{% else %}<td></td>
+                     <td></td>{% endif %}
+                     <td>{{a.cantidadAmbientes}}</td>    
             {% if is_granted('ROLE_COORD')%}        
             <td><a class="enlace" href="{{path('anexo_aldea_show',{'id':a.id})}}">Mostrar</a></td>    
             <td><a class="enlace" href="{{path('anexo_aldea_update',{'id':a.id})}}">Actualizar</a></td>
@@ -145,7 +156,7 @@
                 {% for a in ambientesti.conperiodos%}
                    
                 <td>{{a.ambiente.id}}</td><td>{{a.ambiente.pnf.nombre}}</td> <td>{{a.ambiente.turno}}</td><td>{{a.ambiente.anexo.nombre}}</td><td>{{a.ambiente.nombre}}</td>
-                <td>{{a.ambiente.condicion}}</td><td>{{a.trayecto}}</td><td>{{a.periodo}}</td>
+                <td>{{a.ambiente.condicion}}</td><td>{{a.periodopnf.trayecto}}</td><td>{{a.periodopnf.periodo}}</td>
                 {% if is_granted('ROLE_COORD')%}        
                     <td><a class="enlace" href="{{path('ambiente_show',{'idamb': a.ambiente.id})}}">Mostrar</a></td>
                     <td><a class="enlace" href="{{path('ambiente_update',{'idamb': a.ambiente.id})}}">Actualizar</a></td>

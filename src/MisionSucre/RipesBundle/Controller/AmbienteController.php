@@ -16,11 +16,10 @@ class AmbienteController extends Controller
         if(!$this->get('security.authorization_checker')->isGranted('ROLE_COORD')) {
                 
                 if($this->get('security.authorization_checker')->isGranted('ROLE_TRF')){
-                $id = $this->getUser()->getId();
                 return $this->redirect($this->generateUrl('ambiente_info'));
                 }
                 else
-                    return $this->redirect($this->generateUrl('aldea'));
+                    return $this->redirect($this->generateUrl('ambiente_lista'));
                 }
                 else{
                     return $this->render('MisionSucreRipesBundle:Ambiente:index.html.twig');
@@ -29,6 +28,9 @@ class AmbienteController extends Controller
 	
 	public function newAction(Request $request,$idaldea)
 	{       
+            /* Registra un Nuevo Ambiente
+             * 
+             */
 		$ambiente = new Ambiente();
                 
                 $em = $this->getDoctrine()->getManager();
@@ -48,52 +50,21 @@ class AmbienteController extends Controller
                 return $this->redirect($this->generateUrl('usuario_show',array('id'=>$usr->getId())));
                 }
                 
-                if($usr->getTipUsr()==8){
-                    
-                  $ceje = $this->getDoctrine()
-                            ->getRepository('MisionSucreRipesBundle:CoordinadorEje')
-                            ->findOneByUser($usr->getId());
-
-                            if( $ceje->getEje()->getId() != $aldea->getParroquia()->getEje()->getId()) {   
-                            $request->getSession()->getFlashBag()->add(
-                            'notice',
-                            'Accesso Denegado a este Eje'
-                            );
-                            return $this->redirect($this->generateUrl('usuario_show',array('id'=>$usr->getId())));
-                            }  
-                }
+                /*VALIDAR */
+                $validar = $this->get('servicios.validar');
                 
-                if($usr->getTipUsr()==5){
+                $error = $validar->ValidarAldea($aldea->getId(), $request);
+                if($error)
+                    return $this->redirect($this->generateUrl($error['url'],array($error['param']=>$error['valueparam'])));
+                /*FIN VALIDAR*/
                 
-                $caldea = $this->getDoctrine()
-                ->getRepository('MisionSucreRipesBundle:CoordinadorAldea')
-                ->findOneByUser($usr->getId());
+                $data = $this->get('servicios.ambiente');
                 
-                if($caldea->getAldea()->getId()!=$idaldea){
-
-                $request->getSession()->getFlashBag()->add(
-                'notice',
-                'Usted no es Coordinador de Esta Aldea'
-                );
-                return $this->redirect($this->generateUrl('usuario_show',array('id'=>$usr->getId())));
-                }
-                $turnos=$this->choicesTurno($aldea->getId(), $caldea->getId());
-                }
-                else{
-                    $turnos=$this->choicesTurno($aldea->getId());
-                }
-                
-                if(!$turnos){
-                    $request->getSession()->getFlashBag()->add(
-                'notice',
-                'Ningún Turno Asignado'
-                );
-                return $this->redirect($this->generateUrl('aldea_show',array('id'=>$idaldea)));
-                }
+                $turnos = $data->TurnosAldea($aldea->getId());
                 
                 $anexos = $this->getDoctrine()
                 ->getRepository('MisionSucreRipesBundle:AnexoAldea')
-                ->findByAldea($idaldea);
+                ->findByAldeaForm($idaldea);
                 
 		$form = $this->createForm(new AmbienteType(),$ambiente)->
         add('turno', 'choice', array(
@@ -141,26 +112,15 @@ class AmbienteController extends Controller
 	}
         
         public function listanewAction(Request $request)
-	{       
+	{
+            /*
+             * Muestra una lista de aldea para asignar ambiente ROLE>EJE
+             */
 		$em = $this->getDoctrine()->getManager();
                 
                 $usr = $this->getUser();
                 
                 $id = $usr->getId();
-                    
-                if($usr->getTipUsr()==5){
-                    
-                    $coordinador = $em->getRepository('MisionSucreRipesBundle:CoordinadorAldea')->findOneByUser($id);
-                        if(!$coordinador){
-                            $request->getSession()->getFlashBag()->add(
-                            'notice',
-                            'Coordinador No Vinculado a una Aldea'
-                            );            
-                            return $this->redirect($this->generateUrl('aldea_coordinador_info'));
-                        }
-                        
-                    return $this->redirect($this->generateUrl('ambiente_new',array('idaldea'=>$coordinador->getAldea()->getId())));
-                }
                 
                 $aldeas = $this->AldeasEje();
                 
@@ -181,7 +141,10 @@ class AmbienteController extends Controller
 	}
         
     public function updateAction(Request $request,$idamb)
-	{        
+	{       
+        /*
+         * Actualizar Ambiente
+         */
                 $em = $this->getDoctrine()->getManager();
                 
                 $ambiente = $this->getDoctrine()
@@ -203,66 +166,21 @@ class AmbienteController extends Controller
                 return $this->redirect($this->generateUrl('aldea_show',array('id'=>$usr->getId())));
                 }
                 
+                /*VALIDAR */
+                $validar = $this->get('servicios.validar');
                 
-                $usr = $this->getUser();
-                
-                if(!$aldea){
-                
-            $request->getSession()->getFlashBag()->add(
-            'notice',
-            'Aldea con ID: '.$idaldea.' no registrada'
-                );
-                return $this->redirect($this->generateUrl('aldea_show',array('id'=>$usr->getId())));
-                }
-            
-                if($usr->getTipUsr()==8){
-                    
-                  $ceje = $this->getDoctrine()
-                            ->getRepository('MisionSucreRipesBundle:CoordinadorEje')
-                            ->findOneByUser($usr->getId());
-
-                            if( $ceje->getEje()->getId() != $aldea->getParroquia()->getEje()->getId()) {   
-                            $request->getSession()->getFlashBag()->add(
-                            'notice',
-                            'Accesso Denegado a este Eje'
-                            );
-                            return $this->redirect($this->generateUrl('usuario_show',array('id'=>$usr->getId())));
-                            }  
-                }
-                
-                if($usr->getTipUsr()==5){
-                
-                $caldea = $this->getDoctrine()
-                ->getRepository('MisionSucreRipesBundle:CoordinadorAldea')
-                ->findOneByUser($usr->getId());
-                
-                if( $caldea->getAldea()->getId() != $idaldea) {   
-                            $request->getSession()->getFlashBag()->add(
-                            'notice',
-                            'Accesso Denegado a esta Aldea'
-                            );
-                            return $this->redirect($this->generateUrl('usuario_show',array('id'=>$usr->getId())));
-                            }
-                
-                $turnoambiente = $ambiente->getTurno();
-                            
-                if(!$em->getRepository('MisionSucreRipesBundle:CoordinadorTurno')->CoordinadorTurno($turnoambiente,$caldea->getId())) {   
-                            $request->getSession()->getFlashBag()->add(
-                            'notice',
-                            'Accesso Denegado a este Turno'
-                            );
-                            return $this->redirect($this->generateUrl('usuario_show',array('id'=>$usr->getId())));
-                            }
-                
-                $turnos=$this->choicesTurno($aldea->getId(), $caldea->getId());
-                }
-                else{
-                    $turnos=$this->choicesTurno($aldea->getId());
-                }
-                
+                $error = $validar->ValidarAmbiente($ambiente,$idaldea, $request);
+                if($error)
+                    return $this->redirect($this->generateUrl($error['url'],array($error['param']=>$error['valueparam'])));
+                /*FIN VALIDAR*/
+                                
                 $anexos = $this->getDoctrine()
                 ->getRepository('MisionSucreRipesBundle:AnexoAldea')
-                ->findByAldea($idaldea);
+                ->findByAldeaForm($idaldea);
+                
+                $data = $this->get('servicios.ambiente');
+                
+                $turnos = $data->TurnosAldea($aldea->getId());
                 
 		$form = $this->createForm(new AmbienteType(),$ambiente)->
         add('turno', 'choice', array(
@@ -307,6 +225,9 @@ class AmbienteController extends Controller
         
         public function showAction(Request $request,$idamb)
 	{       
+            /*Mostrar Información de Ambiente
+             * 
+             */
                 $em = $this->getDoctrine()->getManager();
                 
                 $ambiente = $this->getDoctrine()
@@ -324,6 +245,14 @@ class AmbienteController extends Controller
                 
                 $idaldea = $ambiente->getAldea()->getId();
                 
+                /*VALIDAR */
+                $validar = $this->get('servicios.validar');
+                
+                $error = $validar->ValidarAmbiente($ambiente,$idaldea, $request);
+                if($error)
+                    return $this->redirect($this->generateUrl($error['url'],array($error['param']=>$error['valueparam'])));
+                /*FIN VALIDAR*/
+                
                 $aldea = $this->getDoctrine()
                 ->getRepository('MisionSucreRipesBundle:Aldea')
                 ->find($idaldea);
@@ -331,58 +260,6 @@ class AmbienteController extends Controller
                 $periodosacademicos = $this->getDoctrine()
                 ->getRepository('MisionSucreRipesBundle:PeriodoAcademicoAmbiente')
                 ->findByAmbiente($idamb);
-                
-                $usr = $this->getUser();
-                
-                if(!$aldea){
-                
-            $request->getSession()->getFlashBag()->add(
-            'notice',
-            'Aldea con ID: '.$idaldea.' no registrada'
-                );
-                return $this->redirect($this->generateUrl('aldea_show',array('id'=>$usr->getId())));
-                }
-            
-                switch($usr->getTipUsr()){
-                
-                    case 5:
-                        $caldea = $this->getDoctrine()
-                            ->getRepository('MisionSucreRipesBundle:CoordinadorAldea')
-                            ->findOneByUser($usr->getId());
-
-                            if( $caldea->getAldea()->getId() != $idaldea) {   
-                            $request->getSession()->getFlashBag()->add(
-                            'notice',
-                            'Accesso Denegado a esta Aldea'
-                            );
-                            return $this->redirect($this->generateUrl('usuario_show',array('id'=>$usr->getId())));
-                            }
-                
-                $turnoambiente = $ambiente->getTurno();
-                
-                            
-                if( !$em->getRepository('MisionSucreRipesBundle:CoordinadorTurno')->CoordinadorTurno($turnoambiente,$caldea->getId())) {   
-                            $request->getSession()->getFlashBag()->add(
-                            'notice',
-                            'Accesso Denegado a este Turno'
-                            );
-                            return $this->redirect($this->generateUrl('usuario_show',array('id'=>$usr->getId())));
-                            }
-                        break;
-                    case 8:
-                        $ceje = $this->getDoctrine()
-                            ->getRepository('MisionSucreRipesBundle:CoordinadorEje')
-                            ->findOneByUser($usr->getId());
-
-                            if( $ceje->getEje()->getId() != $aldea->getParroquia()->getEje()->getId()) {   
-                            $request->getSession()->getFlashBag()->add(
-                            'notice',
-                            'Accesso Denegado a este Eje'
-                            );
-                            return $this->redirect($this->generateUrl('usuario_show',array('id'=>$usr->getId())));
-                            }
-                        break;
-                }
                 
                 $triunfadores = $this->getDoctrine()
                 ->getRepository('MisionSucreRipesBundle:Triunfador')
@@ -412,20 +289,22 @@ class AmbienteController extends Controller
         
         public function infoAction(Request $request)
 	{       
+            /*
+             * Muestra la Información de ambiente de un triunfador
+             */
                 $usr = $this->getUser();
                 
                 $triunfador = $this->getDoctrine()
                 ->getRepository('MisionSucreRipesBundle:Triunfador')
                 ->findOneByUser($usr->getId());
                 
-                if(!$triunfador){
-            $request->getSession()->getFlashBag()->add(
-            'notice',
-            'Triunfador no Vinculado a una Aldea'
-                );
-                return $this->redirect($this->generateUrl('usuario_info'));    
-                    
-                }
+                /*VALIDAR */
+                $validar = $this->get('servicios.validar');
+                
+                $error = $validar->ValidarTriunfador($usr->getId(),$request);
+                if($error)
+                    return $this->redirect($this->generateUrl($error['url'],array($error['param']=>$error['valueparam'])));
+                /*FIN VALIDAR*/
                 
                 $em = $this->getDoctrine()->getManager();
                 
@@ -478,8 +357,12 @@ class AmbienteController extends Controller
     
     public function listaAction(Request $request)
 	{   
-    
-            $ambientes = $this->AmbientesAldeas();
+        /*Muestra los ambientes
+         * 
+         */
+         $data = $this->get('servicios.ambiente');
+                
+         $ambientes = $data->Lista();
                 
 		if(!$ambientes){
                 
@@ -623,6 +506,9 @@ public function busquedaAction(Request $request)
     
     public function resumenAction(Request $request)
 	{       
+        /*Resumen Estadistico de los ambientes
+         * 
+         */
                 $em = $this->getDoctrine()->getManager();
                 
                 $usr = $this->getUser();
@@ -745,7 +631,10 @@ public function busquedaAction(Request $request)
     return $this->render('MisionSucreRipesBundle:Ambiente:pnfs.html.twig',array('pnfs'=>$pnfs));
     } 
     
-    public function AldeasEje()
+    /*
+     * FUNCIONES ESPECIALES
+     */
+    protected function AldeasEje()
     {   
         $em = $this->getDoctrine()->getManager();
         
@@ -759,45 +648,6 @@ public function busquedaAction(Request $request)
         }
         
         return $aldeas;
-    }
-    
-    public function AmbientesAldeas()
-    {   
-        $em = $this->getDoctrine()->getManager();
-        
-        $ambientes= array();
-        
-        $user = $this->getUser();
-        
-        switch($user->getTipUsr()){
-        
-        case 5:
-            $coordinador = $em->getRepository('MisionSucreRipesBundle:CoordinadorAldea')->findOneByUser($user->getId());
-                        if(!$coordinador){
-                            $request->getSession()->getFlashBag()->add(
-                            'notice',
-                            'Coordinador No Vinculado a una Aldea'
-                            );            
-                            return $this->redirect($this->generateUrl('aldea_coordinador_info'));
-                        }
-            $ambientes['conperiodos'] = $em->getRepository('MisionSucreRipesBundle:CoordinadorTurno')->AmbientesTurnos($coordinador->getId());
-            $ambientes['sinperiodos'] = $em->getRepository('MisionSucreRipesBundle:CoordinadorTurno')->AmbientesTurnosSinPeriodoAcademico($coordinador->getId());
-        
-            break;
-        case 8:    
-        
-        $usreje = $em->getRepository('MisionSucreRipesBundle:CoordinadorEje')->findOneByUser($user->getId());
-        
-        $ambientes['conperiodos'] = $em->getRepository('MisionSucreRipesBundle:Ambiente')->findAllOrderedByAmbienteAndEje($usreje->getEje()->getId());
-        $ambientes['sinperiodos'] = $em->getRepository('MisionSucreRipesBundle:Ambiente')->findAllOrderedByPeriodoAcademicoAndEje($usreje->getEje()->getId());
-        
-        break;
-        case 1:
-        $ambientes['conperiodos'] = $em->getRepository('MisionSucreRipesBundle:Ambiente')->findAllOrderedByAmbiente();
-        $ambientes['sinperiodos'] = $em->getRepository('MisionSucreRipesBundle:Ambiente')->findAllOrderedByPeriodoAcademico();
-        break;
-        }
-        return $ambientes;
     }
     
     protected function MunicipiosEje() {

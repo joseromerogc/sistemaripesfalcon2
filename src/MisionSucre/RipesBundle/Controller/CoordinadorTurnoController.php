@@ -16,7 +16,9 @@ class CoordinadorTurnoController extends Controller
     }
 	
 	public function newAction(Request $request,$id)
-	{       
+	{ /*
+         * Registra el turno de un coordinador de aldea ROLE>EJE
+         */      
                 $em = $this->getDoctrine()->getManager();
                 
 		$turnocoordinador = new CoordinadorTurno();
@@ -52,7 +54,6 @@ class CoordinadorTurnoController extends Controller
                             return $this->redirect($this->generateUrl('aldea_new'));
                     }
                 }
-                
                         
 		$form = $this->createFormBuilder($turnocoordinador)->
         add('turno', 'choice', array(

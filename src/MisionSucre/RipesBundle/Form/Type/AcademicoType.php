@@ -11,13 +11,17 @@ class AcademicoType extends AbstractType
         $bachillerato=array('Institución Pública'=>'Institución Pública','Institución Privada'=>'Institución Privada',
             'Misión Ribas'=>'Misión Ribas','Libre Escolaridad'=>'Libre Escolaridad'
             );
+        $titulo=array('Licenciatura'=>'Licenciatura','Técnico Superior Universitario'=>'Técnico Superior Universitario',
+            'Doctorado'=>'Doctorado','Ingenieria'=>'Ingenieria','Maestria'=>'Maestria'
+            );
         ksort($bachillerato);
+        ksort($titulo);
         
         $builder->add('bachillerato', 'choice', array(
         'choices' => $bachillerato,'label' => 'Modalidad de Estudio Bachillerato', 'placeholder'=>'Seleccione una'
             ));
-         $builder->add('titulouniversitario', 'text',array(
-            'label' => 'Título Universitario'
+         $builder->add('titulouniversitario', 'choice',array(
+            'label' => 'Título Universitario', 'choices' =>$titulo
             )
             );
         $builder->add('postgrado', 'text', array(

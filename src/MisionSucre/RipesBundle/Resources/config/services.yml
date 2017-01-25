@@ -13,3 +13,27 @@ services:
             entityManager: "@doctrine.orm.entity_manager"
             router: "@router"
             tokenStorage: "@security.token_storage"
+    servicios.formatonota:
+        class: MisionSucre\RipesBundle\Services\FormatoNota
+        arguments: 
+            entityManager: "@doctrine.orm.entity_manager"
+            router: "@router"
+            tokenStorage: "@security.token_storage"
+    servicios.sustituir:
+        class: MisionSucre\RipesBundle\Services\Sustituir
+        arguments: 
+            entityManager: "@doctrine.orm.entity_manager"
+            router: "@router"
+            tokenStorage: "@security.token_storage"
+    servicios.ambiente:
+        class: MisionSucre\RipesBundle\Services\Ambiente
+        arguments: 
+            entityManager: "@doctrine.orm.entity_manager"
+            router: "@router"
+            tokenStorage: "@security.token_storage"
+    servicios.datos:
+        class: MisionSucre\RipesBundle\Services\Datos
+        arguments: 
+            entityManager: "@doctrine.orm.entity_manager"
+            router: "@router"
+            tokenStorage: "@security.token_storage"

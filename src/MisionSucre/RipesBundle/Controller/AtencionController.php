@@ -24,6 +24,11 @@ class AtencionController extends Controller
         
         $atencion= new Atencion();
         
+        $fecha = new \DateTime(date("Y-m-d"));
+        //$fecha->format('Y-m-d');
+        
+        $atencion->setFecha($fecha);
+        
         $form = $this->createForm(new AtencionType(),$atencion)->
                
         add('save', 'submit',array('label' => 'Registrar Atención'));
@@ -46,6 +51,7 @@ class AtencionController extends Controller
                             $atencion->setUser($user);
                             $em->persist($atencion);
                             $em->flush();
+                            return $this->redirect($this->generateUrl('atencion_show',array('id'=>$idusr)));
                             }
                             else{
                                $request->getSession()->getFlashBag()->add(
@@ -54,7 +60,7 @@ class AtencionController extends Controller
                             );  
                             }
                                         
-                    return $this->redirect($this->generateUrl('atencion_show',array('id'=>$idusr)));
+                    
 		}
 		
         
@@ -295,5 +301,31 @@ public function buscarAction(Request $request)
          return $this->render(
 			'MisionSucreRipesBundle:Atencion:busqueda.html.twig',
 			array('atenciones'=>$atenciones,'cedula'=>$tipo));
-    }      
+    }
+    public function resumenAction(Request $request)
+	{  /*
+         * Resumen Estadistico de las atenciones
+         */
+        
+        /*SUSTICIONES */
+                $sustituciones = $this->get('servicios.sustituir');
+                $meses = $sustituciones->Meses();
+        /*FIN SUSTICIONES*/
+         $em = $this->getDoctrine()->getManager();
+                
+                        $cantidad = $em->createQuery(
+                        "SELECT MONTH(a.fecha) as mes,YEAR(a.fecha) as anyo, COUNT (a.id) as total FROM MisionSucreRipesBundle:Atencion a
+                            GROUP BY mes, anyo
+                            ORDER BY anyo,mes
+                        ")
+                        ->getResult();
+                        
+                    return $this->render(
+			'MisionSucreRipesBundle:Atencion:resumen.html.twig',
+                        array(
+                            'cantidad'=>$cantidad,
+                            'meses'=>$meses
+                        ));
+                
+        }
 }

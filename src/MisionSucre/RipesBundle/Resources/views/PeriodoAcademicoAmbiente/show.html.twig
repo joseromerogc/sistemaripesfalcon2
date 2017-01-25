@@ -147,7 +147,9 @@
         {{u.priNom|capitalize}} {{u.segNom|capitalize}}{{u.priApe|capitalize}} {{u.segApe|capitalize}}
         </a>
     <td> {{u.cedPer}}</td>    
-    <td><a class="enlace" href="{{path('acta_nota_update',{'idan': u.a.id})}}">Cambiar Docente</a>
+    <td><a class="enlace" href="{{path('acta_nota_update',{'idan': u.a.id})}}">Cambiar Docente</a></td>
+    <td><a class="enlace" onclick="return confirm('******Confirmar Borrar******')" href="{{path('acta_nota_delete',{'idan': u.a.id})}}">Borrar</a></td>    
+    <td><a class="enlace" href="{{path('acta_nota_show',{'idan': u.a.id})}}">Mostrar</a></td>    
             
     </td>
     
@@ -275,7 +277,6 @@ $.ajax({
   success: function (html) {$('#msg_registro').html(html);}
 });
 ActualizarTablaTriunfadores();
-
 }
 
 function desVincularTriunfador(event,idpt){

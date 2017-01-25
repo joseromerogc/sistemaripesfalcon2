@@ -17,28 +17,29 @@ class CoordinadorController extends Controller
 	
 	public function newAction(Request $request,$id)
 	{       
-	
+            /*
+             * Registrar Nuevo Coordinador de Aldea Dado su idusr
+             */
+             
 		$caldea = new CoordinadorAldea();
                 
                 $em = $this->getDoctrine()->getManager();
+                
+                $user = $this->getDoctrine()
+                ->getRepository('MisionSucreRipesBundle:User')
+                ->find($id);
+                /*VALIDAR */
+                $validar = $this->get('servicios.validar');
+                
+                $error = $validar->ValidarUsuario($user,5,$id,$request);
+                if($error)
+                    return $this->redirect($this->generateUrl($error['url'],array($error['param']=>$error['valueparam'])));
+                /*FIN VALIDAR*/
                 
                  $auxcaldea = $this->getDoctrine()
                 ->getRepository('MisionSucreRipesBundle:CoordinadorAldea')
                 ->findByUser($id);            
                 
-                $usr = $this->getDoctrine()
-                ->getRepository('MisionSucreRipesBundle:User')
-                ->find($id);
-                
-                if(!$usr){
-                
-            $request->getSession()->getFlashBag()->add(
-            'notice',
-            'Usuario con ID: '.$id.' no registrado'
-                );
-            return $this->redirect($this->generateUrl('usuario_new'));
-                }
-            
                 if($auxcaldea){
 
                 $request->getSession()->getFlashBag()->add(
@@ -47,15 +48,6 @@ class CoordinadorController extends Controller
                 );
                 return $this->redirect($this->generateUrl('usuario_show',array('id'=>$id)));
                 }      
-                
-                if($usr->getTipUsr()!=5){
-
-                $request->getSession()->getFlashBag()->add(
-                'notice',
-                'Usuario No es de Tipo Coordinador(a) de Aldea'
-                );
-                return $this->redirect($this->generateUrl('usuario_show',array('id'=>$id)));
-                }
                 
                 $per =  $em->getRepository('MisionSucreRipesBundle:Persona')->findOneByUser($id);
                     
@@ -87,7 +79,7 @@ class CoordinadorController extends Controller
                                 
                             $aldea = $em->getRepository('MisionSucreRipesBundle:Aldea')->find($idaldea);
                             
-                            $caldea->setUser($usr);    
+                            $caldea->setUser($user);    
                             $caldea->setAldea($aldea);    
                             $em->persist($caldea);
                             $em->flush();
@@ -101,13 +93,15 @@ class CoordinadorController extends Controller
 		
 		return $this->render('MisionSucreRipesBundle:Coordinador:new.html.twig', array(
 		'form' => $form->createView(),'mensaje_heading'=>'Nuevo Coordinador',
-                    'sub_heading'=>'Aldea Universitaria','usr'=>$usr,'per' => $per
+                    'sub_heading'=>'Aldea Universitaria','usr'=>$user,'per' => $per
 		));
 	}
         
         public function newidAction(Request $request,$idc,$idaldea)
 	{       
-	
+	/*
+         * Registrar Usuario dado la aldea
+         */
 		$caldea = new CoordinadorAldea();
                 
                 $em = $this->getDoctrine()->getManager();
@@ -144,14 +138,13 @@ class CoordinadorController extends Controller
                 ->getRepository('MisionSucreRipesBundle:User')
                 ->find($idc);
                 
-                if(!$usuario){
+                /*VALIDAR */
+                $validar = $this->get('servicios.validar');
                 
-            $request->getSession()->getFlashBag()->add(
-            'notice',
-            'Usuario con ID: '.$idc.' no registrado'
-                );
-            return $this->redirect($this->generateUrl('usuario_new'));
-                }
+                $error = $validar->ValidarUsuario($usuario,5,$idc,$request);
+                if($error)
+                    return $this->redirect($this->generateUrl($error['url'],array($error['param']=>$error['valueparam'])));
+                /*FIN VALIDAR*/
             
                 if($auxcaldea){
 
@@ -162,14 +155,6 @@ class CoordinadorController extends Controller
                 return $this->redirect($this->generateUrl('usuario_show',array('id'=>$id)));
                 }      
                 
-                if($usuario->getTipUsr()!=5){
-
-                $request->getSession()->getFlashBag()->add(
-                'notice',
-                'Usuario No es de Tipo Coordinador(a) de Aldea'
-                );
-                return $this->redirect($this->generateUrl('usuario_show',array('id'=>$id)));
-                }
                 
                 $per =  $em->getRepository('MisionSucreRipesBundle:Persona')->findOneByUser($idc);
                     
@@ -211,15 +196,15 @@ class CoordinadorController extends Controller
         
         public function updateAction(Request $request,$id)
 	{
+            /*
+             * Actualizar Coordinador de Aldea
+             */
+             
             $em = $this->getDoctrine()->getManager();
             
             $caldea = $this->getDoctrine()
                 ->getRepository('MisionSucreRipesBundle:CoordinadorAldea')
                 ->find($id);            
-                
-                $usr = $this->getDoctrine()
-                ->getRepository('MisionSucreRipesBundle:User')
-                ->find($caldea->getUser()->getId());
                 
                 if(!$caldea){
 
@@ -229,6 +214,18 @@ class CoordinadorController extends Controller
                 );
                 return $this->redirect($this->generateUrl('usuario_show',array('id'=>$id)));
                 }      
+                
+                $usr = $this->getDoctrine()
+                ->getRepository('MisionSucreRipesBundle:User')
+                ->find($caldea->getUser()->getId());
+                
+                /*VALIDAR */
+                $validar = $this->get('servicios.validar');
+                
+                $error = $validar->ValidarAldea($caldea->getAldea()->getId(),$request);
+                if($error)
+                    return $this->redirect($this->generateUrl($error['url'],array($error['param']=>$error['valueparam'])));
+                /*FIN VALIDAR*/
                 
                 $per =  $em->getRepository('MisionSucreRipesBundle:Persona')->findOneByUser($caldea->getUser()->getId());
                     
@@ -241,20 +238,6 @@ class CoordinadorController extends Controller
                     return $this->redirect($this->generateUrl('persona_new',array('id'=>$id)));
                 }
                 
-                $aldea = $caldea->getAldea();
-                
-                if($this->getUser()->getTipUsr()==8){
-                $user = $this->getUser();
-                $usreje = $em->getRepository('MisionSucreRipesBundle:CoordinadorEje')->findOneByUser($user->getId());
-                if($usreje->getEje()->getId()!=$aldea->getParroquia()->getEje()->getId())
-                    {
-                    $request->getSession()->getFlashBag()->add(
-                                    'notice',
-                                    "Acceso Denegado al Eje"
-                                    );            
-                            return $this->redirect($this->generateUrl('aldea_new'));
-                    }
-                }
                         
 		$form = $this->createFormBuilder($caldea)->
         add('municipio', 'choice', array(
@@ -262,7 +245,6 @@ class CoordinadorController extends Controller
             'placeholder'=>"Seleccione una",'label' => 'Municipio de la Aldea'
             ))            
         ->add('idaldea', 'hidden',array('mapped' => false))                           
-        ->add('turno_', 'hidden',array('mapped' => false))                
         ->add('save', 'submit',array('label' => 'Registrar Coordinador de Aldea'))->getForm();
             
                 $form->handleRequest($request);
@@ -273,14 +255,10 @@ class CoordinadorController extends Controller
                             $em = $this->getDoctrine()->getManager();    
                             
                             $idaldea = $form->get('idaldea')->getData();
-                            
-                            $turno = $form->get('turno_')->getData();
                                 
                             $aldea = $em->getRepository('MisionSucreRipesBundle:Aldea')->find($idaldea);
-                            
-                            $caldea->setUser($usr);    
+                               
                             $caldea->setAldea($aldea);    
-                            $caldea->setTurno($turno);
                             $em->persist($caldea);
                             $em->flush();
                             
@@ -313,20 +291,17 @@ class CoordinadorController extends Controller
             'Coordinador con ID: '.$id.' no registrado'
             );
             
-            if($this->getUser()->getTipUsr()==8){
-                $user = $this->getUser();
-                $usreje = $em->getRepository('MisionSucreRipesBundle:CoordinadorEje')->findOneByUser($user->getId());
-                if($usreje->getEje()->getId()!=$aldea->getParroquia()->getEje()->getId())
-                    {
-                    $request->getSession()->getFlashBag()->add(
-                                    'notice',
-                                    "Acceso Denegado al Eje"
-                                    );            
-                            return $this->redirect($this->generateUrl('aldea_new'));
-                    }
-                }
             return $this->redirect('asignar_coordinador');
             }
+            
+            /*VALIDAR */
+                $validar = $this->get('servicios.validar');
+                
+                $error = $validar->ValidarAldea($caldea->getAldea()->getId(),$request);
+                if($error)
+                    return $this->redirect($this->generateUrl($error['url'],array($error['param']=>$error['valueparam'])));
+                /*FIN VALIDAR*/
+            
                                                         
                             $em->remove($caldea);
                             $em->flush();
@@ -341,11 +316,19 @@ class CoordinadorController extends Controller
                 
         public function listaAction(Request $request)
 	{       
+            /*
+             * Muestra el listado de Coordinadores de aldea ROLE>EJE
+             */
                 $em = $this->getDoctrine()->getManager();
                 
 		$caldeas =  $em->getRepository('MisionSucreRipesBundle:CoordinadorAldea')->findAllOrderedById();
                 
-		
+                if($this->getUser()->getTipUsr()==8){
+                $user = $this->getUser();
+                $usreje = $em->getRepository('MisionSucreRipesBundle:CoordinadorEje')->findOneByUser($user->getId());
+                $caldeas =  $em->getRepository('MisionSucreRipesBundle:CoordinadorAldea')->findAllOrderedByIdEje($usreje->getEje()->getId());
+                }
+                
 		if(!$caldeas){
                 
             $request->getSession()->getFlashBag()->add(
@@ -390,13 +373,15 @@ class CoordinadorController extends Controller
         
         public function busquedaasignaraldeaAction($param)
 	{       
-            
                 $parametros=json_decode($param,true);
                 
                 $query=$parametros['query'];
                 
                 $em = $this->getDoctrine()->getManager();
                 
+                /*
+                 * Muestra la información de los coordinadores no vinculados
+                 */
                 $result = $em->createQuery(
                         "SELECT DISTINCT u.tip_usr, p.priNom, p.segNom, p.priApe, p.segApe, p.cedPer, p.sexPer,u.id,
                             u.username
@@ -420,7 +405,9 @@ public function choicesaldeaAction($prq) {
     } 
 
     public function showAction(Request $request,$id){
-            
+     /*
+      * Muestra la informacion de coordinador de aldea
+      */
                 $em = $this->getDoctrine()->getManager();
                 
                 $per =  $em->getRepository('MisionSucreRipesBundle:Persona')->findOneByUser($id);
@@ -455,7 +442,7 @@ public function choicesaldeaAction($prq) {
                         return $this->redirect($this->generateUrl('eje_new',array('id'=>$usr->getId())));
                         } 
                         
-                        if(!$coordeje->getEje()->id()==$ideje)
+                        if(!$coordeje->getEje()->getId()==$ideje)
                         {
                         $request->getSession()->getFlashBag()->add(
                         'notice',
@@ -478,6 +465,7 @@ public function choicesaldeaAction($prq) {
                 $trabajo =  $em->getRepository('MisionSucreRipesBundle:Trabajo')->findOneByUser($id);       
                 $comunitaria =  $em->getRepository('MisionSucreRipesBundle:ParticipacionComunitaria')->findOneByUser($id);       
                 $politica =  $em->getRepository('MisionSucreRipesBundle:ParticipacionPolitica')->findOneByUser($id); 
+                $bloqueo =  $em->getRepository('MisionSucreRipesBundle:Bloqueado')->findOneByCedulas($per->getCedPer());
                 
                 if($coordinador)
                     $turnos = $em->getRepository('MisionSucreRipesBundle:CoordinadorTurno')->findAllByCoordinador($coordinador->getId()); 
@@ -489,7 +477,7 @@ public function choicesaldeaAction($prq) {
 			array('usuario' => $usuario,'persona' => $per,'sociales'=> $sociales,'enfermedades'=>$enfermedades,
                         'discapacidad'=>$discapacidad,'arte'=>$arte,'deporte'=>$deporte,'trabajo'=>$trabajo,
                             'comunitaria'=>$comunitaria,'politica'=>$politica,'academico'=>$academico,'coordinador'=>$coordinador,
-                            'ubicacionvivienda'=>$ubicacionvivienda,'turnos'=>$turnos
+                            'ubicacionvivienda'=>$ubicacionvivienda,'turnos'=>$turnos,'bloqueo'=>$bloqueo
                         )
 		);
         }
@@ -512,8 +500,6 @@ public function choicesaldeaAction($prq) {
                     return $this->redirect($this->generateUrl('persona_new',array('id'=>$id)));
                 }
             
-                $usr = $this->getUser();
-                
                 $coordinador = $em->getRepository('MisionSucreRipesBundle:CoordinadorAldea')->findOneByUser($id);
                 
                 if($coordinador){
@@ -534,7 +520,7 @@ public function choicesaldeaAction($prq) {
                         return $this->redirect($this->generateUrl('eje_new',array('id'=>$usr->getId())));
                         } 
                         
-                        if(!$coordeje->getEje()->id()==$ideje)
+                        if(!$coordeje->getEje()->getId()==$ideje)
                         {
                         $request->getSession()->getFlashBag()->add(
                         'notice',

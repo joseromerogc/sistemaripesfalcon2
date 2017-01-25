@@ -32,7 +32,9 @@ class TriunfadorController extends Controller
     }
 	
 	public function newAction(Request $request,$idamb,$idtrf)
-	{       
+	{  /*
+         * Registra nuevo Triunfador en un Ambiente Especifico
+         */     
 		$triunfador = new Triunfador();
                 
                 $em = $this->getDoctrine()->getManager();
@@ -40,10 +42,6 @@ class TriunfadorController extends Controller
                 $ambiente = $this->getDoctrine()
                 ->getRepository('MisionSucreRipesBundle:Ambiente')
                 ->find($idamb);
-                
-                 $infoambiente = $this->getDoctrine()
-                ->getRepository('MisionSucreRipesBundle:PeriodoAcademicoAmbiente')
-                ->findAllByAmbiente($idamb);
                 
                 $usertriunfador = $this->getDoctrine()
                 ->getRepository('MisionSucreRipesBundle:User')
@@ -66,53 +64,16 @@ class TriunfadorController extends Controller
                 return $this->redirect($this->generateUrl('usuario_show',array('id'=>$usr->getId())));
                 }
                 
-                if(!$usertriunfador){
+                /*VALIDAR */
+                $validar = $this->get('servicios.validar');
                 
-            $request->getSession()->getFlashBag()->add(
-            'notice',
-            'Usuario con ID: '.$idtrf.' no registrado'
-                );
-                return $this->redirect($this->generateUrl('usuario_show',array('id'=>$usr->getId())));
-                }
-                
-                switch($usr->getTipUsr()){
-                
-                    case 5:
-                        $caldea = $this->getDoctrine()
-                            ->getRepository('MisionSucreRipesBundle:CoordinadorAldea')
-                            ->findOneByUser($usr->getId());
-
-                            if( $caldea->getAldea()->getId() != $idaldea) {   
-                            $request->getSession()->getFlashBag()->add(
-                            'notice',
-                            'Accesso Denegado a esta Aldea'
-                            );
-                            return $this->redirect($this->generateUrl('usuario_show',array('id'=>$usr->getId())));
-                            }
-                        break;
-                    case 8:
-                        $ceje = $this->getDoctrine()
-                            ->getRepository('MisionSucreRipesBundle:CoordinadorEje')
-                            ->findOneByUser($usr->getId());
-
-                            if( $ceje->getEje()->getId() != $aldea->getParroquia()->getEje()->getId()) {   
-                            $request->getSession()->getFlashBag()->add(
-                            'notice',
-                            'Accesso Denegado a este Eje'
-                            );
-                            return $this->redirect($this->generateUrl('usuario_show',array('id'=>$usr->getId())));
-                            }
-                        break;
-                }
-                
-                if($usertriunfador->getTipUsr()!=6){
-
-                $request->getSession()->getFlashBag()->add(
-                'notice',
-                'Usuario No es de Tipo Triunfador'
-                );
-                return $this->redirect($this->generateUrl('usuario_show',array('id'=>$usr->getId())));
-                }
+                $error = $validar->ValidarUsuario($usertriunfador,6,$idtrf, $request);
+                if($error)
+                    return $this->redirect($this->generateUrl($error['url'],array($error['param']=>$error['valueparam'])));
+                $error = $validar->ValidarAmbiente($ambiente,$idaldea,$request);
+                if($error)
+                    return $this->redirect($this->generateUrl($error['url'],array($error['param']=>$error['valueparam'])));
+                /*FIN VALIDAR*/
                 
 		$form = $this->createFormBuilder($triunfador)->
         add('condicion', 'choice', array(
@@ -152,10 +113,29 @@ class TriunfadorController extends Controller
 		
                 $per =  $em->getRepository('MisionSucreRipesBundle:Persona')->findOneByUser($usertriunfador->getId());
                 
+                if(!$per){
+                $request->getSession()->getFlashBag()->add(
+                            'notice',
+                            'Datos Personales no Registrado'
+                            );            
+                    return $this->redirect($this->generateUrl('persona_new'),array('id'=>$idusr));
+                }
+                
+                $bloqueo = $this->getDoctrine()
+                ->getRepository('MisionSucreRipesBundle:Bloqueado')
+                ->findOneByCedulas($per->getCedPer());
+                
+                if($bloqueo){
+                $request->getSession()->getFlashBag()->add(
+                            'notice',
+                            'Persona Bloqueada por '.$bloqueo->getMotivo()
+                            );            
+                    return $this->redirect($this->generateUrl('usuario_lista'));
+                }
 		return $this->render('MisionSucreRipesBundle:Triunfador:new.html.twig', array(
 		'form' => $form->createView(),'mensaje_heading'=>'Nuevo Triunfador',
                     'sub_heading'=>'Aldea Universitaria <br>'.$aldea->getNombre(),
-                    'ambiente'=>$infoambiente, 'usr'=>$usertriunfador,'per'=>$per
+                    'ambiente'=>$ambiente, 'usr'=>$usertriunfador,'per'=>$per
 		));
 	}
         
@@ -324,44 +304,16 @@ class TriunfadorController extends Controller
                 return $this->redirect($this->generateUrl('usuario_show',array('id'=>$usr->getId())));
                 }
                 
-                switch($usr->getTipUsr()){
+                /*VALIDAR */
+                $validar = $this->get('servicios.validar');
                 
-                    case 5:
-                        $caldea = $this->getDoctrine()
-                            ->getRepository('MisionSucreRipesBundle:CoordinadorAldea')
-                            ->findOneByUser($usr->getId());
-
-                            if( $caldea->getAldea()->getId() != $idaldea) {   
-                            $request->getSession()->getFlashBag()->add(
-                            'notice',
-                            'Accesso Denegado a esta Aldea'
-                            );
-                            return $this->redirect($this->generateUrl('usuario_show',array('id'=>$usr->getId())));
-                            }
-                        break;
-                    case 8:
-                        $ceje = $this->getDoctrine()
-                            ->getRepository('MisionSucreRipesBundle:CoordinadorEje')
-                            ->findOneByUser($usr->getId());
-
-                            if( $ceje->getEje()->getId() != $aldea->getParroquia()->getEje()->getId()) {   
-                            $request->getSession()->getFlashBag()->add(
-                            'notice',
-                            'Accesso Denegado a este Eje'
-                            );
-                            return $this->redirect($this->generateUrl('usuario_show',array('id'=>$usr->getId())));
-                            }
-                        break;
-                }
-                
-                if(!$triunfador){
-
-                $request->getSession()->getFlashBag()->add(
-                'notice',
-                "Triunfador con ID $idtrf no Registrado"
-                );
-                return $this->redirect($this->generateUrl('ambiente_show',array('idamb'=>$ambiente->getId())));
-                }
+                $error = $validar->ValidarUsuario($usertriunfador,6,$idtrf, $request);
+                if($error)
+                    return $this->redirect($this->generateUrl($error['url'],array($error['param']=>$error['valueparam'])));
+                $error = $validar->ValidarAmbiente($ambiente,$idaldea,$request);
+                if($error)
+                    return $this->redirect($this->generateUrl($error['url'],array($error['param']=>$error['valueparam'])));
+                /*FIN VALIDAR*/
                 
                 $vocero = $this->getDoctrine()
                 ->getRepository('MisionSucreRipesBundle:Vocero')
@@ -383,7 +335,10 @@ class TriunfadorController extends Controller
         
         
     public function asignartriunfadorAction(Request $request,$idamb)
-	{       
+	{  
+        /* Buscar el ambiente para la eventual vinculación
+         * 
+         */     
                 $em = $this->getDoctrine()->getManager();
                 
                 $ambiente = $this->getDoctrine()
@@ -461,9 +416,12 @@ class TriunfadorController extends Controller
                         array('aldea'=>$aldea,'ambiente'=>$infoambiente,'triunfadores'=>$triunfadores)
 		);	
 	}
-                    //busqueda para vincular a ambiente
+                    
         public function busquedatriunfadorAction($param)
 	{       
+            /*
+             * Busqueda en masa de los triunfadores a vincular
+             */
             
                 $parametros=json_decode($param,true);
                 
@@ -476,6 +434,7 @@ class TriunfadorController extends Controller
                 $noregistrados = array();
                 $noperfil = array(); //recoge los perfiles invalidos
                 $vinculados=  array();
+                $cedulavincular=  array();
                 
                 //las cedulas que no estan registradas
                 foreach ($cedulas as $c) {
@@ -498,9 +457,18 @@ class TriunfadorController extends Controller
                                    $noperfil[]=array('ced'=>$c, 'msg'=>'Es un Operario') ;
                              break;        
                              case 6:
+                                 
+                                 $bloqueo = $this->getDoctrine()
+                                    ->getRepository('MisionSucreRipesBundle:Bloqueado')
+                                    ->findOneByCedulas($per->getCedPer());
+
+                                    if($bloqueo){
+                                    $noperfil[]=array('ced'=>$c, 'msg'=>'Triunfador Bloqueado') ;
+                                    }
+                                 else{
                                  $trf = $this->getDoctrine()
-                ->getRepository('MisionSucreRipesBundle:Triunfador')
-                ->findOneByUser($per->getUser()->getId());
+                                ->getRepository('MisionSucreRipesBundle:Triunfador')
+                                ->findOneByUser($per->getUser()->getId());
                                    if($trf)
                                    {
                                 $ambiente=$trf->getAmbiente();
@@ -508,6 +476,10 @@ class TriunfadorController extends Controller
                                       $vinculados[] = array ('ced'=>$c,'pnf'=>$ambiente->getPnf()->getNombre()."/".$ambiente->getTurno()
                                           ,'aldea'=>$ambiente->getAldea()->getNombre());
                                    }
+                                   else{
+                                       $cedulavincular[] =$c;
+                                   }
+                                 }
                              break;        
                     }
                     }
@@ -522,7 +494,7 @@ class TriunfadorController extends Controller
                             FROM MisionSucreRipesBundle:Persona p JOIN p.user u
                         WHERE p.cedPer IN (:cedulas) AND u.tip_usr = 6 AND NOT EXISTS
                    ( SELECT t FROM MisionSucreRipesBundle:Triunfador t WHERE u.id=t.user) ORDER BY p.cedPer" 
-                        )->setParameters(array('cedulas'=>$cedulas))->getResult();
+                        )->setParameters(array('cedulas'=>$cedulavincular))->getResult();
                 
 		return $this->render(
 			'MisionSucreRipesBundle:Triunfador:listaasignar.html.twig',
@@ -533,7 +505,9 @@ class TriunfadorController extends Controller
 	}
         public function busquedatriunfadorvincularAction($param)
 	{       
-            
+            /*
+             * Buscar triunfador para vincular
+             */
                 $parametros=json_decode($param,true);
                 
                 $query=$parametros['query'];
@@ -555,7 +529,9 @@ class TriunfadorController extends Controller
 	}
         
         public function buscarAction(Request $request)
-	{       
+	{   /*
+         * Funcion buscar triunfador
+         */    
                 $em = $this->getDoctrine()->getManager();
                 
                 if($this->getUser()->getTipUsr()==5){
@@ -600,61 +576,17 @@ class TriunfadorController extends Controller
                 $triunfador = $em->getRepository('MisionSucreRipesBundle:Triunfador')->findOneByUser($id);
                 
                 
-                if($triunfador){
+                /*VALIDAR */
+                $validar = $this->get('servicios.validar');
                 
-                $ideje = $triunfador->getAmbiente()->getAldea()->getParroquia()->getEje()->getId();
-                $aldea = $triunfador->getAmbiente()->getAldea();
-                
-                switch($usr->getTipUsr()){
-                    case 8:
-                        $coordeje = $this->getDoctrine()
-                        ->getRepository('MisionSucreRipesBundle:CoordinadorEje')
-                        ->findOneByUser($usr->getId());
-                        
-                        if(!$coordeje){
-
-                        $request->getSession()->getFlashBag()->add(
-                        'notice',
-                        'Coordinador de Eje No registrado(a)'
-                        );
-                        return $this->redirect($this->generateUrl('eje_new',array('id'=>$usr->getId())));
-                        } 
-                        
-                        if(!$coordeje->getEje()->getId()==$ideje)
-                        {
-                        $request->getSession()->getFlashBag()->add(
-                        'notice',
-                        'Acceso Denegado a este Eje'
-                        );
-                        return $this->redirect($this->generateUrl('usuario_lista'));     
-                        }
-                        
-                        break;
-                    case 5:
-                        $coordaldea = $this->getDoctrine()
-                        ->getRepository('MisionSucreRipesBundle:CoordinadorAldea')
-                        ->findOneByUser($usr->getId());
-                        
-                        if(!$coordaldea){
-
-                        $request->getSession()->getFlashBag()->add(
-                        'notice',
-                        'Coordinador de Aldea No registrado(a)'
-                        );
-                        return $this->redirect($this->generateUrl('eje_new',array('id'=>$usr->getId())));
-                        } 
-                        $usrs = $em->getRepository('MisionSucreRipesBundle:CoordinadorAldea')->findAllByAldea($coordaldea->getAldea());
-                        
-                        if(!$coordaldea->getAldea()->getId()==$aldea->getId())
-                        {
-                        $request->getSession()->getFlashBag()->add(
-                        'notice',
-                        'Acceso Denegado a esta Aldea'
-                        );
-                        return $this->redirect($this->generateUrl('usuario_lista'));     
-                        }
-                        break;
-                }}
+                $error = $validar->ValidarTriunfador($id, $request);
+                if($error)
+                    return $this->redirect($this->generateUrl($error['url'],array($error['param']=>$error['valueparam'])));
+                $error = $validar->ValidarAmbiente($triunfador->getAmbiente(),$triunfador->getAmbiente()->getAldea()->getId()
+                        ,$request);
+                if($error)
+                    return $this->redirect($this->generateUrl($error['url'],array($error['param']=>$error['valueparam'])));
+                /*FIN VALIDAR*/
             
                 $usuario =  $em->getRepository('MisionSucreRipesBundle:Role')->findOneByRole($id);    
                 $user =  $em->getRepository('MisionSucreRipesBundle:User')->findOneById($id); 
@@ -668,13 +600,14 @@ class TriunfadorController extends Controller
                 $trabajo =  $em->getRepository('MisionSucreRipesBundle:Trabajo')->findOneByUser($id);       
                 $comunitaria =  $em->getRepository('MisionSucreRipesBundle:ParticipacionComunitaria')->findOneByUser($id);       
                 $politica =  $em->getRepository('MisionSucreRipesBundle:ParticipacionPolitica')->findOneByUser($id);    
+                $bloqueo =  $em->getRepository('MisionSucreRipesBundle:Bloqueado')->findOneByCedulas($per->getCedPer());
                 
                 return $this->render(
 			'MisionSucreRipesBundle:Triunfador:show.html.twig',
 			array('usuario' => $usuario,'persona' => $per,'sociales'=> $sociales,'enfermedades'=>$enfermedades,
                         'discapacidad'=>$discapacidad,'arte'=>$arte,'deporte'=>$deporte,'trabajo'=>$trabajo,
                             'comunitaria'=>$comunitaria,'politica'=>$politica,'academico'=>$academico,'triunfador'=>$triunfador,
-                            'ubicacionvivienda'=>$ubicacionvivienda
+                            'ubicacionvivienda'=>$ubicacionvivienda,'bloqueo'=>$bloqueo
                         )
 		);
         }        
@@ -702,63 +635,15 @@ class TriunfadorController extends Controller
                 
                 $triunfador = $em->getRepository('MisionSucreRipesBundle:Triunfador')->findOneByUser($id);
                 
+                if(!$per){
+                    
+                    $request->getSession()->getFlashBag()->add(
+                    'notice',
+                    'Triunfador no Vinculado'
+                    );    
+                    return $this->redirect($this->generateUrl('asignar_triunfador_ambiente',array('idtrf'=>$id)));
+                }
                 
-                if($triunfador){
-                
-                $ideje = $triunfador->getAmbiente()->getAldea()->getParroquia()->getEje()->getId();
-                $aldea = $triunfador->getAmbiente()->getAldea();
-                
-                switch($usr->getTipUsr()){
-                    case 8:
-                        $coordeje = $this->getDoctrine()
-                        ->getRepository('MisionSucreRipesBundle:CoordinadorEje')
-                        ->findOneByUser($usr->getId());
-                        
-                        if(!$coordeje){
-
-                        $request->getSession()->getFlashBag()->add(
-                        'notice',
-                        'Coordinador de Eje No registrado(a)'
-                        );
-                        return $this->redirect($this->generateUrl('eje_new',array('id'=>$usr->getId())));
-                        } 
-                        
-                        if(!$coordeje->getEje()->id()==$ideje)
-                        {
-                        $request->getSession()->getFlashBag()->add(
-                        'notice',
-                        'Acceso Denegado a este Eje'
-                        );
-                        return $this->redirect($this->generateUrl('usuario_lista'));     
-                        }
-                        
-                        break;
-                    case 5:
-                        $coordaldea = $this->getDoctrine()
-                        ->getRepository('MisionSucreRipesBundle:CoordinadorAldea')
-                        ->findOneByUser($usr->getId());
-                        
-                        if(!$coordaldea){
-
-                        $request->getSession()->getFlashBag()->add(
-                        'notice',
-                        'Coordinador de Aldea No registrado(a)'
-                        );
-                        return $this->redirect($this->generateUrl('eje_new',array('id'=>$usr->getId())));
-                        } 
-                        $usrs = $em->getRepository('MisionSucreRipesBundle:CoordinadorAldea')->findAllByAldea($coordaldea->getAldea());
-                        
-                        if(!$coordaldea->getAldea()->getId()==$aldea->getId())
-                        {
-                        $request->getSession()->getFlashBag()->add(
-                        'notice',
-                        'Acceso Denegado a esta Aldea'
-                        );
-                        return $this->redirect($this->generateUrl('usuario_lista'));     
-                        }
-                        break;
-                }}
-            
                 $usuario =  $em->getRepository('MisionSucreRipesBundle:Role')->findOneByRole($id);    
                 $user =  $em->getRepository('MisionSucreRipesBundle:User')->findOneById($id);    
                 $sociales =  $em->getRepository('MisionSucreRipesBundle:Social')->findOneByUser($id); 
@@ -771,13 +656,14 @@ class TriunfadorController extends Controller
                 $trabajo =  $em->getRepository('MisionSucreRipesBundle:Trabajo')->findOneByUser($id);       
                 $comunitaria =  $em->getRepository('MisionSucreRipesBundle:ParticipacionComunitaria')->findOneByUser($id);       
                 $politica =  $em->getRepository('MisionSucreRipesBundle:ParticipacionPolitica')->findOneByUser($id);    
+                $bloqueo =  $em->getRepository('MisionSucreRipesBundle:Bloqueado')->findOneByCedulas($per->getCedPer());
                 
                 return $this->render(
 			'MisionSucreRipesBundle:Triunfador:show.html.twig',
 			array('usuario' => $usuario,'persona' => $per,'sociales'=> $sociales,'enfermedades'=>$enfermedades,
                         'discapacidad'=>$discapacidad,'arte'=>$arte,'deporte'=>$deporte,'trabajo'=>$trabajo,
                             'comunitaria'=>$comunitaria,'politica'=>$politica,'academico'=>$academico,'triunfador'=>$triunfador, 
-                            'ubicacionvivienda' => $ubicacionvivienda
+                            'ubicacionvivienda' => $ubicacionvivienda,'bloqueo'=>$bloqueo
                         )
 		);
         }        
@@ -958,10 +844,12 @@ class TriunfadorController extends Controller
     
     public function busquedaambienteAction(Request $request)
 	{       
+        
                  if($request->request->get('param'))
                 {   $param=$request->request->get('param');
                     $parametros=json_decode($param,true);}
-                
+//                $param='{"query":{"idtrf":"2007","aldea":"2","municipio":"1","parroquia":"2","nombre":"","turno":"","modalidad":"","pnf":"","trayecto":"","periodo":"","periodoacademico":"","condicion":""}}';
+//                $parametros=json_decode($param,true);
                 $query=$parametros['query'];
                 
                 $em = $this->getDoctrine()->getManager();
@@ -1020,17 +908,19 @@ class TriunfadorController extends Controller
                     $condnombre = '(am.nombre IS NULL OR am.nombre LIKE :nombre)';
                   
                 $ambientes = $em->createQuery(
-                        "SELECT am, pa
-                            FROM MisionSucreRipesBundle:PeriodoAcademicoAmbiente pa JOIN pa.ambiente am JOIN am.aldea a JOIN a.parroquia prq JOIN prq.eje e,
+                        "SELECT DISTINCT pa
+                            FROM MisionSucreRipesBundle:PeriodoAcademicoAmbiente pa JOIN pa.periodopnf ppnf ,
+                            MisionSucreRipesBundle:Ambiente am JOIN am.aldea a JOIN a.parroquia prq JOIN prq.eje e,
                             MisionSucreRipesBundle:Pnf pnf, MisionSucreRipesBundle:PeriodoAcademico p, MisionSucreRipesBundle:Municipio m,
                             MisionSucreRipesBundle:CoordinadorTurno t JOIN t.coordinador c
                             WHERE $condnombre 
                                AND a.id LIKE :aldea AND a.parroquia=prq.id AND $cond AND
                                am.turno LIKE :turno AND pnf.id LIKE :pnf AND pnf.modalidad LIKE :modalidad
-                            AND pa.trayecto LIKE :trayecto AND pa.periodo LIKE :periodo AND p.id LIKE :periodoacademico
+                            AND ppnf.trayecto LIKE :trayecto AND ppnf.periodo LIKE :periodo AND p.id LIKE :periodoacademico
                             AND am.condicion LIKE :condicion AND am.pnf = pnf.id  AND pa.periodoacademico = p.id AND m.id = prq.municipio
                             AND c.id LIKE :idcoordinador AND c.aldea = a.id AND t.turno=am.turno
-                            
+                            AND pa.ambiente = am.id
+                            GROUP BY pa.ambiente
                         " 
                         )->setParameters(array('aldea'=>"$aldea",'nombre'=>"%{$query['nombre']}%"
                         ,'turno'=>"%{$query['turno']}%",'pnf'=>"{$query['pnf']}",'modalidad'=>"%{$query['modalidad']}%",

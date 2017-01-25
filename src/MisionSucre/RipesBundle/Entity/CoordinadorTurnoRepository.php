@@ -41,7 +41,7 @@ class CoordinadorTurnoRepository extends EntityRepository
                     WHERE c.aldea =:aldea
                 '
             )
-            ->setParameters(array('aldea'=>$aldea))->getResult();
+            ->setParameters(array('aldea'=>$aldea))->getArrayResult();
     }
     
     public function ExisteTurno($turno,$aldea)
@@ -68,7 +68,8 @@ class CoordinadorTurnoRepository extends EntityRepository
     {
           return $this->getEntityManager()
             ->createQuery(
-                " SELECT pa as ambiente, (select count(tr.id)  FROM MisionSucreRipesBundle:Triunfador tr WHERE tr.ambiente=a.id) AS cantidadtriunfadores 
+                " SELECT pa as ambiente, 
+                    (select count(tr.id)  FROM MisionSucreRipesBundle:Triunfador tr WHERE tr.ambiente=a.id) AS cantidadtriunfadores 
                     FROM MisionSucreRipesBundle:PeriodoAcademico p,  MisionSucreRipesBundle:PeriodoAcademicoAmbiente pa 
                     JOIN pa.ambiente a,
                     MisionSucreRipesBundle:CoordinadorTurno t JOIN t.coordinador c
@@ -122,4 +123,17 @@ class CoordinadorTurnoRepository extends EntityRepository
             )
             ->setParameters(array('idcoordinador'=>$idcoordinador,'cedula'=>"%$cedula%"))->getResult();
     }
+    
+    public function CoordinadorTurnoAmbiente($amb)
+    {
+          return $this->getEntityManager()
+            ->createQuery(
+                'SELECT t FROM MisionSucreRipesBundle:CoordinadorTurno t JOIN t.coordinador c,
+                    MisionSucreRipesBundle:Ambiente a
+                    WHERE a.id =:amb AND a.turno=t.turno AND a.aldea=c.aldea
+                '
+            )
+            ->setParameters(array('amb'=>$amb))->getSingleResult();
+    }
+    
 }

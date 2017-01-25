@@ -134,6 +134,8 @@ class PeriodoAcademicoAmbiente
     public function __construct()
     {
         $this->periodostriunfadores = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->$actasnotas = new \Doctrine\Common\Collections\ArrayCollection();
+        
     }
 
     /**

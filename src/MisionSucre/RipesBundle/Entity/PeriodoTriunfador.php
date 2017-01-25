@@ -33,6 +33,11 @@ class PeriodoTriunfador
      */
     protected $user;
     
+    /**
+     * @ORM\OneToMany(targetEntity="Nota", mappedBy="triunfador")
+     */
+    protected $notas;
+    
 
     /**
      * Get id
@@ -88,5 +93,45 @@ class PeriodoTriunfador
     public function getUser()
     {
         return $this->user;
+    }
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->notas = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+
+    /**
+     * Add notas
+     *
+     * @param \MisionSucre\RipesBundle\Entity\Nota $notas
+     * @return PeriodoTriunfador
+     */
+    public function addNota(\MisionSucre\RipesBundle\Entity\Nota $notas)
+    {
+        $this->notas[] = $notas;
+
+        return $this;
+    }
+
+    /**
+     * Remove notas
+     *
+     * @param \MisionSucre\RipesBundle\Entity\Nota $notas
+     */
+    public function removeNota(\MisionSucre\RipesBundle\Entity\Nota $notas)
+    {
+        $this->notas->removeElement($notas);
+    }
+
+    /**
+     * Get notas
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getNotas()
+    {
+        return $this->notas;
     }
 }

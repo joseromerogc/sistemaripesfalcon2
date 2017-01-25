@@ -12,7 +12,18 @@
     cursor:pointer;
     
 }
-
+.botonsimple
+{
+    color: white;
+    text-decoration: none;
+    margin: 20px;
+    margin-top: 1px;
+    margin-bottom: 40px;
+    padding: 15px;
+    border-radius:5px;
+    border:1px solid white;
+    cursor:pointer;
+}
 #boton_nuevo
 {	 
     clear: both;
@@ -74,12 +85,12 @@ background: #5CCD00;
 #blue,.blue{
 background: blue;
 	background:-moz-linear-gradient(top,#207cca 0%,#1e5799 100%);
-	background:-webkit-gradient(linear,left top,left bottom,color-stop(0%,#207cca),color-stop(100%,#4AA400));
-	background:-webkit-linear-gradient(top,#207cca 0%,#4AA400 100%);
-	background:-o-linear-gradient(top,#207cca 0%,#4AA400 100%);
-	background:-ms-linear-gradient(top,#207cca 0%,#4AA400 100%);
-	background:linear-gradient(top,#207cca 0%,#4AA400 100%);
-	filter: progid: DXImageTransform.Microsoft.gradient( startColorstr='#cb60b3', endColorstr='#4AA400',GradientType=0);
+	background:-webkit-gradient(linear,left top,left bottom,color-stop(0%,#207cca),color-stop(100%,#1e5799));
+	background:-webkit-linear-gradient(top,#207cca 0%,#1e5799 100%);
+	background:-o-linear-gradient(top,#207cca 0%,#1e5799 100%);
+	background:-ms-linear-gradient(top,#207cca 0%,#1e5799 100%);
+	background:linear-gradient(top,#207cca 0%,#1e5799100%);
+	filter: progid: DXImageTransform.Microsoft.gradient( startColorstr='#cb60b3', endColorstr='#1e5799',GradientType=0);
 	border:1px solid blue;
 }
 

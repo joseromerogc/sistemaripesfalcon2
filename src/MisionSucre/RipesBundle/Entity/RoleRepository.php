@@ -90,19 +90,13 @@ class RoleRepository extends EntityRepository
             )->setParameters(array('username'=>"%$username%",'cedula'=>"%$cedula%"))
             ->getResult();
     }
-    public function NoVinculados($username,$cedula)
+    public function NoVinculado($idusr)
     {
-        if($cedula=="")
-        {
-            $cedula="%%";
-        }
-        
           return $this->getEntityManager()
             ->createQuery(
-                "SELECT u.username, u.id,r.id AS idrole, p.priNom,p.segNom, p.priApe, p.segApe,r.name,p.cedPer FROM MisionSucreRipesBundle:Role r, 
-                    MisionSucreRipesBundle:Persona p JOIN p.user u
-                    WHERE p.cedPer LIKE :cedula 
-                    AND r.id=u.tip_usr AND u.username LIKE :username AND(
+                "SELECT u FROM MisionSucreRipesBundle:User u
+                    WHERE u.id = :id
+                    AND(
                             (u.tip_usr=8 AND NOT EXISTS 
                             ( SELECT c FROM MisionSucreRipesBundle:CoordinadorEje c WHERE u.id=c.user)) AND
                             (u.tip_usr=5 AND NOT EXISTS 
@@ -115,9 +109,8 @@ class RoleRepository extends EntityRepository
                             (u.tip_usr=9 AND NOT EXISTS 
                             ( SELECT o FROM MisionSucreRipesBundle:Operario o WHERE u.id=o.user))
                             )
-                            ORDER BY u.username
                             "
-            )->setParameters(array('username'=>"%$username%",'cedula'=>"%$cedula%"))
+            )->setParameters(array('id'=>"$idusr"))
             ->getResult();
     }
     
@@ -131,6 +124,5 @@ class RoleRepository extends EntityRepository
             )->setParameter('id', $id)
             ->getOneOrNullResult();
     }
-        
 }
 

@@ -1,0 +1,92 @@
+{% extends 'MisionSucreRipesBundle::layout.html.twig' %}
+
+{% block stylesheets %}
+{{ parent() }}
+	<link rel="stylesheet" type="text/css" href="{{asset('css/table/littletable.css')}}">
+{% endblock %}
+
+
+{% block content %}
+	{{ parent() }}
+
+        
+{% for flashMessage in app.session.flashbag.get('notice') %}
+        <div class="flash-notice">
+        {{ flashMessage }}
+        </div>
+{% endfor %}
+
+
+    <h1 class="heading_style">Resumen Estadistico Atención</h1> 
+    
+    <table cellspacing='0'  style="float: left"> <!-- cellspacing='0' is important, must stay -->
+        <tr > <th class="heading" colspan='7'> Cantidad por Meses</th></tr>
+            <tr>
+                <th>Mes/Año</th><th>Cantidad</th>           
+            </tr><!-- Table Header -->
+
+    {% set cont = 0 %}  
+    {% for c in cantidad%}
+        <tr>
+            <td>{{meses[c.mes]}}/{{c.anyo}}</td>
+            <td>{{c.total}}</td>
+            {% set cont = cont+ c.total%}
+        </tr><!-- Table Row -->
+    {% endfor%}
+    <td class = 'total'>Total</td><td>{{cont}}</td>
+    </table>    
+    
+    <div id="container" style="height: 350px; float:left"></div>
+
+<script src="http://code.highcharts.com/highcharts.js"></script>
+<script src="http://code.highcharts.com/highcharts-3d.js"></script>
+<script src="http://code.highcharts.com/modules/exporting.js"></script>
+<script>    
+    
+$(document).ready(function(){
+    
+$(function () {
+    $('#container').highcharts({
+        chart: {
+            type: 'pie',
+            options3d: {
+                enabled: true,
+                alpha: 45,
+                beta: 0
+            }
+        },
+        title: {
+            text: 'Atenciones por Mes'
+        },
+        tooltip: {
+            pointFormat: '{series.name}: <b>{point.percentage:.0f}%</b>'
+        },
+        plotOptions: {
+            pie: {
+                allowPointSelect: true,
+                cursor: 'pointer',
+                depth: 35,
+                dataLabels: {
+                    enabled: true,
+                    format: '{point.name}'
+                }
+            }
+        },
+        series: [{
+            type: 'pie',
+            name: 'Cantidad',
+            data: [
+                {% for c in cantidad%}
+                    ['{{meses[c.mes]}}/{{c.anyo}}',{{c.total}}],
+                {% endfor%} 
+            ]
+        }]
+    });
+});
+
+});
+
+</script>
+    
+{% endblock %}
+

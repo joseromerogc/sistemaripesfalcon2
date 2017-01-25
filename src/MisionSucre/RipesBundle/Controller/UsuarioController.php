@@ -444,12 +444,42 @@ class UsuarioController extends Controller
                 }
                 else{
                     
+                $novinculado = $this->getDoctrine()
+                        ->getRepository('MisionSucreRipesBundle:Role')
+                        ->NoVinculado($id);
+                
+                if(!$novinculado){
+                    $usuario =  $em->getRepository('MisionSucreRipesBundle:Role')->findOneByRole($id);    
+                $sociales =  $em->getRepository('MisionSucreRipesBundle:Social')->findOneByUser($id); 
+                $enfermedades =  $usr->getEnfermedades()->getValues();
+                $ubicacionvivienda = $em->getRepository('MisionSucreRipesBundle:UbicacionVivienda')->findOneByUser($id); 
+                $discapacidad =  $em->getRepository('MisionSucreRipesBundle:Discapacidad')->findOneByUser($id);       
+                $academico =  $em->getRepository('MisionSucreRipesBundle:Academico')->findOneByUser($id);
+                $arte =  $em->getRepository('MisionSucreRipesBundle:Arte')->findOneByUser($id);       
+                $deporte =  $em->getRepository('MisionSucreRipesBundle:Deporte')->findOneByUser($id);       
+                $trabajo =  $em->getRepository('MisionSucreRipesBundle:Trabajo')->findOneByUser($id);       
+                $comunitaria =  $em->getRepository('MisionSucreRipesBundle:ParticipacionComunitaria')->findOneByUser($id);       
+                $politica =  $em->getRepository('MisionSucreRipesBundle:ParticipacionPolitica')->findOneByUser($id);    
+                $per =  $em->getRepository('MisionSucreRipesBundle:Persona')->findOneByUser($id);
+                $bloqueo = $this->getDoctrine()
+                ->getRepository('MisionSucreRipesBundle:Bloqueado')
+                ->findOneByCedulas($per->getCedPer());
+                
+                return $this->render(
+			'MisionSucreRipesBundle:Usuario:show.html.twig',
+			array('usuario' => $usuario,'persona' => $per,'sociales'=> $sociales,'enfermedades'=>$enfermedades,
+                        'discapacidad'=>$discapacidad,'arte'=>$arte,'deporte'=>$deporte,'trabajo'=>$trabajo,
+                            'comunitaria'=>$comunitaria,'politica'=>$politica,'academico'=>$academico,
+                            'ubicacionvivienda'=>$ubicacionvivienda,'bloqueo'=>$bloqueo
+                        )
+		);
+                }    
+                    
                 switch($this->getUser()->getTipUsr()){
                     
                     case 6:
                     case 7:
                     case 9:
-                    case 8:    
                         return $this->redirect($this->generateUrl('usuario_info'));
                 }    
                     
@@ -491,6 +521,34 @@ class UsuarioController extends Controller
                 $id = $usr->getId();
                 
                 //DEPENDIENDO DEL TIPO DE USUARIO SE ACCEDE A SU RESPECTIVO CONTROLADOR
+                $novinculado = $this->getDoctrine()
+                        ->getRepository('MisionSucreRipesBundle:Role')
+                        ->NoVinculado($usr->getId());
+                
+                if($novinculado){
+                    $usuario =  $em->getRepository('MisionSucreRipesBundle:Role')->findOneByRole($id);    
+                $sociales =  $em->getRepository('MisionSucreRipesBundle:Social')->findOneByUser($id); 
+                $enfermedades =  $usr->getEnfermedades()->getValues();
+                $ubicacionvivienda = $em->getRepository('MisionSucreRipesBundle:UbicacionVivienda')->findOneByUser($id); 
+                $discapacidad =  $em->getRepository('MisionSucreRipesBundle:Discapacidad')->findOneByUser($id);       
+                $academico =  $em->getRepository('MisionSucreRipesBundle:Academico')->findOneByUser($id);
+                $arte =  $em->getRepository('MisionSucreRipesBundle:Arte')->findOneByUser($id);       
+                $deporte =  $em->getRepository('MisionSucreRipesBundle:Deporte')->findOneByUser($id);       
+                $trabajo =  $em->getRepository('MisionSucreRipesBundle:Trabajo')->findOneByUser($id);       
+                $comunitaria =  $em->getRepository('MisionSucreRipesBundle:ParticipacionComunitaria')->findOneByUser($id);       
+                $politica =  $em->getRepository('MisionSucreRipesBundle:ParticipacionPolitica')->findOneByUser($id);    
+                $per =  $em->getRepository('MisionSucreRipesBundle:Persona')->findOneByUser($id);
+                
+                return $this->render(
+			'MisionSucreRipesBundle:Operario:show.html.twig',
+			array('usuario' => $usuario,'persona' => $per,'sociales'=> $sociales,'enfermedades'=>$enfermedades,
+                        'discapacidad'=>$discapacidad,'arte'=>$arte,'deporte'=>$deporte,'trabajo'=>$trabajo,
+                            'comunitaria'=>$comunitaria,'politica'=>$politica,'academico'=>$academico,
+                            'ubicacionvivienda'=>$ubicacionvivienda,'aldea'=>$aldea
+                        )
+		);
+                }
+                
                 switch($usr->getTipUsr()){
                     case 1:
                     case 2:

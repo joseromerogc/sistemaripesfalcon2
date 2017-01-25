@@ -64,27 +64,85 @@
 <div id="ambientes">
   
   <div id="accordionambientes">
-    <h3> <span class='icon'><img src="{{asset('img/Letter-T-blue-icon.png')}}"/><span>TI</h3>
+    <h3>TI</h3>
       <div>  
-          {% if  ambientesti %} 
+          {% if  ambientesti.conperiodos %} 
             <table cellspacing='0' style='margin-top: 0px; margin-bottom: 0px;margin-left: 0px;'> <!-- cellspacing='0' is important, must stay -->
-                <tr><th>ID</th><th>P.N.F.</th><th>Turno</th><th>Promoción</th><th>Condición</th>
+                <tr><th>ID</th><th>P.N.F.</th><th>Turno</th><th>Anexo</th><th>Nombre del Ambiente</th><th>Condición</th>
+                    <th>Trayecto</th><th>Periodo</th>
+                </tr><!-- Table Header -->  
+            <tr>
+                {% for a in ambientesti.conperiodos%}
+                   
+                <td>{{a.ambiente.id}}</td><td>{{a.ambiente.pnf.nombre}}</td> <td>{{a.ambiente.turno}}</td><td>{{a.ambiente.anexo.nombre}}</td><td>{{a.ambiente.nombre}}</td>
+                <td>{{a.ambiente.condicion}}</td><td>{{a.trayecto}}</td><td>{{a.periodo}}</td>
+                {% if is_granted('ROLE_COORD')%}        
+                    <td><a class="enlace" href="{{path('ambiente_show',{'idamb': a.ambiente.id})}}">Mostrar</a></td>
+                    <td><a class="enlace" href="{{path('ambiente_update',{'idamb': a.ambiente.id})}}">Actualizar</a></td>
+                {% endif %}
+                
+            </tr><!-- Table Row -->
+                {% endfor %}
+            </table>    
+            {% endif %}    
+            <h3>Sin Periodo Académico Activo<h3>
+          {% if  ambientesti.sinperiodos %} 
+            <table cellspacing='0' style='margin-top: 0px; margin-bottom: 0px;margin-left: 0px;'> <!-- cellspacing='0' is important, must stay -->
+                <tr><th>ID</th><th>P.N.F.</th><th>Turno</th><th>Anexo</th><th>Nombre del Ambiente</th><th>Condición</th>
                     <th>Trayecto</th><th>Periodo</th>
                 </tr><!-- Table Header -->  
             <tr>
                 
-                {% for a in ambientesti %}
-                    
-                {% if a.turno == 'n' %}
-                        {% set turno = 'Nocturno' %}
+                {% for a in ambientesti.sinperiodos%}
+                   
+                <td>{{a.id}}</td><td>{{a.pnf.nombre}}</td> <td>{{a.turno}}</td><td>{{a.anexo.nombre}}</td><td>{{a.nombre}}</td>
+                <td>{{a.condicion}}</td>
+                {% if is_granted('ROLE_COORD')%}        
+                    <td><a class="enlace" href="{{path('ambiente_show',{'idamb': a.id})}}">Mostrar</a></td>
+                    <td><a class="enlace" href="{{path('ambiente_update',{'idamb': a.id})}}">Actualizar</a></td>
+                {% endif %}
+                
+            </tr><!-- Table Row -->
+                {% endfor %}
+            </table>    
+            {% endif %}    
+      </div>
+    <h3> TRIMESTRALES</h3>
+      <div>  
+          {% if  ambientescta.conperiodos %} 
+            <table cellspacing='0' style='margin-top: 0px; margin-bottom: 0px;margin-left: 0px;'> <!-- cellspacing='0' is important, must stay -->
+                <tr><th>ID</th><th>P.N.F.</th><th>Turno</th><th>Anexo</th><th>Nombre del Ambiente</th><th>Condición</th>
+                    <th>Trayecto</th><th>Periodo</th>
+                </tr><!-- Table Header -->  
+            <tr>
+                
+                {% for a in ambientescta.conperiodos %}	
 
-                {% else%}	
-                        {% set turno = 'Fines de Semana' %}
-                {% endif %}	
-
                     
-                <td>{{a.id}}</td><td>{{a.pnf.nombre}}</td> <td>{{turno}}</td>
-                <td>{{a.promocion}}</td><td>{{a.condicion}}</td><td>{{a.trayecto}}</td><td>{{a.periodo}}</td>
+                <td>{{a.ambiente.id}}</td><td>{{a.ambiente.pnf.nombre}}</td> <td>{{a.ambiente.turno}}</td><td>{{a.ambiente.anexo.nombre}}</td><td>{{a.ambiente.nombre}}</td>
+                <td>{{a.ambiente.condicion}}</td><td>{{a.trayecto}}</td><td>{{a.periodo}}</td>
+                {% if is_granted('ROLE_COORD')%}        
+                    <td><a class="enlace" href="{{path('ambiente_show',{'idamb': a.ambiente.id})}}">Mostrar</a></td>
+                    <td><a class="enlace" href="{{path('ambiente_update',{'idamb': a.ambiente.id})}}">Actualizar</a></td>
+                {% endif %}
+                
+            </tr><!-- Table Row -->
+            {% endfor %}
+            </table>    
+            {% endif %}    
+           
+            <h3>Sin Periodo Académico Activo<h3>
+             {% if  ambientescta.sinperiodos %} 
+            <table cellspacing='0' style='margin-top: 0px; margin-bottom: 0px;margin-left: 0px;'> <!-- cellspacing='0' is important, must stay -->
+                <tr><th>ID</th><th>P.N.F.</th><th>Turno</th><th>Anexo</th><th>Nombre del Ambiente</th><th>Condición</th>
+                </tr><!-- Table Header -->  
+            <tr>
+                
+                {% for a in ambientescta.sinperiodos %}
+                
+                    
+                <td>{{a.id}}</td><td>{{a.pnf.nombre}}</td> <td>{{a.turno}}</td><td>{{a.anexo.nombre}}</td><td>{{a.nombre}}</td>
+                <td>{{a.condicion}}</td>
                 {% if is_granted('ROLE_COORD')%}        
                     <td><a class="enlace" href="{{path('ambiente_show',{'idamb': a.id})}}">Mostrar</a></td>
                     <td><a class="enlace" href="{{path('ambiente_update',{'idamb': a.id})}}">Actualizar</a></td>
@@ -95,67 +153,48 @@
             </table>    
             {% endif %}    
       </div>
-    <h3> <span class='icon'><img src="{{asset('img/Letter-C-pink-icon.png')}}"/><span>CTA</h3>
+    <h3>SEMESTRALES</h3>
       <div>  
-          {% if  ambientescta %} 
+          {% if  ambientesubv.conperiodos %} 
             <table cellspacing='0' style='margin-top: 0px; margin-bottom: 0px;margin-left: 0px;'> <!-- cellspacing='0' is important, must stay -->
-                <tr><th>ID</th><th>P.N.F.</th><th>Turno</th><th>Promoción</th><th>Condición</th>
-                    <th>Trayecto</th><th>Periodo</th>
-                </tr><!-- Table Header -->  
-            <tr>
-                
-                {% for a in ambientescta %}
-                    
-                {% if a.turno == 'n' %}
-                        {% set turno = 'Nocturno' %}
-
-                {% else%}	
-                        {% set turno = 'Fines de Semana' %}
-                {% endif %}	
-
-                    
-                <td>{{a.id}}</td><td>{{a.pnf.nombre}}</td> <td>{{turno}}</td>
-                <td>{{a.promocion}}</td><td>{{a.condicion}}</td><td>{{a.trayecto}}</td><td>{{a.periodo}}</td>
-                {% if is_granted('ROLE_COORD')%}        
-                    <td><a class="enlace" href="{{path('ambiente_show',{'idamb': a.id})}}">Mostrar</a></td>
-                    <td><a class="enlace" href="{{path('ambiente_update',{'idamb': a.id})}}">Actualizar</a></td>
-                {% endif %}
-                
-            </tr><!-- Table Row -->
-            {% endfor %}
-            </table>    
-            {% endif %}    
-            
-      </div>
-    <h3> <span class='icon'><img src="{{asset('img/U-icon.png')}}"/><span>UBV</h3>
-      <div>  
-          {% if  ambientesubv %} 
-            <table cellspacing='0' style='margin-top: 0px; margin-bottom: 0px;margin-left: 0px;'> <!-- cellspacing='0' is important, must stay -->
-                <tr><th>ID</th><th>P.N.F.</th><th>Turno</th><th>Promoción</th><th>Condición</th>
+                <tr><th>ID</th><th>P.N.F.</th><th>Turno</th><th>Anexo</th><th>Nombre del Ambiente</th><th>Promoción</th><th>Condición</th>
                     <th>Trayecto</th><th>Tramo</th>
                 </tr><!-- Table Header -->  
             <tr>
                 
-                {% for a in ambientesubv %}
-                    
-                {% if a.turno == 'n' %}
-                        {% set turno = 'Nocturno' %}
-
-                {% else%}	
-                        {% set turno = 'Fines de Semana' %}
-                {% endif %}	
-
-                    
-                <td>{{a.id}}</td><td>{{a.pnf.nombre}}</td> <td>{{turno}}</td>
-                <td>{{a.promocion}}</td><td>{{a.condicion}}</td><td>{{a.trayecto}}</td><td>{{a.periodo}}</td>
+                {% for a in ambientesubv.conperiodos %}
+                	 
+                <td>{{a.ambiente.id}}</td><td>{{a.ambiente.pnf.nombre}}</td> <td>{{a.ambiente.turno}}</td><td>{{a.ambiente.anexo.nombre}}</td><td>{{a.ambiente.nombre}}</td>
+                <td>{{a.ambiente.condicion}}</td><td>{{a.trayecto}}</td><td>{{a.periodo}}</td>
                 {% if is_granted('ROLE_COORD')%}        
-                    <td><a class="enlace" href="{{path('ambiente_show',{'idamb': a.id})}}">Mostrar</a></td>
-                    <td><a class="enlace" href="{{path('ambiente_update',{'idamb': a.id})}}">Actualizar</a></td>
+                    <td><a class="enlace" href="{{path('ambiente_show',{'idamb': a.ambiente.id})}}">Mostrar</a></td>
+                    <td><a class="enlace" href="{{path('ambiente_update',{'idamb': a.ambiente.id})}}">Actualizar</a></td>
                 {% endif %}
             </tr><!-- Table Row -->
             {% endfor %}
             </table>    
-            {% endif %}    
+            {% endif %} 
+            <h3>Sin Periodo Académico Activo<h3>
+             {% if  ambientesubv.sinperiodos %} 
+            <table cellspacing='0' style='margin-top: 0px; margin-bottom: 0px;margin-left: 0px;'> <!-- cellspacing='0' is important, must stay -->
+                <tr><th>ID</th><th>P.N.F.</th><th>Turno</th><th>Anexo</th><th>Nombre del Ambiente</th><th>Condición</th>
+                </tr><!-- Table Header -->  
+            <tr>
+                
+                {% for a in ambientesubv.sinperiodos %}
+                 
+                <td>{{a.id}}</td><td>{{a.pnf.nombre}}</td> <td>{{a.turno}}</td><td>{{a.anexo.nombre}}</td><td>{{a.nombre}}</td>
+                <td>{{a.condicion}}</td>
+                {% if is_granted('ROLE_COORD')%}        
+                    <td><a class="enlace" href="{{path('ambiente_show',{'idamb': a.id})}}">Mostrar</a></td>
+                    <td><a class="enlace" href="{{path('ambiente_update',{'idamb': a.id})}}">Actualizar</a></td>
+                {% endif %}
+                
+            </tr><!-- Table Row -->
+            {% endfor %}
+            </table>    
+            {% endif %} 
+            
             
       </div>      
   </div>

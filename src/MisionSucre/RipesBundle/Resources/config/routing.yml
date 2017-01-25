@@ -120,10 +120,19 @@ persona_trabajo_delete:
 persona_trabajo_update:
   path: persona/updatetrabajo/{id}
   defaults: { _controller: MisionSucreRipesBundle:Sociales:updatetrabajo }
-#ACADEMICOS#
+###################################################################################
+#                                ACADEMICOS                                       #
+###################################################################################
+
 academico_new:
   path: academico/new/{id}
   defaults: { _controller: MisionSucreRipesBundle:Academico:new }
+academico_listasadmin:
+  path: admin/academico/lista
+  defaults: { _controller: MisionSucreRipesBundle:Academico:lista }
+academico_resumenadmin:
+  path: admin/academico/resumen
+  defaults: { _controller: MisionSucreRipesBundle:Academico:resumen}
 academico_update:
   path: academico/update/{idaca}
   defaults: { _controller: MisionSucreRipesBundle:Academico:update }
@@ -162,13 +171,18 @@ comunitaria_consejocomunal_resumen:
   defaults: { _controller: MisionSucreRipesBundle:ConsejoComunal:resumen }
 comunitaria_consejocomunal_lista:
   path: coord/consejocomunal/lista
-  defaults: { _controller: MisionSucreRipesBundle:ConsejoComunal:lista }
+  defaults: { _controller: MisionSucreRipesBundle:ConsejoComunal:lista } 
 politica_resumen:
   path: coord/comunitaria/politica
   defaults: { _controller: MisionSucreRipesBundle:Participacion:ResumenPolitica }
 politica_lista:
   path: coord/politica/lista
   defaults: { _controller: MisionSucreRipesBundle:Participacion:ListaPolitica }
+  
+####################################### CONSEJO COMUNAL   #########################################################
+consejo_comunal_new:
+  path: admin/consejocomunal/new
+  defaults: { _controller: MisionSucreRipesBundle:ConsejoComunal:new }
   
 ####################################### UBCH   #########################################################
 politica_ubch_resumen:
@@ -245,10 +259,10 @@ aldea_new:
   path: eje/aldea/new
   defaults: { _controller: MisionSucreRipesBundle:Aldea:new }
 aldea_show:
-  path: coord/aldea/show/{id}
+  path: aldea/show/{id}
   defaults: { _controller: MisionSucreRipesBundle:Aldea:show }
-docente_aldeas_show:
-  path: docente/aldeas/show/{id}
+docente_aldea_show:
+  path: aldea/docente/show/{id}
   defaults: { _controller: MisionSucreRipesBundle:Aldea:showdoc }  
 aldea_info:
   path: aldea/info
@@ -271,6 +285,9 @@ aldea_update_parroquia:
 aldea_lista:
   path: eje/aldea/lista
   defaults: { _controller: MisionSucreRipesBundle:Aldea:lista }
+aldea_lista_docente:
+  path: aldea/listadocente
+  defaults: { _controller: MisionSucreRipesBundle:Aldea:listadocente }
 aldea_resumen:
   path: eje/aldea/resumen
   defaults: { _controller: MisionSucreRipesBundle:Aldea:resumen}
@@ -285,6 +302,12 @@ aldea_parroquia:
 anexo_aldea_new:
   path: coord/anexoaldea/new/{id}
   defaults: { _controller: MisionSucreRipesBundle:AnexoAldea:new }
+anexoaldea_listasadmin:
+  path: coord/anexoaldea/lista
+  defaults: { _controller: MisionSucreRipesBundle:AnexoAldea:lista }
+anexoaldea_resumenadmin:
+  path: coord/anexoaldea/resumen
+  defaults: { _controller: MisionSucreRipesBundle:AnexoAldea:resumen }
 anexo_aldea_update:
   path: coord/anexoaldea/update/{id}
   defaults: { _controller: MisionSucreRipesBundle:AnexoAldea:update }
@@ -306,13 +329,13 @@ choices_anexo_triunfador:
 #######################################################################################################
 
 aldea_comunal_new:
-  path: eje/aldeacomunal/new/{id}
+  path: coord/aldeacomunal/new/{id}
   defaults: { _controller: MisionSucreRipesBundle:AldeaComunal:new }
 aldea_comunal_update:
-  path: eje/aldeacomunal/update/{id}
+  path: coord/aldeacomunal/update/{id}
   defaults: { _controller: MisionSucreRipesBundle:AldeaComunal:update }
 aldea_comunal_delete:
-  path: eje/aldeacomunal/delete/{id}
+  path: coord/aldeacomunal/delete/{id}
   defaults: { _controller: MisionSucreRipesBundle:AldeaComunal:delete }
 
 #######################################################################################################
@@ -418,6 +441,9 @@ atencion_show:
 atencion_lista:
   path: atencion/lista
   defaults: { _controller: MisionSucreRipesBundle:Atencion:lista}  
+atencion_resumen:
+  path: atencion/resumen
+  defaults: { _controller: MisionSucreRipesBundle:Atencion:resumen}  
 atencion_delete:
   path: atencion/delete/{id}
   defaults: { _controller: MisionSucreRipesBundle:Atencion:delete}  
@@ -495,7 +521,7 @@ ambiente_new:
   path: coord/ambiente/new/{idaldea}
   defaults: { _controller: MisionSucreRipesBundle:Ambiente:new }  
 ambiente_lista_new:
-  path: coord/ambiente/lista/new
+  path: eje/ambiente/lista/new
   defaults: { _controller: MisionSucreRipesBundle:Ambiente:listanew }   
 ambiente_update:
   path: coord/ambiente/update/{idamb}
@@ -847,6 +873,11 @@ periodo_lista_triunfador_cedula:
   defaults: { _controller: MisionSucreRipesBundle:PeriodoTriunfador:listacedula} 
 
 
+############################################### BIBLIORATO ###########################################################################
+
+bibliorato_new:
+  path: control-estudio/bibliorato/new/{idamb}
+  defaults: { _controller: MisionSucreRipesBundle:Bibliorato:new }  
 ############################################### MALLA ###########################################################################
 
 malla_registrar_ucs:
@@ -868,11 +899,45 @@ acta_nota_new:
   path: coord/actanota/new/{idpamb}/{idm}
   defaults: { _controller: MisionSucreRipesBundle:ActaNota:new }  
 acta_nota_update:
-  path: coord/actanota/update/{an}
+  path: coord/actanota/update/{idan}
   defaults: { _controller: MisionSucreRipesBundle:ActaNota:update }  
+acta_nota_delete:
+  path: coord/actanota/delete/{idan}
+  defaults: { _controller: MisionSucreRipesBundle:ActaNota:delete }  
 acta_nota_data_docente:
   path: coord/actanota/datadocente/{cedula}/{aldea}
   defaults: { _controller: MisionSucreRipesBundle:ActaNota:dataDocente }  
+acta_nota_show:
+  path: actanotainfo/show/{idan}
+  defaults: { _controller: MisionSucreRipesBundle:ActaNota:show }  
+
+############################################### NOTAS ###########################################################################
+acta_nota_cargar:
+  path: actanota/cargar/{idan}
+  defaults: { _controller: MisionSucreRipesBundle:Nota:cargar}  
+acta_nota_validar:
+  path: actanota/validar/{idan}
+  defaults: { _controller: MisionSucreRipesBundle:ActaNota:validar}  
+acta_nota_registrarnotas:
+  path: actanota/registrarnota/{notas}
+  defaults: { _controller: MisionSucreRipesBundle:Nota:registrarNotas}  
+nota_update:
+  path: actanota/update/{idan}
+  defaults: { _controller: MisionSucreRipesBundle:Nota:update}  
+nota_actualizar_notas:
+  path: actanota/actualizarnotas/{notas}
+  defaults: { _controller: MisionSucreRipesBundle:Nota:actualizarNotas}  
+
+############################################### IMPRESION ACTA ###########################################################################
+vistaprevia_acta_nota:
+  path: actanota/vistaprevia/{idan}
+  defaults: { _controller: MisionSucreRipesBundle:ImprimirActaNota:vistaPrevia}  
+imprimir_acta_nota:
+  path: actanota/imprimir/{idan}
+  defaults: { _controller: MisionSucreRipesBundle:ImprimirActaNota:imprimir}  
+desbloquear_acta_nota:
+  path: admin/actanota/desbloquear/{idan}
+  defaults: { _controller: MisionSucreRipesBundle:ActaNota:desbloquear}  
 
 ############################################### GUIA ###########################################################################
 guia:
@@ -893,3 +958,15 @@ guia_usuario_nuevo:
 guia_usuario_carga:
   path: guia/usuario_carga
   defaults: { _controller: MisionSucreRipesBundle:Guia:usuario_carga } 
+  
+############################################### BLOQUEAR ###########################################################################
+
+bloquear_new:
+  path: coord/bloquear/new/{cedula}
+  defaults: { _controller: MisionSucreRipesBundle:Bloqueado:new } 
+bloquear_lista:
+  path: admin/bloquear/lista
+  defaults: { _controller: MisionSucreRipesBundle:Bloqueado:lista } 
+bloquear_delete:
+  path: admin/delete/{id}
+  defaults: { _controller: MisionSucreRipesBundle:Bloqueado:delete } 

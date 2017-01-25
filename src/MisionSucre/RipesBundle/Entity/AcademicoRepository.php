@@ -12,4 +12,16 @@ use Doctrine\ORM\EntityRepository;
  */
 class AcademicoRepository extends EntityRepository
 {
+    public function lista()
+    {
+          return $this->getEntityManager()
+            ->createQuery(
+                'SELECT  IDENTITY(p.user) AS u, p.priNom,p.segNom, p.priApe, p.segApe, p.cedPer,
+                    a.titulouniversitario
+                    FROM MisionSucreRipesBundle:Persona p,MisionSucreRipesBundle:Academico a
+                    WHERE a.user = p.user
+                    '
+            )
+            ->getResult();
+    }
 }

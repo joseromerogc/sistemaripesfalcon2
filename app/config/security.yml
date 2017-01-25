@@ -75,6 +75,8 @@ security:
     access_control:
         # require ROLE_ADMIN for /admin*
         - { path: ^/admin, roles: ROLE_ADMIN }
+        - { path: ^/actanota, roles: [ ROLE_DOC, ROLE_COORD] }
+        - { path: ^/actanotainfo, roles: [ ROLE_DOC,ROLE_TRF, ROLE_COORD] }
         - { path: ^/control-estudio, roles: ROLE_CTRL }
         - { path: ^/atencion, roles: ROLE_REC }
         - { path: ^/aldea, roles: IS_AUTHENTICATED_FULLY }
@@ -82,6 +84,7 @@ security:
         - { path: ^/usuario, roles: IS_AUTHENTICATED_FULLY }
         - { path: ^/usuarios, roles: ROLE_COORD }
         - { path: ^/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/academico, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/ambiente, roles: IS_AUTHENTICATED_FULLY }
         - { path: ^/persona, roles: IS_AUTHENTICATED_FULLY }
         - { path: ^/triunfadorinfo, roles: ROLE_TRF }

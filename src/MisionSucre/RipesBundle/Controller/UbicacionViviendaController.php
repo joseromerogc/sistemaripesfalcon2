@@ -11,7 +11,6 @@ use Symfony\Component\Validator\Constraints;
 
 class UbicacionViviendaController extends Controller
 {
-    
 	public function newAction(Request $request,$id)
 	{       
                 $em = $this->getDoctrine()->getManager();

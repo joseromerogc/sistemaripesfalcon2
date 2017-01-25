@@ -26,7 +26,11 @@ class AldeaController extends Controller
     }
     
     public function newAction(Request $request)
-	{       
+	{
+        
+        /*
+         * Registro de Aldea
+         */
 	$em = $this->getDoctrine()->getManager();
         
         $aldea= new Aldea();
@@ -51,6 +55,7 @@ class AldeaController extends Controller
                             $idprq = $form->get('prq')->getData();
                                 
                             $prq = $em->getRepository('MisionSucreRipesBundle:Parroquia')->find($idprq);
+                            $sector = $em->getRepository('MisionSucreRipesBundle:Sector')->findOneByParroquia($idprq);
                             
                             $aldea->setParroquia($prq);
                             $em->persist($aldea);
@@ -60,8 +65,11 @@ class AldeaController extends Controller
                             'notice',
                             'Aldea Creada con Éxito'
                             );  
+                            /*
+                             * registrar anexo principal
+                             */
                             $anexo= new AnexoAldea();
-                            //$anexo->setSector($sector);
+                            $anexo->setSector($sector);
                             $anexo->setAldea($aldea);
                             $anexo->setNombre("Principal");
                             $anexo->setDireccion($aldea->getDireccion());
@@ -80,6 +88,9 @@ class AldeaController extends Controller
         
         public function updateAction(Request $request,$id)
 	{       
+        /*
+         * Actualizar de Aldea
+         */    
 	$em = $this->getDoctrine()->getManager();
                 
         $aldea =  $em->getRepository('MisionSucreRipesBundle:Aldea')->find($id);
@@ -143,13 +154,17 @@ class AldeaController extends Controller
         
         return $this->render('MisionSucreRipesBundle:Aldea:new.html.twig', array(
 		'form' => $form->createView(),'mensaje_heading'=>'Actualización de Aldea',
-                    'sub_heading'=>'Datos de Aldea Universitaria'
+                    'sub_heading'=>$aldea->getNombre()
 		));
         
         }
     
     public function showAction(Request $request,$id)
 	{       
+        /*
+         * Mostrar informacion de aldea. Role > COORD. Si es Coordinador se redirecciona a info
+         */
+         
                 $em = $this->getDoctrine()->getManager();
                 
                 $aldea =  $em->getRepository('MisionSucreRipesBundle:Aldea')->find($id);
@@ -163,7 +178,9 @@ class AldeaController extends Controller
                     return $this->redirect($this->generateUrl('aldea_new'));
                 }
                 
-                if($this->getUser()->getTipUsr()==8){
+                switch(($this->getUser()->getTipUsr())){
+                
+                case 8:
                 $user = $this->getUser();
                 $usreje = $em->getRepository('MisionSucreRipesBundle:CoordinadorEje')->findOneByUser($user->getId());
                 if($usreje->getEje()->getId()!=$aldea->getParroquia()->getEje()->getId())
@@ -174,23 +191,27 @@ class AldeaController extends Controller
                                     );            
                             return $this->redirect($this->generateUrl('aldea_new'));
                     }
+                break;
+                
+                case 7:
+                    return $this->redirect($this->generateUrl('docente_aldea_show',  array('id'=>$id)));
+                case 5:
+                case 6:
+                case 9:
+                    return $this->redirect($this->generateUrl('aldea_info'));
                 }
                 
                 $coordinadoresaldea = $em->getRepository('MisionSucreRipesBundle:CoordinadorAldea')->findAllOrderedByAldea($id);
-                $aldeascomunales =  $em->getRepository('MisionSucreRipesBundle:AldeaComunal')->findByAldea($id);
                 $anexos =  $em->getRepository('MisionSucreRipesBundle:AnexoAldea')->findByAldea($id);
-                
-                $ambientescta = array();
-                $ambientescta['conperiodos'] =  $em->getRepository('MisionSucreRipesBundle:Ambiente')->findAmbienteByAldeaAndModalidad($id,'TRIMESTRAL');
-                $ambientescta['sinperiodos'] =  $em->getRepository('MisionSucreRipesBundle:Ambiente')->findAllOrderedByPeriodoAcademicoAndAldea($id,'TRIMESTRAL');
                 $ambientesnovinculados = $em->getRepository('MisionSucreRipesBundle:Ambiente')->cantidadAmbientesnovinculados($id);
-                $ambientesubv = array();                               
-                $ambientesubv['conperiodos'] =  $em->getRepository('MisionSucreRipesBundle:Ambiente')->findAmbienteByAldeaAndModalidad($id,'SEMESTRAL');               
-                $ambientesubv['sinperiodos'] =  $em->getRepository('MisionSucreRipesBundle:Ambiente')->findAllOrderedByPeriodoAcademicoAndAldea($id,'SEMESTRAL');
-                 $ambientesti  = array();
-                $ambientesti['conperiodos'] =  $em->getRepository('MisionSucreRipesBundle:Ambiente')->findAmbienteByAldeaAndModalidad($id,'TI');
-                $ambientesti['sinperiodos'] =  $em->getRepository('MisionSucreRipesBundle:Ambiente')->findAllOrderedByPeriodoAcademicoAndAldea($id,'TI');
+                
+//                SERVICIOS AMBIENTES
+                $containerambientes = $this->get('servicios.ambiente');
+                $ambientes = $containerambientes->AldeaModalidad($id);
+//                FIN
+                
                 $datosambientes = $em->getRepository('MisionSucreRipesBundle:Ambiente')->cantidadAmbientes($id);
+                
                 $cantidadtriunfadores = $em->getRepository('MisionSucreRipesBundle:Triunfador')->cantidadAldea($id);
                 $triunfadoresnovinculados= $em->getRepository('MisionSucreRipesBundle:Triunfador')->cantidadAldeanovinculados($id);
                 $cantidaddocentes = $em->getRepository('MisionSucreRipesBundle:Docente')->cantidadAldea($id);
@@ -208,8 +229,9 @@ class AldeaController extends Controller
                 
 		return $this->render(
 			'MisionSucreRipesBundle:Aldea:show.html.twig',
-			array('aldea'=>$aldea,'aldeascomunales'=>$aldeascomunales,'ambientescta'=>$ambientescta,
-                            'ambientesubv'=>$ambientesubv,'operarios'=>$operarios,'docentes'=>$docentes,'ambientesti'=>$ambientesti,
+			array('aldea'=>$aldea,'ambientescta'=>$ambientes['CTA'],
+                            'ambientesubv'=>$ambientes['UBV'],'operarios'=>$operarios,'docentes'=>$docentes,
+                            'ambientesti'=>$ambientes['TI'],
                             'coord' => $coordinadoresaldea, 'coordenadas' => $coordenadas,'anexos'=> $anexos,
                             'datosambientes'=>$datosambientes,'ambientesnovinculados' =>$ambientesnovinculados,
                             'cantidadtriunfadores'=>$cantidadtriunfadores, 'triunfadoresnovinculados'=>$triunfadoresnovinculados,
@@ -218,7 +240,10 @@ class AldeaController extends Controller
 	}
         
         public function showdocAction(Request $request,$id)
-	{       
+	{   
+            /*
+             * Mostrar la aldea al que esta vinculado dicho docente
+             */
                 $em = $this->getDoctrine()->getManager();
                 
                 $aldea =  $em->getRepository('MisionSucreRipesBundle:Aldea')->find($id);
@@ -260,16 +285,11 @@ class AldeaController extends Controller
                 $anexos =  $em->getRepository('MisionSucreRipesBundle:AnexoAldea')->findByAldea($id);
                 $aldeascomunales =  $em->getRepository('MisionSucreRipesBundle:AldeaComunal')->findByAldea($id);
                 
-                $ambientescta = array();                
-                $ambientescta['conperiodos'] =  $em->getRepository('MisionSucreRipesBundle:Ambiente')->findAmbienteByAldeaAndModalidad($idaldea,'TRIMESTRAL');             
-                $ambientescta['sinperiodos'] =  $em->getRepository('MisionSucreRipesBundle:Ambiente')->findAllOrderedByPeriodoAcademicoAndAldea($idaldea,'TRIMESTRAL');
-                $ambientesubv = array();                
-                $ambientesubv['conperiodos'] =  $em->getRepository('MisionSucreRipesBundle:Ambiente')->findAmbienteByAldeaAndModalidad($idaldea,'SEMESTRAL');
-                $ambientesubv['sinperiodos'] =  $em->getRepository('MisionSucreRipesBundle:Ambiente')->findAllOrderedByPeriodoAcademicoAndAldea($idaldea,'SEMESTRAL');
-                $ambientesti  = array();
-                $ambientesti['conperiodos'] =  $em->getRepository('MisionSucreRipesBundle:Ambiente')->findAmbienteByAldeaAndModalidad($idaldea,'TI');
-                $ambientesti['sinperiodos'] =  $em->getRepository('MisionSucreRipesBundle:Ambiente')->findAllOrderedByPeriodoAcademicoAndAldea($idaldea,'TI');
-                
+                //                SERVICIOS AMBIENTES
+                $containerambientes = $this->get('servicios.ambiente');
+                $ambientes = $containerambientes->AldeaModalidad($id);
+//                FIN
+                $ambientesnovinculados = $em->getRepository('MisionSucreRipesBundle:Ambiente')->cantidadAmbientesnovinculados($id);
                 $datosambientes = $em->getRepository('MisionSucreRipesBundle:Ambiente')->cantidadAmbientes($id);
                 $cantidadtriunfadores = $em->getRepository('MisionSucreRipesBundle:Triunfador')->cantidadAldea($id);
                 $triunfadoresnovinculados= $em->getRepository('MisionSucreRipesBundle:Triunfador')->cantidadAldeanovinculados($id);
@@ -285,21 +305,26 @@ class AldeaController extends Controller
                 
                 $coordenadas =$em->getRepository('MisionSucreRipesBundle:CoordenadasAldea')->findOneByAldea($id);
                 
+                $estructuras = $em->getRepository('MisionSucreRipesBundle:Estructura')->findByAldea($id);
                 
+                $turnos=$em->getRepository('MisionSucreRipesBundle:CoordinadorTurno')->findAllByAldea($id);
                 
-		return $this->render(
+                return $this->render(
 			'MisionSucreRipesBundle:Aldea:show.html.twig',
-			array('aldea'=>$aldea,'aldeascomunales'=>$aldeascomunales,'ambientescta'=>$ambientescta,
-                            'ambientesubv'=>$ambientesubv,'operarios'=>$operarios,'docentes'=>$docentes,'ambientesti'=>$ambientesti,
-                            'coord' => $coordinadoresaldea,'anexos'=>$anexos,
+			array('aldea'=>$aldea,'ambientescta'=>$ambientes['CTA'],
+                            'ambientesubv'=>$ambientes['UBV'],'operarios'=>$operarios,'docentes'=>$docentes,
+                            'ambientesti'=>$ambientes['TI'],
+                            'coord' => $coordinadoresaldea, 'coordenadas' => $coordenadas,'anexos'=> $anexos,
                             'datosambientes'=>$datosambientes,'ambientesnovinculados' =>$ambientesnovinculados,
                             'cantidadtriunfadores'=>$cantidadtriunfadores, 'triunfadoresnovinculados'=>$triunfadoresnovinculados,
-                            'cantidaddocentes'=>$cantidaddocentes,'coordenadas' => $coordenadas
+                            'cantidaddocentes'=>$cantidaddocentes,'estructuras'=>$estructuras,'turnos'=>$turnos
                         ));
 	}
         
         public function infoAction(Request $request)
-	{       
+	{       /*
+         * Muestra la información de aldea de un usuario especifico. No es visible para administradores
+         */
             
                 $em = $this->getDoctrine()->getManager();
                 
@@ -310,55 +335,31 @@ class AldeaController extends Controller
                 switch($usr->getTipUsr()){
                    
                     case 6:
-                        $triunfador = $em->getRepository('MisionSucreRipesBundle:Triunfador')->findOneByUser($id);
+                      
+                      /*VALIDAR */
+                $validar = $this->get('servicios.validar');
+                $error = $validar->ValidarTriunfador($id, $request);
+                if($error)
+                    return $this->redirect($this->generateUrl($error['url'],array($error['param']=>$error['valueparam'])));
+                /*FIN VALIDAR*/
                         
-                        if(!$triunfador){
-                            $request->getSession()->getFlashBag()->add(
-                            'notice',
-                            'Triunfador No Vinculado a una Aldea'
-                            );            
-                            return $this->redirect($this->generateUrl('triunfador_info'));
-                        }
-                        else{
-                $aldea = $triunfador->getAmbiente()->getAldea();
-                $idaldea = $aldea->getId();
-                
-                $coordinadoresaldea = $em->getRepository('MisionSucreRipesBundle:CoordinadorAldea')->findAllOrderedByAldea($idaldea);
-                $anexos =  $em->getRepository('MisionSucreRipesBundle:AnexoAldea')->findByAldea($idaldea);
-                $aldeascomunales =  $em->getRepository('MisionSucreRipesBundle:AldeaComunal')->findByAldea($idaldea);
-                $ambientescta = array();                
-                $ambientescta['conperiodos'] =  $em->getRepository('MisionSucreRipesBundle:Ambiente')->findAmbienteByAldeaAndModalidad($idaldea,'TRIMESTRAL');             
-                $ambientescta['sinperiodos'] =  $em->getRepository('MisionSucreRipesBundle:Ambiente')->findAllOrderedByPeriodoAcademicoAndAldea($idaldea,'TRIMESTRAL');
-                $ambientesubv = array();                
-                $ambientesubv['conperiodos'] =  $em->getRepository('MisionSucreRipesBundle:Ambiente')->findAmbienteByAldeaAndModalidad($idaldea,'SEMESTRAL');
-                $ambientesubv['sinperiodos'] =  $em->getRepository('MisionSucreRipesBundle:Ambiente')->findAllOrderedByPeriodoAcademicoAndAldea($idaldea,'SEMESTRAL');
-                $ambientesti  = array();
-                $ambientesti['conperiodos'] =  $em->getRepository('MisionSucreRipesBundle:Ambiente')->findAmbienteByAldeaAndModalidad($idaldea,'TI');
-                $ambientesti['sinperiodos'] =  $em->getRepository('MisionSucreRipesBundle:Ambiente')->findAllOrderedByPeriodoAcademicoAndAldea($idaldea,'TI');
-                $cantidaddocentes = $em->getRepository('MisionSucreRipesBundle:Docente')->cantidadAldea($idaldea);
-                $ambientesnovinculados = $em->getRepository('MisionSucreRipesBundle:Ambiente')->cantidadAmbientesnovinculados($idaldea);
-                $estructuras = $em->getRepository('MisionSucreRipesBundle:Estructura')->findByAldea($idaldea);
-                
-                $operarios = $this->getDoctrine()
-                ->getRepository('MisionSucreRipesBundle:Operario')
-                ->findAllOrderedByAldea($idaldea);
-                
-                $docentes = $this->getDoctrine()
-                ->getRepository('MisionSucreRipesBundle:Docente')
-                ->findAllOrderedByAldea($idaldea);
-                
-                $coordenadas =$em->getRepository('MisionSucreRipesBundle:CoordenadasAldea')->findOneByAldea($idaldea);
-		return $this->render(
-			'MisionSucreRipesBundle:Aldea:show.html.twig',
-			array('aldea'=>$aldea,'aldeascomunales'=>$aldeascomunales,'ambientescta'=>$ambientescta,'ambientesti'=>$ambientesti,
-                            'ambientesubv'=>$ambientesubv,'operarios'=>$operarios,'docentes'=>$docentes,
-                            'coord' => $coordinadoresaldea,'anexos'=>$anexos,'coordenadas' => $coordenadas,
-                            'estructuras'=>$estructuras
-                        ));
-                        }
+                      $triunfador = $em->getRepository('MisionSucreRipesBundle:Triunfador')->findOneByUser($id);
+                        
+                      $aldea = $triunfador->getAmbiente()->getAldea();
+                      $idaldea = $aldea->getId();
+                      //                SERVICIOS AMBIENTES
+                $containerambientes = $this->get('servicios.ambiente');
+                $ambientes = $containerambientes->AldeaModalidad($idaldea);
+//                FIN  
                     break;
                     
                     case 5:
+                        /*VALIDAR */
+                $validar = $this->get('servicios.validar');
+                $error = $validar->ValidarCoordinadorAldea($id, $request);
+                if($error)
+                    return $this->redirect($this->generateUrl($error['url'],array($error['param']=>$error['valueparam'])));
+                /*FIN VALIDAR*/
                         $coordinador = $em->getRepository('MisionSucreRipesBundle:CoordinadorAldea')->findOneByUser($id);
                         if(!$coordinador){
                             $request->getSession()->getFlashBag()->add(
@@ -367,7 +368,7 @@ class AldeaController extends Controller
                             );            
                             return $this->redirect($this->generateUrl('aldea_coordinador_info'));
                         }
-                        else{
+                        
                 $aldea = $coordinador->getAldea();
                 $idaldea = $aldea->getId();
                 $idcoord= $coordinador->getId();
@@ -376,27 +377,10 @@ class AldeaController extends Controller
                 $anexos =  $em->getRepository('MisionSucreRipesBundle:AnexoAldea')->findByAldea($idaldea);
                 $aldeascomunales =  $em->getRepository('MisionSucreRipesBundle:AldeaComunal')->findByAldea($idaldea);
                 
-                $ambientescta = array();
-                $ambientesubv = array();
-                $ambientesti  = array();
-                
-                $turnoscoordinador=$em->getRepository('MisionSucreRipesBundle:CoordinadorTurno')->findAllByCoordinador($idcoord);
-                
-                $ambientescta['conperiodos']= array();
-                $ambientescta['sinperiodos']= array();         
-                $ambientesubv['conperiodos']= array();
-                $ambientesubv['sinperiodos']= array();
-                $ambientesti['conperiodos']= array();
-                $ambientesti['sinperiodos']= array();
-                         
-                foreach($turnoscoordinador as $t) {
-                $ambientescta['conperiodos'] = $ambientescta['conperiodos'] + $em->getRepository('MisionSucreRipesBundle:Ambiente')->AmbientesAldeaTurnoModalidad($idaldea,$t['turno'],'TRIMESTRAL');
-                $ambientescta['sinperiodos'] =$ambientescta['sinperiodos'] + $em->getRepository('MisionSucreRipesBundle:Ambiente')->AmbientesAldeaTurnoModalidadSinPeriodoActual($idaldea,$t['turno'],'TRIMESTRAL');
-                $ambientesubv['conperiodos'] = $ambientesubv['conperiodos'] + $em->getRepository('MisionSucreRipesBundle:Ambiente')->AmbientesAldeaTurnoModalidad($idaldea,$t['turno'],'SEMESTRAL');               
-                $ambientesubv['sinperiodos'] = $ambientesubv['sinperiodos']+ $em->getRepository('MisionSucreRipesBundle:Ambiente')->AmbientesAldeaTurnoModalidadSinPeriodoActual($idaldea,$t['turno'],'SEMESTRAL');
-                $ambientesti['conperiodos'] =  $ambientesti['conperiodos'] + $em->getRepository('MisionSucreRipesBundle:Ambiente')->AmbientesAldeaTurnoModalidad($idaldea,$t['turno'],'TI');
-                $ambientesti['sinperiodos'] = $ambientesti['sinperiodos'] + $em->getRepository('MisionSucreRipesBundle:Ambiente')->AmbientesAldeaTurnoModalidadSinPeriodoActual($idaldea,$t['turno'],'TI');
-                }
+                //                SERVICIOS AMBIENTES
+                $containerambientes = $this->get('servicios.ambiente');
+                $ambientes = $containerambientes->AldeaModalidad($idaldea);
+//                FIN
                 
                 $datosambientes = $em->getRepository('MisionSucreRipesBundle:Ambiente')->cantidadAmbientesTurnos($idcoord);
                 $cantidadtriunfadores = $em->getRepository('MisionSucreRipesBundle:Triunfador')->cantidadAldeaTurno($idcoord);
@@ -419,117 +403,46 @@ class AldeaController extends Controller
                 
 		return $this->render(
 			'MisionSucreRipesBundle:Aldea:show.html.twig',
-			array('aldea'=>$aldea,'aldeascomunales'=>$aldeascomunales,'ambientescta'=>$ambientescta,
-                            'ambientesubv'=>$ambientesubv,'operarios'=>$operarios,'docentes'=>$docentes,'ambientesti'=>$ambientesti,
-                            'coord' => $coordinadoresaldea,'anexos'=>$anexos,
+			array('aldea'=>$aldea,'ambientescta'=>$ambientes['CTA'],
+                            'ambientesubv'=>$ambientes['UBV'],'operarios'=>$operarios,'docentes'=>$docentes,
+                            'ambientesti'=>$ambientes['TI'],
+                            'coord' => $coordinadoresaldea, 'coordenadas' => $coordenadas,'anexos'=> $anexos,
                             'datosambientes'=>$datosambientes,'ambientesnovinculados' =>$ambientesnovinculados,
-                            'cantidadtriunfadores'=>$cantidadtriunfadores, 'triunfadoresnovinculados'=>$triunfadoresnovinculados
-                        ,'cantidaddocentes'=>$cantidaddocentes,'coordenadas' => $coordenadas,'turnos'=>$turnos,
-                            'estructuras'=>$estructuras
+                            'cantidadtriunfadores'=>$cantidadtriunfadores, 'triunfadoresnovinculados'=>$triunfadoresnovinculados,
+                            'cantidaddocentes'=>$cantidaddocentes,'estructuras'=>$estructuras,'turnos'=>$turnos
                         ));
-                        }
-                    break;
-                    
+                 break;   
                     case 7:
-                        $docente = $em->getRepository('MisionSucreRipesBundle:Docente')->findByUser($id);
-                        
-                        if(!$docente){
-                            $request->getSession()->getFlashBag()->add(
-                            'notice',
-                            'Docente No Vinculado a una Aldea'
-                            );            
-                            return $this->redirect($this->generateUrl('usuario_info'));
-                        }
-                        if(count($docente)<2){
-                        
-                        $docente = $docente[0];   
-                        $aldea = $docente->getAldea();
-                        $idaldea = $aldea->getId();
-
-                        $coordinadoresaldea = $em->getRepository('MisionSucreRipesBundle:CoordinadorAldea')->findAllOrderedByAldea($idaldea);
-                        $anexos =  $em->getRepository('MisionSucreRipesBundle:AnexoAldea')->findByAldea($idaldea);
-                        $aldeascomunales =  $em->getRepository('MisionSucreRipesBundle:AldeaComunal')->findByAldea($idaldea);
-                        $ambientescta = array();    
-                        $ambientescta['conperiodos'] =  $em->getRepository('MisionSucreRipesBundle:Ambiente')->findAmbienteByAldeaAndModalidad($idaldea,'TRIMESTRAL');               
-                        $ambientescta['sinperiodos'] =  $em->getRepository('MisionSucreRipesBundle:Ambiente')->findAllOrderedByPeriodoAcademicoAndAldea($idaldea,'TRIMESTRAL');
-                        $ambientesubv = array();                               
-                        $ambientesubv['conperiodos'] =  $em->getRepository('MisionSucreRipesBundle:Ambiente')->findAmbienteByAldeaAndModalidad($idaldea,'SEMESTRAL');               
-                        $ambientesubv['sinperiodos'] =  $em->getRepository('MisionSucreRipesBundle:Ambiente')->findAllOrderedByPeriodoAcademicoAndAldea($idaldea,'SEMESTRAL');
-                        $ambientesti  = array();
-                        $ambientesti['conperiodos'] =  $em->getRepository('MisionSucreRipesBundle:Ambiente')->findAmbienteByAldeaAndModalidad($idaldea,'TI');
-                        $ambientesti['sinperiodos'] =  $em->getRepository('MisionSucreRipesBundle:Ambiente')->findAllOrderedByPeriodoAcademicoAndAldea($idaldea,'TI');
-                        $datosambientes = $em->getRepository('MisionSucreRipesBundle:Ambiente')->cantidadAmbientes($idaldea);
-                        $cantidadtriunfadores = $em->getRepository('MisionSucreRipesBundle:Triunfador')->cantidadAldea($idaldea);
-                        $triunfadoresnovinculados= $em->getRepository('MisionSucreRipesBundle:Triunfador')->cantidadAldeanovinculados($idaldea);
-                        $cantidaddocentes = $em->getRepository('MisionSucreRipesBundle:Docente')->cantidadAldea($idaldead);
-                        $ambientesnovinculados = $em->getRepository('MisionSucreRipesBundle:Ambiente')->cantidadAmbientesnovinculados($idaldea);
-                        $estructuras = $em->getRepository('MisionSucreRipesBundle:Estructura')->findByAldea($idaldea);
-                        
-                        $operarios = $this->getDoctrine()
-                        ->getRepository('MisionSucreRipesBundle:Operario')
-                        ->findAllOrderedByAldea($idaldea);
-
-                        $docentes = $this->getDoctrine()
-                        ->getRepository('MisionSucreRipesBundle:Docente')
-                        ->findAllOrderedByAldea($idaldea);
-                        
-                        $coordenadas =$em->getRepository('MisionSucreRipesBundle:CoordenadasAldea')->findOneByAldea($idaldea);
-
-                        return $this->render(
-                                'MisionSucreRipesBundle:Aldea:show.html.twig',
-                                array('aldea'=>$aldea,'aldeascomunales'=>$aldeascomunales,'ambientescta'=>$ambientescta,'ambientesti'=>$ambientesti,
-                                    'ambientesubv'=>$ambientesubv,'operarios'=>$operarios,'docentes'=>$docentes,'ambientesti'=>$ambientesti,
-                                    'coord' => $coordinadoresaldea,'anexos'=>$anexos,
-                            'datosambientes'=>$datosambientes,'ambientesnovinculados' =>$ambientesnovinculados,
-                            'cantidadtriunfadores'=>$cantidadtriunfadores, 'triunfadoresnovinculados'=>$triunfadoresnovinculados
-                                ,'cantidaddocentes'=>$cantidaddocentes,'coordenadas' => $coordenadas,
-                            'estructuras'=>$estructuras
-                                ));
-                    } else
-                    {
-                    $aldeas = array();
-                    foreach ($docente as $d){    
-                            $aldeas[]=$d->getAldea();
-                        }
-                        
-                        return $this->render(
-			'MisionSucreRipesBundle:Aldea:aldeadocente.html.twig',
-			array('aldeas'=>$aldeas
-                        ));
-                        }
+                        return $this->redirect($this->generateUrl('aldea_lista_docente'));
                     break;
                     case 9:
-                        $operario = $em->getRepository('MisionSucreRipesBundle:Operario')->findOneByUser($id);
-                        
-                        if(!$operario){
-                            $request->getSession()->getFlashBag()->add(
-                            'notice',
-                            'Operario No Vinculado a una Aldea'
-                            );            
-                            return $this->redirect($this->generateUrl('triunfador_info'));
-                        }
-                        else{
+                    
+                    /*VALIDAR */
+                $validar = $this->get('servicios.validar');
+                $error = $validar->ValidarOperario($id, $request);
+                if($error)
+                    return $this->redirect($this->generateUrl($error['url'],array($error['param']=>$error['valueparam'])));
+                /*FIN VALIDAR*/
+                $operario = $em->getRepository('MisionSucreRipesBundle:Operario')->findOneByUser($id);        
                 $aldea = $operario->getAldea();
                 $idaldea = $aldea->getId();
+                
+                $containerambientes = $this->get('servicios.ambiente');
+                $ambientes = $containerambientes->AldeaModalidad($idaldea);
+//                FIN
+                    break;
+                default :
+                    return $this->redirect($this->generateUrl('aldea_lista'));
+                }
                 
                 $coordinadoresaldea = $em->getRepository('MisionSucreRipesBundle:CoordinadorAldea')->findAllOrderedByAldea($idaldea);
                 $anexos =  $em->getRepository('MisionSucreRipesBundle:AnexoAldea')->findByAldea($idaldea);
                 $aldeascomunales =  $em->getRepository('MisionSucreRipesBundle:AldeaComunal')->findByAldea($idaldea);
-                $ambientescta = array();                
-                $ambientescta['conperiodos'] =  $em->getRepository('MisionSucreRipesBundle:Ambiente')->findAmbienteByAldeaAndModalidad($idaldea,'TRIMESTRAL');             
-                $ambientescta['sinperiodos'] =  $em->getRepository('MisionSucreRipesBundle:Ambiente')->findAllOrderedByPeriodoAcademicoAndAldea($idaldea,'TRIMESTRAL');
-                $ambientesubv = array();                
-                $ambientesubv['conperiodos'] =  $em->getRepository('MisionSucreRipesBundle:Ambiente')->findAmbienteByAldeaAndModalidad($idaldea,'SEMESTRAL');
-                $ambientesubv['sinperiodos'] =  $em->getRepository('MisionSucreRipesBundle:Ambiente')->findAllOrderedByPeriodoAcademicoAndAldea($idaldea,'SEMESTRAL');
-                $ambientesti  = array();
-                $ambientesti['conperiodos'] =  $em->getRepository('MisionSucreRipesBundle:Ambiente')->findAmbienteByAldeaAndModalidad($idaldea,'TI');
-                $ambientesti['sinperiodos'] =  $em->getRepository('MisionSucreRipesBundle:Ambiente')->findAllOrderedByPeriodoAcademicoAndAldea($idaldea,'TI');
-                $datosambientes = $em->getRepository('MisionSucreRipesBundle:Ambiente')->cantidadAmbientes($idaldea);
-                $cantidadtriunfadores = $em->getRepository('MisionSucreRipesBundle:Triunfador')->cantidadAldea($idaldea);
-                $triunfadoresnovinculados= $em->getRepository('MisionSucreRipesBundle:Triunfador')->cantidadAldeanovinculados($idaldea);
                 $cantidaddocentes = $em->getRepository('MisionSucreRipesBundle:Docente')->cantidadAldea($idaldea);
                 $ambientesnovinculados = $em->getRepository('MisionSucreRipesBundle:Ambiente')->cantidadAmbientesnovinculados($idaldea);
                 $estructuras = $em->getRepository('MisionSucreRipesBundle:Estructura')->findByAldea($idaldea);
+                
+                $turnos =$em->getRepository('MisionSucreRipesBundle:CoordinadorTurno')->findAllByAldea($idaldea);
                 
                 $operarios = $this->getDoctrine()
                 ->getRepository('MisionSucreRipesBundle:Operario')
@@ -538,26 +451,24 @@ class AldeaController extends Controller
                 $docentes = $this->getDoctrine()
                 ->getRepository('MisionSucreRipesBundle:Docente')
                 ->findAllOrderedByAldea($idaldea);
+                $coordenadas =$em->getRepository('MisionSucreRipesBundle:CoordenadasAldea')->findOneByAldea($idaldea);
+                $cantidadtriunfadores = $em->getRepository('MisionSucreRipesBundle:Triunfador')->cantidadAldea($id);
+                $triunfadoresnovinculados= $em->getRepository('MisionSucreRipesBundle:Triunfador')->cantidadAldeanovinculados($id);
+                $datosambientes = $em->getRepository('MisionSucreRipesBundle:Ambiente')->cantidadAmbientes($id);
                 
-                $coordenadas =$em->getRepository('MisionSucreRipesBundle:CoordenadasAldea')->findOneByAldea($id);
-                
-		return $this->render(
+                return $this->render(
 			'MisionSucreRipesBundle:Aldea:show.html.twig',
-			array('aldea'=>$aldea,'aldeascomunales'=>$aldeascomunales,'ambientescta'=>$ambientescta,'ambientesti'=>$ambientesti,
-                            'ambientesubv'=>$ambientesubv,'operarios'=>$operarios,'docentes'=>$docentes,
-                            'coord' => $coordinadoresaldea,'anexos'=>$anexos,
+			array('aldea'=>$aldea,'ambientescta'=>$ambientes['CTA'],
+                            'ambientesubv'=>$ambientes['UBV'],'operarios'=>$operarios,'docentes'=>$docentes,
+                            'ambientesti'=>$ambientes['TI'],
+                            'coord' => $coordinadoresaldea, 'coordenadas' => $coordenadas,'anexos'=> $anexos,
                             'datosambientes'=>$datosambientes,'ambientesnovinculados' =>$ambientesnovinculados,
-                            'cantidadtriunfadores'=>$cantidadtriunfadores, 'triunfadoresnovinculados'=>$triunfadoresnovinculados
-                         ,'cantidaddocentes'=>$cantidaddocentes,'coordenadas' => $coordenadas,
-                            'estructuras'=>$estructuras
+                            'cantidadtriunfadores'=>$cantidadtriunfadores, 'triunfadoresnovinculados'=>$triunfadoresnovinculados,
+                            'cantidaddocentes'=>$cantidaddocentes,'estructuras'=>$estructuras,'turnos'=>$turnos
                         ));
-                        }
-                    break;
-                    
-                }  
-            }
         
-        
+}  
+            
         public function deleteAction(Request $request,$id)
 	{       
 	$em = $this->getDoctrine()->getManager();
@@ -642,6 +553,9 @@ class AldeaController extends Controller
         }
 public function listaAction(Request $request)
 	{   
+    /*
+     * Muestra las Aldea . ROLE > EJE 
+     */
     
             $aldeas = $this->AldeasEje();
                 
@@ -653,6 +567,40 @@ public function listaAction(Request $request)
             );
             return $this->redirect($this->generateUrl('aldea_new'));
             }
+            
+		return $this->render(
+			'MisionSucreRipesBundle:Aldea:lista.html.twig',
+                array('aldeas' => $aldeas)
+		);	
+	}
+        
+public function listadocenteAction(Request $request)
+	{   
+    /*
+     * lista de aldeas que esta vinculado un docente
+     */
+    $em = $this->getDoctrine()->getManager();
+    $idusr=$this->getUser()->getId();
+    
+    /*VALIDAR */
+                $validar = $this->get('servicios.validar');
+                $error = $validar->ValidarDocente($idusr, $request);
+                if($error)
+                    return $this->redirect($this->generateUrl($error['url'],array($error['param']=>$error['valueparam'])));
+                /*FIN VALIDAR*/
+    
+    
+            $aldeas = $em->getRepository('MisionSucreRipesBundle:Docente')->Aldeas($idusr);
+                
+		if(!$aldeas){
+                
+            $request->getSession()->getFlashBag()->add(
+            'notice',
+            'Ninguna Aldea Vinculada'
+            );
+            return $this->redirect($this->generateUrl('aldea_new'));
+            }
+            
             
 		return $this->render(
 			'MisionSucreRipesBundle:Aldea:lista.html.twig',
@@ -676,16 +624,14 @@ public function busquedaAction($param)
                 
                 $em = $this->getDoctrine()->getManager();
                 
-                $aldeas=null;
-                
                 if($this->getUser()->getTipUsr()==8){
                 $user = $this->getUser();
                 $usreje = $em->getRepository('MisionSucreRipesBundle:CoordinadorEje')->findOneByUser($user->getId());
                 $eje = $usreje->getEje()->getId();
                 }
-                else
+                else{
                     $eje = "";
-                
+                }
                 $aldeas = $em->createQuery(
                         "SELECT DISTINCT a
                             FROM MisionSucreRipesBundle:Aldea a JOIN a.parroquia prq JOIN prq.municipio m,

@@ -21,10 +21,10 @@
 	{% else %}	
 			{% set class = 'gradeB' %}		
         {% endif %}	
-                
         <tr class="{{class}}">   
-	<td>{{a.ambiente.id}}</td><td>{{a.ambiente.aldea.nombre}}</td> <td>{{a.ambiente.pnf.nombre}}</td> <td>{{a.ambiente.turno}}</td><td>{{a.ambiente.nombre}}</td>
-                <td>{{a.ambiente.condicion}}</td><td>{{a.trayecto}}</td><td>{{a.periodo}}</td>
+	<td>{{a.ambiente.id}}</td><td>{{a.ambiente.aldea.nombre}}</td> <td>{{a.ambiente.pnf.nombre}}</td> 
+        <td>{{a.ambiente.turno}}</td><td>{{a.ambiente.nombre}}</td>
+                <td>{{a.ambiente.condicion}}</td><td>{{a.periodopnf.trayecto}}</td><td>{{a.periodopnf.periodo}}</td>
             <td><a class="enlace" href="{{path('triunfador_new',{'idamb': a.ambiente.id,'idtrf': idtrf})}}">Vincular</a></td>
         </tr><!-- Table Row -->
     

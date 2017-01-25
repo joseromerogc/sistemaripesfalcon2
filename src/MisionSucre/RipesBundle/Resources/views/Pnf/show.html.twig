@@ -121,6 +121,7 @@
 
 		<tr >
     <td>{{i}}</td><td>{{ u.uc.nombre}}</td><td>{{ u.uc.area}}</td><td>{{ u.uc.codigo}}</td><td>{{ u.eselectiva}}</td><td>{{ u.estaller}}</td>
+    <td><a class="enlace" onclick="return confirm('******Confirmar Desvincular******')" href="{{path('malla_delete',{'iducmalla': u.id})}}">Desvincular</a></td>
     </tr>
  {% set i = i+1 %}   
 {% endfor %}    

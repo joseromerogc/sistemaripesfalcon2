@@ -1,0 +1,209 @@
+{% extends 'MisionSucreRipesBundle::layout.html.twig' %}
+
+{% block stylesheets %}
+{{ parent() }}
+	<link rel="stylesheet" type="text/css" href="{{asset('css/table/littletable.css')}}">
+	<link rel="stylesheet" type="text/css" href="{{asset('css/blitzer/jquery-ui-1.10.4.custom.css')}}">
+	
+{% endblock %}
+
+{% block js %}
+        {{ parent() }}
+	<script src="{{asset('js/jquery-ui-1.10.4.custom.js')}}"></script>
+        <script>
+            
+            $(function() {
+                $( "#tabs" ).tabs();
+            });            
+            
+        </script>
+{% endblock %}    
+
+{% block content %}
+	{{ parent() }}
+
+{% for flashMessage in app.session.flashbag.get('notice') %}
+        <div class="flash-notice">
+        {{ flashMessage }}
+        </div>
+{% endfor %}
+
+<h1 class="heading_style">Acta de Nota</h1> 
+<div id="tabs">
+    <ul>
+		<li><a href="#info">Información General</a></li>
+		<li><a href="#triunfadores">Triunfadores Vinculados</a></li>
+		<li><a href="#notas">Notas Cargadas</a></li>
+		
+                
+    </ul>
+<div id="info">    
+    <h1 class="heading_style">Información de Ambiente</h1> 
+    <table cellspacing='0' style='margin-top: 0px; margin-bottom: 0px;margin-left: 0px;'> <!-- cellspacing='0' is important, must stay -->
+                <tr><th>ID</th><th>Ambiente</th><th>P.N.F.</th><th>Turno</th><th>Anexo</th><th>Nombre</th><th>Promoción</th><th>Condición</th>
+                    <th>Ingreso</th><th>Egreso</th>
+                    <th></th>
+                </tr><!-- Table Header -->  
+            <tr>
+                    
+                {% if ambiente.turno == 'n' %}
+                        {% set turno = 'Nocturno' %}
+
+                {% else%}	
+                        {% set turno = 'Fines de Semana' %}
+                {% endif %}	
+
+                    
+                <td>{{ambiente.id}}</td>
+                <td><a href="{{path('aldea_show',{'id': ambiente.aldea.id})}}">{{ambiente.aldea.nombre}}<a></td>
+                <td><a class="enlace" href="{{path('pnf_show',{'id': periodopnf.pnf.id})}}">{{periodopnf.pnf.nombre}}</a></td>
+                <td>{{turno}}</td><td>{%if ambiente.anexo %} {{ambiente.anexo.nombre}} {%endif%}</td>
+                <td>{{ambiente.nombre}}</td>
+                <td>{{ambiente.promocion}}</td><td>{{ambiente.condicion}}</td>
+                <td>{{ambiente.ingreso}}</td><td>{{ambiente.egreso}}</td>
+                {% if is_granted('ROLE_COORD') %}
+                <td><a class="enlace" href="{{path('ambiente_update',{'idamb': ambiente.id})}}">Actualizar</a></td>
+                {% endif%}
+                
+            </tr><!-- Table Row -->
+    </table>    
+    <h1 class="heading_style">Información de Periodo Académico-Unidad Curricular</h1>             
+    <table cellspacing='0' style='margin-top: 0px; margin-bottom: 0px;margin-left: 0px;'> <!-- cellspacing='0' is important, must stay -->
+        <tr><th>ID</th><th>Nombre</th><th>Trayecto</th><th>Periodo/Tramo</th><th>Actual</th><th>Nombre Unidad Curricular</th>
+            <th>Código</th>
+                </tr><!-- Table Header -->  
+            <tr>
+            
+                <td>{{periodoambiente.id}}</td>
+                <td>{{periodoacademico.nombre}}</td>
+                <td>{{periodopnf.trayecto}}</td><td>{{periodopnf.periodo}}</td>
+                <td>{{periodoacademico.actual}}</td>
+                <td>{{malla.uc.nombre}}</td>
+                <td>{{malla.uc.codigo}}</td>
+                 </tr><!-- Table Row -->
+    </table>
+    <h1 class="heading_style">Docente</h1>             
+    <table cellspacing='0' style='margin-top: 0px; margin-bottom: 0px;margin-left: 0px;'> <!-- cellspacing='0' is important, must stay -->
+        <tr><th>ID</th><th>Nombre</th><th>Apellio</th><th>Cédula</th>
+                </tr><!-- Table Header -->  
+            <tr>
+                <td>{{docente.user.id}}</td>
+                <td><a class="enlace" href="{{path('usuario_show',{'id': docente.user.id})}}">
+        {{docente.priNom|capitalize}} {{docente.segNom|capitalize}}</td>
+        <td>{{docente.priApe|capitalize}} {{docente.segApe|capitalize}}</td>
+        </a>
+    <td> {{docente.cedPer}}</td>    
+    {% if is_granted('ROLE_DOC') and actanota.validada|upper!='SI' %}
+                <td><a class="enlace" href="{{path('acta_nota_cargar',{'idan': actanota.id})}}">Cargar Nota</a></td>
+    {% endif%}
+   
+                 </tr><!-- Table Row -->
+    </table>
+                 
+</div>
+
+      
+<div id="triunfadores" >
+<h1 class="heading_style">Triunfadores Vinculados</h1> 
+                 <div>
+{% if  triunfadores %}
+    <table cellspacing='0' style='margin-top: 0px; margin-bottom: 0px;margin-left: 0px;'> <!-- cellspacing='0' is important, must stay -->
+		<tr>
+			<th >#</th>
+                        <th >Cédula</th><th>Nombres y Apellidos</th>
+                        <th >Vinculado al </br> Sistema Sucre</th>
+                        <th >Condición</th>
+                        <th ></th>
+                        <th ></th>
+		</tr>
+                
+	<tbody>
+    {% else %}
+    <h1 class="heading_style">Ningún Triunfador Vinculado</h1> 
+    {% endif %}
+	
+{% set i = 1 %}
+
+{% for t in triunfadores %}
+
+	{% if t.sexPer == 'm' %}
+			{% set class = 'gradeA' %}
+	{% else %}	
+			{% set class = 'gradeU' %}		
+        {% endif %}	
+        	
+		<tr class="{{class}}">
+    <td>{{i}}</td>  <td>{{ t.cedPer}}</td>
+    <td>{{ t.priNom |upper}} 
+    {{ t.priApe |upper}}</td>
+         <td>{{t.sistema}}</td>
+    
+    <td>{{t.condicion}}</td>
+    
+    {% if is_granted('ROLE_COORD') %}
+        <td><a class="enlace" href="{{path('usuario_show',{'id': t.idusr})}}">Mostrar</a></td>
+        <td><a class="enlace" onclick="desVincularTriunfador(event,{{t.idpt}})" href="#">desVincular</a></td>
+    {% endif %} 
+    
+{% set i = i+1 %}
+{% endfor %}    
+		</tr>
+      </tbody>
+</table>
+</div>
+
+</div>
+<div id="notas" >
+    <h1 class="heading_style">Notas</h1> 
+    {% if is_granted('ROLE_COORD') and actanota.validada|upper!='SI' %}
+    <a class="enlace" href="{{path('acta_nota_cargar',{'idan': actanota.id})}}">
+    <span class='icon'><img src="{{asset('img/add-1-icon.png')}}"/></span>Cargar Notas</a> 
+    {% endif%}
+   {% if  notas %}
+    <table cellspacing='0' style='margin-top: 0px; margin-bottom: 0px;margin-left: 0px;'> <!-- cellspacing='0' is important, must stay -->
+		<tr>
+			<th >#</th>
+                        <th >Cédula</th><th>Nombres y Apellidos</th>
+                        <th>Asistencia</th><th>Nota</th>
+		</tr>
+                
+	<tbody>
+    {% endif %}
+	
+{% set i = 1 %}
+
+{% for t in notas %}
+
+	{% if t.sexPer == 'm' %}
+			{% set class = 'gradeA' %}
+	{% else %}	
+			{% set class = 'gradeU' %}		
+        {% endif %}	
+        	
+		<tr class="{{class}}">
+    <td>{{i}}</td>  <td>{{ t.cedPer}}</td>
+    <td>{{ t.priNom |upper}} 
+    {{ t.priApe |upper}}</td>
+    <td>{{t.asistencia}}</td>
+    <td>{{t.valor}}</td>
+    
+{% set i = i+1 %}
+{% endfor %}    
+		</tr>
+      </tbody>
+</table>
+    {% if is_granted('ROLE_COORD') and actanota.validada|upper!='SI' %}
+    <a class="enlace" href="{{path('nota_update',{'idan': actanota.id})}}">
+    <span class='icon'><img src="{{asset('img/update.png')}}"/></span>Actualizar Notas</a> 
+    {% else%}                
+        <a class="enlace" href="{{path('desbloquear_acta_nota',{'idan': actanota.id})}}">
+        <span class='icon'><img src="{{asset('img/Lock-Unlock-icon.png')}}"/></span>Desbloquear</a> 
+    {% endif%}            
+    <a class="enlace" href="{{path('vistaprevia_acta_nota',{'idan': actanota.id})}}">
+        <span class='icon'><img src="{{asset('img/print-icon.png')}}"/></span>Imprimir Notas</a> 
+    
+</div>                
+</div>
+
+{% endblock %}
+

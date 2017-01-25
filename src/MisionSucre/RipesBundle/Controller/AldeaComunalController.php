@@ -27,18 +27,13 @@ class AldeaComunalController extends Controller
                     return $this->redirect($this->generateUrl('aldea_new'));
         }
         
-        if($this->getUser()->getTipUsr()==8){
-        $user = $this->getUser();
-        $usreje = $em->getRepository('MisionSucreRipesBundle:CoordinadorEje')->findOneByUser($user->getId());
-        if($usreje->getEje()->getId()!=$aldea->getParroquia()->getEje()->getId())
-            {
-            $request->getSession()->getFlashBag()->add(
-                            'notice',
-                            "Acceso Denegado al Eje"
-                            );            
-                    return $this->redirect($this->generateUrl('aldea_lista'));
-            }
-        }
+        /*VALIDAR */
+                $validar = $this->get('servicios.validar');
+                
+                $error = $validar->ValidarAldea($aldea->getId(), $request);
+                if($error)
+                    return $this->redirect($this->generateUrl($error['url'],array($error['param']=>$error['valueparam'])));
+                /*FIN VALIDAR*/
         
 	$em = $this->getDoctrine()->getManager();
         
@@ -100,18 +95,13 @@ class AldeaComunalController extends Controller
                     return $this->redirect($this->generateUrl('aldea_new'));
         }
         
-        if($this->getUser()->getTipUsr()==8){
-        $user = $this->getUser();
-        $usreje = $em->getRepository('MisionSucreRipesBundle:CoordinadorEje')->findOneByUser($user->getId());
-        if($usreje->getEje()->getId()!=$aldeacomunal->getSector()->getParroquia()->getEje()->getId())
-            {
-            $request->getSession()->getFlashBag()->add(
-                            'notice',
-                            "Acceso Denegado al Eje"
-                            );            
-                    return $this->redirect($this->generateUrl('aldea_lista'));
-            }
-        }
+        /*VALIDAR */
+                $validar = $this->get('servicios.validar');
+                
+                $error = $validar->ValidarAldea($aldea->getId(), $request);
+                if($error)
+                    return $this->redirect($this->generateUrl($error['url'],array($error['param']=>$error['valueparam'])));
+                /*FIN VALIDAR*/
         
         $form = $this->createFormBuilder($aldeacomunal)->
                 add('nombre', 'text',array('label' => 'Nombre del Ambiente Comunal'))
@@ -164,18 +154,14 @@ class AldeaComunalController extends Controller
                     return $this->redirect($this->generateUrl('aldea_new'));
         }
         
-        if($this->getUser()->getTipUsr()==8){
-        $user = $this->getUser();
-        $usreje = $em->getRepository('MisionSucreRipesBundle:CoordinadorEje')->findOneByUser($user->getId());
-        if($usreje->getEje()->getId()!=$aldeacomunal->getSector()->getParroquia()->getEje()->getId())
-            {
-            $request->getSession()->getFlashBag()->add(
-                            'notice',
-                            "Acceso Denegado al Eje"
-                            );            
-                    return $this->redirect($this->generateUrl('aldea_lista'));
-            }
-        }
+        /*VALIDAR */
+                $validar = $this->get('servicios.validar');
+                
+                $error = $validar->ValidarAldea($aldea->getId(), $request);
+                if($error)
+                    return $this->redirect($this->generateUrl($error['url'],array($error['param']=>$error['valueparam'])));
+                /*FIN VALIDAR*/
+                
                             $em->remove($aldeacomunal);
                             $idaldea = $aldeacomunal->getAldea()->getId();
                             $em->flush();

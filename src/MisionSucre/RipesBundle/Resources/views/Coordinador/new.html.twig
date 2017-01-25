@@ -94,7 +94,7 @@ if($('#form_municipio').value!=""){
     
     var id=$('#form_municipio').val();
     $.ajax({
-        url: "../parroquiaaldea/"+id+"",
+        url: "/eje/aldea/coordinador/parroquiaaldea/"+id+"",
         success: function (html) {$('#form_parroquia').html(html);}
     });
 }
@@ -105,7 +105,7 @@ if($('#form_municipio').value!=""){
     
     var id=$('#form_municipio').val();
     $.ajax({
-        url: "../parroquiaaldea/"+id+"",
+        url: "/eje/aldea/coordinador/parroquiaaldea/"+id+"",
         success: function (html) {$('#form_parroquia').html(html);}
     });
 });
@@ -115,7 +115,7 @@ $('#form_parroquia').change( function () {
     
     var id=$('#form_parroquia').val();
     $.ajax({
-        url: "../aldeas/"+id+"",
+        url: "/eje/aldea/coordinador/aldeas/"+id+"",
         success: function (html) {$('#form_aldea').html(html);}
     });
 });

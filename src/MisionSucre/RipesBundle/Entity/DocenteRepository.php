@@ -132,7 +132,17 @@ class DocenteRepository extends EntityRepository
                 '
             )
             ->getResult();
+    }  
+    public function Aldeas($idusr)
+    {
+          return $this->getEntityManager()
+            ->createQuery(
+                'SELECT a FROM MisionSucreRipesBundle:Aldea a JOIN a.parroquia p,
+                    MisionSucreRipesBundle:Docente d
+                    WHERE d.user = :id AND d.aldea=a.id
+                    '
+            )
+            ->setParameter('id', $idusr)      
+            ->getResult();
     }
-    
-    
 }

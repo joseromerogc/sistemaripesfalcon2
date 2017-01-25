@@ -11,8 +11,12 @@ use Symfony\Component\Validator\Constraints;
 class AnexoAldeaController extends Controller
 {
     
+    
     public function newAction(Request $request,$id)
-	{       
+	{ 
+    /*
+     * Crea un nuevo ambiente comunal(o anexo)
+     */      
         
         $em = $this->getDoctrine()->getManager();
         
@@ -27,22 +31,16 @@ class AnexoAldeaController extends Controller
                     return $this->redirect($this->generateUrl('aldea_new'));
         }
         
-        if($this->getUser()->getTipUsr()==8){
-        $user = $this->getUser();
-        $usreje = $em->getRepository('MisionSucreRipesBundle:CoordinadorEje')->findOneByUser($user->getId());
-        if($usreje->getEje()->getId()!=$aldea->getParroquia()->getEje()->getId())
-            {
-            $request->getSession()->getFlashBag()->add(
-                            'notice',
-                            "Acceso Denegado al Eje"
-                            );            
-                    return $this->redirect($this->generateUrl('aldea_lista'));
-            }
-        }
+        /*VALIDAR */
+                $validar = $this->get('servicios.validar');
+                
+                $error = $validar->ValidarAldea($aldea->getId(), $request);
+                if($error)
+                    return $this->redirect($this->generateUrl($error['url'],array($error['param']=>$error['valueparam'])));
+                /*FIN VALIDAR*/
         
         
         $anexo= new AnexoAldea();
-        
         
         $form = $this->createFormBuilder($anexo)->
                 add('nombre', 'text',array('label' => 'Nombre del Ambiente Comunal'))
@@ -86,6 +84,9 @@ class AnexoAldeaController extends Controller
         
         public function updateAction(Request $request,$id)
 	{       
+         /*
+          * Actualiza los datos del ambiente comunal(Anexo)
+          */   
 	$em = $this->getDoctrine()->getManager();
                 
         $anexo =  $em->getRepository('MisionSucreRipesBundle:AnexoAldea')->find($id);
@@ -110,18 +111,13 @@ class AnexoAldeaController extends Controller
                     return $this->redirect($this->generateUrl('aldea_new'));
         }
         
-        if($this->getUser()->getTipUsr()==8){
-        $user = $this->getUser();
-        $usreje = $em->getRepository('MisionSucreRipesBundle:CoordinadorEje')->findOneByUser($user->getId());
-        if($usreje->getEje()->getId()!=$aldea->getParroquia()->getEje()->getId())
-            {
-            $request->getSession()->getFlashBag()->add(
-                            'notice',
-                            "Acceso Denegado al Eje"
-                            );            
-                    return $this->redirect($this->generateUrl('aldea_lista'));
-            }
-        }
+        /*VALIDAR */
+                $validar = $this->get('servicios.validar');
+                
+                $error = $validar->ValidarAldea($aldea->getId(), $request);
+                if($error)
+                    return $this->redirect($this->generateUrl($error['url'],array($error['param']=>$error['valueparam'])));
+                /*FIN VALIDAR*/
         
         $form = $this->createFormBuilder($anexo)->
                 add('nombre', 'text',array('label' => 'Nombre del Ambiente Comunal'))
@@ -165,6 +161,9 @@ class AnexoAldeaController extends Controller
 	
         public function deleteAction(Request $request,$id)
 	{       
+        /*
+         * Elimina el ambiente comunal. Este no debe poseer datos.
+         */
         $em = $this->getDoctrine()->getManager();
 	$anexo =  $em->getRepository('MisionSucreRipesBundle:AnexoAldea')->find($id);
         
@@ -177,31 +176,38 @@ class AnexoAldeaController extends Controller
                     return $this->redirect($this->generateUrl('aldea_new'));
         }
         
-        if($this->getUser()->getTipUsr()==8){
-        $user = $this->getUser();
-        $usreje = $em->getRepository('MisionSucreRipesBundle:CoordinadorEje')->findOneByUser($user->getId());
-        if($usreje->getEje()->getId()!=$anexo->getSector()->getParroquia()->getEje()->getId())
-            {
+        /*VALIDAR */
+                $validar = $this->get('servicios.validar');
+                
+                $error = $validar->ValidarAldea($anexo->getAldea()->getId(), $request);
+                if($error)
+                    return $this->redirect($this->generateUrl($error['url'],array($error['param']=>$error['valueparam'])));
+        /*FIN VALIDAR*/
+        $idaldea = $anexo->getAldea()->getId();
+        
+        $ambientes = $em->getRepository('MisionSucreRipesBundle:Ambiente')->findByAnexo($id);
+        if($ambientes){
             $request->getSession()->getFlashBag()->add(
                             'notice',
-                            "Acceso Denegado al Eje"
+                            "No puede Eliminar un Ambiente Comunal que contiene Información"
                             );            
-                    return $this->redirect($this->generateUrl('aldea_lista'));
-            }
+                    return $this->redirect($this->generateUrl('aldea_show',array('id'=>$idaldea)));
         }
                             $em->remove($anexo);
-                            $idaldea = $anexo->getAldea()->getId();
                             $em->flush();
                             
                             $request->getSession()->getFlashBag()->add(
                             'notice',
                             'Anexo Borrado con Éxito'
                             );            
-                    return $this->redirect($this->generateUrl('aldea_show',array('id'=>$idaldea)    ));
+                    return $this->redirect($this->generateUrl('aldea_show',array('id'=>$idaldea)));
         
         }
     public function showAction(Request $request,$id)
-	{       
+	{  
+        /*
+         * Muestra los ambientes que se encuentran activos en ese anexo o ambiente comunal
+         */
                 $em = $this->getDoctrine()->getManager();
                 
                 $anexo =  $em->getRepository('MisionSucreRipesBundle:AnexoAldea')->find($id);
@@ -217,44 +223,68 @@ class AnexoAldeaController extends Controller
                 
                 $aldea = $anexo->getAldea();
                 
-                $aldea =  $em->getRepository('MisionSucreRipesBundle:Aldea')->find($anexo->getAldea()->getId());
+                /*VALIDAR */
+                $validar = $this->get('servicios.validar');
                 
-                if(!$aldea){
-                    
-                    $request->getSession()->getFlashBag()->add(
-                    'notice',
-                    'Aldea con ID: '.$id.' no registrada'
-                    );    
-                    return $this->redirect($this->generateUrl('aldea_new'));
-                }
+                $error = $validar->ValidarAldea($aldea->getId(), $request);
+                if($error)
+                    return $this->redirect($this->generateUrl($error['url'],array($error['param']=>$error['valueparam'])));
+                /*FIN VALIDAR*/
                 
-                if($this->getUser()->getTipUsr()==8){
-                $user = $this->getUser();
-                $usreje = $em->getRepository('MisionSucreRipesBundle:CoordinadorEje')->findOneByUser($user->getId());
-                if($usreje->getEje()->getId()!=$aldea->getParroquia()->getEje()->getId())
-                    {
-                    $request->getSession()->getFlashBag()->add(
-                                    'notice',
-                                    "Acceso Denegado al Eje"
-                                    );            
-                            return $this->redirect($this->generateUrl('aldea_new'));
-                    }
-                }
+                //LLAMANDO AL SERVICIO DE AMBIENTES
+                $containerambientes = $this->get('servicios.ambiente');
                 
-                $coordinadoresaldea = $em->getRepository('MisionSucreRipesBundle:CoordinadorAldea')->findAllOrderedByAldea($aldea->getId());
-                $ambientescta =  $em->getRepository('MisionSucreRipesBundle:Ambiente')->findAmbienteByAnexoAldeaAndModalidad($id,'CTA');
-                $ambientesubv =  $em->getRepository('MisionSucreRipesBundle:Ambiente')->findAmbienteByAnexoAldeaAndModalidad($id,'UBV');
-                $ambientesti =  $em->getRepository('MisionSucreRipesBundle:Ambiente')->findAmbienteByAnexoAldeaAndModalidad($id,'TI');
+                $ambientes = $containerambientes->AnexoModalidad($id);
                 
 		return $this->render(
 			'MisionSucreRipesBundle:Anexo:show.html.twig',
-			array('aldea'=>$aldea,'ambientescta'=>$ambientescta,'anexo'=>$anexo,
-                            'ambientesubv'=>$ambientesubv,'ambientesti'=>$ambientesti 
+			array('aldea'=>$aldea,'ambientescta'=>$ambientes['CTA'],'anexo'=>$anexo,
+                            'ambientesubv'=>$ambientes['UBV'],'ambientesti'=>$ambientes['TI']
                     
                         ));
 	}
-        
-        
+public function listaAction(Request $request)
+	{   
+        /*
+         * Muestra la lista de todos los ambientes comunales
+         */
+            $em = $this->getDoctrine()->getManager();
+            $anexos = $em->getRepository('MisionSucreRipesBundle:AnexoAldea')->lista();
+                
+		if(!$anexos){
+                
+            $request->getSession()->getFlashBag()->add(
+            'notice',
+            'Ningun Dato Académico Registrado'
+            );
+            return $this->redirect($this->generateUrl('aldea_lista'));
+            }
+            
+		return $this->render(
+			'MisionSucreRipesBundle:Anexo:lista.html.twig',
+                array('anexos' => $anexos)
+		);	
+	}
+  public function resumenAction(Request $request)
+	{  /*
+         * Resumen Estadistico de los Ambientes Comunales
+         */     
+                $em = $this->getDoctrine()->getManager();
+                
+                        $cantidad = $em->createQuery(
+                        "SELECT m.municipio, COUNT ( DISTINCT a.id) as total
+                            FROM MisionSucreRipesBundle:AnexoAldea a JOIN a.sector s JOIN s.parroquia prq JOIN prq.municipio m
+                            GROUP BY m.municipio
+                        ")
+                        ->getResult();
+                        
+                    return $this->render(
+			'MisionSucreRipesBundle:Anexo:resumen.html.twig',
+                        array(
+                            'cantidad'=>$cantidad,
+                        ));
+                
+        }        
         
         
 /*

@@ -12,4 +12,117 @@ use Doctrine\ORM\EntityRepository;
  */
 class AnexoAldeaRepository extends EntityRepository
 {
+    public function findByAldea($idaldea)
+    {
+        /*
+         * Muestra la información de ambientes de un turno
+         */
+          return $this->getEntityManager()
+            ->createQuery(
+                "SELECT a.id, a.nombre, a.direccion, prq.parroquia ,s.nombre as sector,
+                  (SELECT count(amb.id) FROM MisionSucreRipesBundle:Ambiente amb WHERE amb.anexo=a.id AND (amb.condicion ='Nuevo' OR amb.condicion ='Activo')) as cantidadAmbientes 
+                  FROM MisionSucreRipesBundle:AnexoAldea a JOIN a.sector s JOIN s.parroquia prq
+                    WHERE a.aldea =:aldea
+                "
+            )
+            ->setParameters(array('aldea'=>$idaldea))->getResult();
+    }
+    
+    public function findByAldeaForm($idaldea)
+    {
+        /*
+         * Para ser Mostrado en Form
+         */
+          return $this->getEntityManager()
+            ->createQuery(
+                "SELECT a                
+                  FROM MisionSucreRipesBundle:AnexoAldea a
+                    WHERE a.aldea =:aldea
+                "
+            )
+            ->setParameters(array('aldea'=>$idaldea))->getResult();
+    }
+    
+    public function lista()
+    {
+          return $this->getEntityManager()
+            ->createQuery(
+                "SELECT a.id, a.nombre, a.direccion, prq.parroquia ,s.nombre as sector, m.municipio , al.nombre as aldea,
+                  (SELECT count(amb.id) FROM MisionSucreRipesBundle:Ambiente amb WHERE amb.anexo=a.id AND (amb.condicion ='Nuevo' OR amb.condicion ='Activo')) as cantidadAmbientes 
+                  FROM MisionSucreRipesBundle:AnexoAldea a JOIN a.sector s JOIN s.parroquia prq JOIN prq.municipio m,
+                  MisionSucreRipesBundle:Aldea al
+                  WHERE al.id = a.aldea
+                  ORDER BY m.municipio, a.nombre ASC
+                "
+            )
+            ->getResult();
+    }
+    
+    public function AmbientesConPeriodoAcademicos($anexo,$modalidad="%%")
+    {
+        /*
+         * Muestra los ambientes que estan vinculados en el periodo academico actual segun su modalidad
+         */
+          return $this->getEntityManager()
+            ->createQuery(
+                "SELECT pa FROM MisionSucreRipesBundle:PeriodoAcademico p, MisionSucreRipesBundle:PeriodoAcademicoAmbiente pa JOIN pa.ambiente a JOIN a.pnf pnf
+                    WHERE a.anexo=:anexo AND pnf.modalidad=:modalidad AND LOWER(p.actual)='si' AND p.id = pa.periodoacademico
+                    AND (a.condicion ='Nuevo' OR a.condicion ='Activo')
+                "
+            )
+            ->setParameters(array('anexo'=>$anexo,'modalidad'=>$modalidad))->getResult();
+    }
+    public function AmbientesConPeriodoAcademicosCoordinador($anexo,$idcoordinador,$modalidad="%%")
+    {
+        /*
+         * Muestra los ambientes que estan vinculados en el periodo academico actual segun su modalidad
+         */
+          return $this->getEntityManager()
+            ->createQuery(
+                "SELECT pa FROM MisionSucreRipesBundle:PeriodoAcademico p, MisionSucreRipesBundle:PeriodoAcademicoAmbiente pa JOIN pa.ambiente a JOIN a.pnf pnf,
+                    MisionSucreRipesBundle:CoordinadorTurno t JOIN t.coordinador c
+                    WHERE a.anexo=:anexo AND pnf.modalidad=:modalidad AND LOWER(p.actual)='si' AND p.id = pa.periodoacademico
+                    AND (a.condicion ='Nuevo' OR a.condicion ='Activo')
+                    AND c.id = :idcoordinador AND c.aldea = a.aldea AND t.turno=a.turno
+                "
+            )
+            ->setParameters(array('anexo'=>$anexo,'idcoordinador'=> $idcoordinador,'modalidad'=>$modalidad))->getResult();
+    }
+    
+    public function AmbientesSinPeriodoAcademicos($anexo,$modalidad="%%")
+    {
+        /*
+         * Ambientes que no estan vinculados al periodo academico actual
+         */
+         
+          return $this->getEntityManager()
+            ->createQuery(
+                "SELECT a FROM MisionSucreRipesBundle:Ambiente a JOIN a.pnf pnf
+                    WHERE
+                    NOT EXISTS
+                   ( SELECT pa FROM MisionSucreRipesBundle:PeriodoAcademicoAmbiente pa JOIN pa.periodoacademico p WHERE pa.ambiente=a.id AND LOWER(p.actual)='si')
+                   AND a.anexo=:anexo AND pnf.modalidad LIKE :modalidad AND (a.condicion ='Nuevo' OR a.condicion ='Activo')
+                "
+            )->setParameters(array('anexo'=>$anexo,'modalidad'=>$modalidad))
+            ->getResult();
+    }
+    public function AmbientesSinPeriodoAcademicosCoordinador($anexo,$idcoordinador,$modalidad="%%")
+    {
+        /*
+         * Ambientes que no estan vinculados al periodo academico actual y coordinador
+         */
+         
+          return $this->getEntityManager()
+            ->createQuery(
+                "SELECT a FROM MisionSucreRipesBundle:Ambiente a JOIN a.pnf pnf,
+                    MisionSucreRipesBundle:CoordinadorTurno t JOIN t.coordinador c
+                    WHERE
+                    NOT EXISTS
+                   ( SELECT pa FROM MisionSucreRipesBundle:PeriodoAcademicoAmbiente pa JOIN pa.periodoacademico p WHERE pa.ambiente=a.id AND LOWER(p.actual)='si')
+                   AND a.anexo=:anexo AND pnf.modalidad LIKE :modalidad AND (a.condicion ='Nuevo' OR a.condicion ='Activo')
+                   AND c.id = :idcoordinador AND c.aldea = a.aldea AND t.turno=a.turno
+                "
+            )->setParameters(array('anexo'=>$anexo,'modalidad'=>$modalidad,'idcoordinador'=> $idcoordinador))
+            ->getResult();
+    }
 }

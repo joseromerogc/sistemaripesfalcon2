@@ -4,6 +4,8 @@
 {{ parent() }}
 	<link rel="stylesheet" type="text/css" href="{{asset('css/table/littletable.css')}}">
 	<link rel="stylesheet" type="text/css" href="{{asset('css/blitzer/jquery-ui-1.10.4.custom.css')}}">
+        <link rel="stylesheet" type="text/css" href="{{asset('css/botones.css')}}">
+        <link rel="stylesheet" type="text/css" href="{{asset('css/color.css')}}">
 	
 {% endblock %}
 
@@ -40,60 +42,21 @@
     <h1 class="heading_style">Información de Usuario</h1> 
     <table cellspacing='0'> <!-- cellspacing='0' is important, must stay -->
             <tr><th>ID</th><th>Nombre de Usuario</th><th>Tipo de Usuario</th><th></th><th></th></tr><!-- Table Header -->
-
-
         <tr><td>{{usuario.id}}</td><td>{{usuario.username}}</td><td>{{usuario.name}}</td>
             <td><a class="enlace" href="{{path('usuario_update',{'id':usuario.id})}}">Actualizar</a></td><td><a class="enlace" onclick="return confirm('******Confirmar Borrar******')" href="{{path('usuario_delete',{'id':usuario.id})}}">Borrar</a></td>
+        <td >
+                {% if bloqueo  %}
+                    <span style ="color: darkorange">Bloqueado por {{bloqueo.motivo}}</span>
+                {% else  %}
+                <a href="{{path('bloquear_new',{'cedula':persona.cedPer})}}" class='botonsimple red'>Bloquear Usuario</a>
+                {% endif  %}
+        </td>
         </tr><!-- Table Row -->
-    </table>
-    {% if  usuario.name =='Coordinador de Eje' %}  
-     <h1 class="heading_style">Coordinación de Eje</h1>  
-  {% if  coordinadoreje %}  
-    <table cellspacing='0' > <!-- cellspacing='0' is important, must stay -->
-	<tr><th>ID</th><th>Eje</th><th>Municipios</th><th>Parroquias</th>
-        </tr><!-- Table Header -->  
-    <tr>
-        <td>{{coordinadoreje.id}}</td><td>{{coordinadoreje.Eje.nombre}}</td>
-        <td>
-            {% for m in municipioseje %}
-               {{m.municipio}},
-            {% endfor %} 
-        </td> 
-        <td>
-            {% for p in parroquiaseje %}
-               {{p.parroquia}},
-            {% endfor %} 
-        </td> 
-        <td><a class="enlace" href="{{path('eje_update',{'id':usuario.id})}}">Actualizar</a></td>
-        <td><a class="enlace" onclick="return confirm('******Confirmar Borrar******')" href="{{path('eje_delete',{'id': usuario.id,'id_coord': coordinadoreje.id})}}">Borrar</a></td>
-    </tr><!-- Table Row -->
-    </table>
-  {% else %}    
-      <a style='margin-left: 12px;' class="enlace" href="{{path('eje_new',{'id':usuario.id})}}"> 
-                   <span class='icon'><img src="{{asset('img/add-1-icon.png')}}"/></span> Vincular al Eje</a> 
-  {% endif %}
-  {% endif %}
-  
-  {% if  usuario.name =='Coordinador' %}  
-      {% if  coordinadoraldea %}  
-    <table cellspacing='0'> <!-- cellspacing='0' is important, must stay -->
-            <tr><th>ID</th><th>Nombre de Aldea</th><th>Turno</th><th></th><th><!-- Table Header -->  
-                </tr><!-- Table Header -->  
-    <tr>
-        <td>{{coordinadoraldea.id}}</td><td>{{coordinadoraldea.aldea.nombre}}</td><td>{{turnocoordinador}}</td>
-        <td><a class="enlace"  href="{{path('aldea_coordinador_update',{'id': coordinadoraldea.id})}}">Actualizar</a></td>
-        <td><a class="enlace" onclick="return confirm('******Confirmar Borrar******')" href="{{path('aldea_coordinador_delete',{'id': coordinadoraldea.id})}}">Borrar</a></td>
-    </tr>
-    </table>
-    {% elseif true %}
-        <a style='margin-left: 12px;' class="enlace" href="{{path('aldea_coordinador_new',{'id':usuario.id})}}"> 
-                   <span class='icon'><img src="{{asset('img/add-1-icon.png')}}"/></span> Asignar Aldea</a> 
-    {% endif %}   
+        
+    </table>    
     
-  {% endif %}   
 </div>
 
-        
 <div id="personales" >
 <h1 class="heading_style">Datos Personales</h1> 
   
@@ -109,23 +72,30 @@
         <td>{% if persona.sexPer =='m'%} {% set s='Masculino'%} {% else %}{% set s='Femenino'%}{% endif %}{{s}}</td>
         <td> {{ persona.edoCiv}}</td>
         <td> {{ persona.celPer}}</td><td> {{ persona.telPer}}</td>
+        <td><a class="enlace" href="{{path('persona_update',{'id':usuario.id})}}">Actualizar</a></td>
     </tr><!-- Table Row -->
     </table>
-    <table cellspacing='0'> <!-- cellspacing='0' is important, must stay -->
-	<tr><th>Municipio</th><th>Parroquia</th><th>Sector</th><th colspan="2">Dirrección</th>
-        </tr><!-- Table Header -->  
-    <tr>
-        <td>{{persona.sector.parroquia.municipio.municipio}}</td><td>{{persona.sector.parroquia.parroquia}}</td><td>{{persona.sector.nombre}}</td>
-        <td colspan="2">{{persona.dirPer}}</td><td><a class="enlace" href="{{path('persona_update',{'id':usuario.id})}}">Actualizar</a></td>
-    </tr><!-- Table Row -->
-    </table>
+    
   {% else %}    
     <a style='margin-left: 12px;' class="enlace" href="{{path('persona_new',{'id':usuario.id})}}"> <span class='icon'>
     <img src="{{asset('img/add-1-icon.png')}}"/></span> Agregar Datos Personales</a> 
   {% endif %}    
-  
+  <h1 class="heading_style">Ubicación de Vivienda</h1> 
+  {% if ubicacionvivienda %}  
+  <table cellspacing='0'> <!-- cellspacing='0' is important, must stay -->
+	<tr><th>Municipio</th><th>Parroquia</th><th>Sector</th><th colspan="2">Dirrección</th>
+        </tr><!-- Table Header -->  
+    <tr>
+        <td>{{ubicacionvivienda.sector.parroquia.municipio.municipio}}</td><td>{{ubicacionvivienda.sector.parroquia.parroquia}}</td><td>{{ubicacionvivienda.sector.nombre}}</td>
+        <td colspan="2">{{ubicacionvivienda.direccion}}</td>
+    </tr><!-- Table Row -->
+   </table>
+   {% else %}    
+    <a style='margin-left: 12px;' class="enlace" href="{{path('persona_new',{'id':usuario.id})}}"> <span class='icon'>
+    <img src="{{asset('img/add-1-icon.png')}}"/></span> Agregar Datos Personales</a> 
+  {% endif %}     
 </div>
-  
+
 <div id="sociales">
     <h1 class="heading_style">Datos Sociales, Comunitarios y Politicos</h1> 
   

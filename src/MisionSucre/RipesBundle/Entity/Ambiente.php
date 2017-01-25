@@ -55,6 +55,11 @@ class Ambiente
     protected $periodosacademicos;
     
     /**
+     * @ORM\OneToMany(targetEntity="Bibliorato", mappedBy="ambiente")
+     */
+    protected $biblioratos;
+    
+    /**
      * @ORM\OneToMany(targetEntity="TIFinalizado", mappedBy="ambiente")
      */
     protected $tifinalizados;
@@ -74,6 +79,13 @@ class Ambiente
      */
     
     private $promocion;
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="seccion", type="string", length=2,nullable=true)
+     */
+    
+    private $seccion;
     
     /**
      * @var string
@@ -437,5 +449,61 @@ class Ambiente
     public function getPeriodosacademicos()
     {
         return $this->periodosacademicos;
+    }
+
+    /**
+     * Set seccion
+     *
+     * @param string $seccion
+     * @return Ambiente
+     */
+    public function setSeccion($seccion)
+    {
+        $this->seccion = $seccion;
+
+        return $this;
+    }
+
+    /**
+     * Get seccion
+     *
+     * @return string 
+     */
+    public function getSeccion()
+    {
+        return $this->seccion;
+    }
+
+    /**
+     * Add tifinalizados
+     *
+     * @param \MisionSucre\RipesBundle\Entity\TIFinalizado $tifinalizados
+     * @return Ambiente
+     */
+    public function addTifinalizado(\MisionSucre\RipesBundle\Entity\TIFinalizado $tifinalizados)
+    {
+        $this->tifinalizados[] = $tifinalizados;
+
+        return $this;
+    }
+
+    /**
+     * Remove tifinalizados
+     *
+     * @param \MisionSucre\RipesBundle\Entity\TIFinalizado $tifinalizados
+     */
+    public function removeTifinalizado(\MisionSucre\RipesBundle\Entity\TIFinalizado $tifinalizados)
+    {
+        $this->tifinalizados->removeElement($tifinalizados);
+    }
+
+    /**
+     * Get tifinalizados
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getTifinalizados()
+    {
+        return $this->tifinalizados;
     }
 }

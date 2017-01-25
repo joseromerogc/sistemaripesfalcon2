@@ -53,7 +53,12 @@ class Ambiente
      * @ORM\OneToMany(targetEntity="PeriodoAcademicoAmbiente", mappedBy="ambiente")
      */
     protected $periodosacademicos;
-        
+    
+    /**
+     * @ORM\OneToMany(targetEntity="TIFinalizado", mappedBy="ambiente")
+     */
+    protected $tifinalizados;
+    
     /**
      * @var string
      *
@@ -69,6 +74,13 @@ class Ambiente
      */
     
     private $promocion;
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="seccion", type="string", length=2,nullable=true)
+     */
+    
+    private $seccion;
     
     /**
      * @var string
@@ -198,52 +210,6 @@ class Ambiente
     public function getCondicion()
     {
         return $this->condicion;
-    }
-
-    /**
-     * Set trayecto
-     *
-     * @param string $trayecto
-     * @return Ambiente
-     */
-    public function setTrayecto($trayecto)
-    {
-        $this->trayecto = $trayecto;
-
-        return $this;
-    }
-
-    /**
-     * Get trayecto
-     *
-     * @return string 
-     */
-    public function getTrayecto()
-    {
-        return $this->trayecto;
-    }
-
-    /**
-     * Set periodo
-     *
-     * @param string $periodo
-     * @return Ambiente
-     */
-    public function setPeriodo($periodo)
-    {
-        $this->periodo = $periodo;
-
-        return $this;
-    }
-
-    /**
-     * Get periodo
-     *
-     * @return string 
-     */
-    public function getPeriodo()
-    {
-        return $this->periodo;
     }
 
     /**
@@ -445,5 +411,38 @@ class Ambiente
     public function getVinculadosistema()
     {
         return $this->vinculadosistema;
+    }
+
+    /**
+     * Add periodosacademicos
+     *
+     * @param \MisionSucre\RipesBundle\Entity\PeriodoAcademicoAmbiente $periodosacademicos
+     * @return Ambiente
+     */
+    public function addPeriodosacademico(\MisionSucre\RipesBundle\Entity\PeriodoAcademicoAmbiente $periodosacademicos)
+    {
+        $this->periodosacademicos[] = $periodosacademicos;
+
+        return $this;
+    }
+
+    /**
+     * Remove periodosacademicos
+     *
+     * @param \MisionSucre\RipesBundle\Entity\PeriodoAcademicoAmbiente $periodosacademicos
+     */
+    public function removePeriodosacademico(\MisionSucre\RipesBundle\Entity\PeriodoAcademicoAmbiente $periodosacademicos)
+    {
+        $this->periodosacademicos->removeElement($periodosacademicos);
+    }
+
+    /**
+     * Get periodosacademicos
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getPeriodosacademicos()
+    {
+        return $this->periodosacademicos;
     }
 }

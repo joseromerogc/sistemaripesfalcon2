@@ -12,16 +12,66 @@ use Doctrine\ORM\EntityRepository;
  */
 class AmbienteRepository extends EntityRepository
 {
-    public function findAmbienteByAldeaAndModalidad($aldea,$modalidad)
-    {
+    public function PorAldeaModalidadConPeriodo($aldea,$modalidad="%%")
+    {/*
+     * Ambientes de una aldea con Periodo Academico 
+     */
           return $this->getEntityManager()
             ->createQuery(
                 "SELECT pa FROM MisionSucreRipesBundle:PeriodoAcademico p, MisionSucreRipesBundle:PeriodoAcademicoAmbiente pa JOIN pa.ambiente a JOIN a.pnf pnf
-                    WHERE a.aldea=:aldea AND pnf.modalidad=:modalidad AND p.actual=:actual AND p.id = pa.periodoacademico
+                    WHERE a.aldea=:aldea AND pnf.modalidad LIKE :modalidad AND LOWER(p.actual)=:actual AND p.id = pa.periodoacademico
                     AND (a.condicion ='Nuevo' OR a.condicion ='Activo')
                 "
             )
             ->setParameters(array('modalidad'=>$modalidad,'aldea'=>$aldea,'actual'=>'SI'))->getResult();
+    }
+    public function PorAldeaModalidadSinPeriodo($aldea,$modalidad="%%")
+    {/*
+     * Ambientes de una aldea sin Periodo Academico
+     */
+          return $this->getEntityManager()
+            ->createQuery(
+                "SELECT a FROM MisionSucreRipesBundle:Ambiente a JOIN a.pnf pnf
+                    WHERE
+                    NOT EXISTS
+                   ( SELECT pa FROM MisionSucreRipesBundle:PeriodoAcademicoAmbiente pa JOIN pa.periodoacademico p WHERE pa.ambiente=a.id AND LOWER(p.actual)='si')
+                   AND a.aldea=:aldea AND pnf.modalidad LIKE :modalidad AND (a.condicion ='Nuevo' OR a.condicion ='Activo')
+                "
+            )->setParameters(array('aldea'=>$aldea,'modalidad'=>$modalidad))
+            ->getResult();
+    }
+    
+    public function PorAldeaModalidadConPeriodoCoordinador($aldea,$idcoordinador, $modalidad="%%")
+    {/*
+     * Ambientes de una aldea con Periodo Academico  de un coordinador especifico
+     */
+          return $this->getEntityManager()
+            ->createQuery(
+                "SELECT pa FROM MisionSucreRipesBundle:PeriodoAcademico p, MisionSucreRipesBundle:PeriodoAcademicoAmbiente pa JOIN pa.ambiente a JOIN a.pnf pnf,
+                    MisionSucreRipesBundle:CoordinadorTurno t JOIN t.coordinador c
+                    WHERE a.aldea=:aldea AND pnf.modalidad LIKE :modalidad AND LOWER(p.actual)=:actual AND p.id = pa.periodoacademico
+                    AND (a.condicion ='Nuevo' OR a.condicion ='Activo')
+                    AND c.id = :idcoordinador AND c.aldea = a.aldea AND t.turno=a.turno
+                "
+            )
+            ->setParameters(array('modalidad'=>$modalidad,'aldea'=>$aldea,'idcoordinador'=> $idcoordinador,'actual'=>'SI'))->getResult();
+    }
+    public function PorAldeaModalidadSinPeriodoCoordinador($aldea,$idcoordinador,$modalidad="%%")
+    {/*
+     * Ambientes de una aldea sin Periodo Academico
+     */
+          return $this->getEntityManager()
+            ->createQuery(
+                "SELECT a FROM MisionSucreRipesBundle:Ambiente a JOIN a.pnf pnf,
+                    MisionSucreRipesBundle:CoordinadorTurno t JOIN t.coordinador c
+                    WHERE
+                    NOT EXISTS
+                   ( SELECT pa FROM MisionSucreRipesBundle:PeriodoAcademicoAmbiente pa JOIN pa.periodoacademico p WHERE pa.ambiente=a.id AND LOWER(p.actual)='si')
+                   AND a.aldea=:aldea AND pnf.modalidad LIKE :modalidad AND (a.condicion ='Nuevo' OR a.condicion ='Activo')
+                   AND c.id = :idcoordinador AND c.aldea = a.aldea AND t.turno=a.turno
+                "
+            )->setParameters(array('aldea'=>$aldea,'modalidad'=>$modalidad,'idcoordinador'=> $idcoordinador))
+            ->getResult();
     }
     
     public function AmbientesAldeaTurnoModalidad($aldea,$turno,$modalidad)
@@ -70,7 +120,8 @@ class AmbienteRepository extends EntityRepository
     {
           return $this->getEntityManager()
             ->createQuery(
-                "SELECT pa as ambiente, (select count(tr.id)  FROM MisionSucreRipesBundle:Triunfador tr WHERE tr.ambiente=a.id) AS cantidadtriunfadores 
+                "SELECT pa as ambiente, 
+                    (select count(tr.id)  FROM MisionSucreRipesBundle:Triunfador tr WHERE tr.ambiente=a.id) AS cantidadtriunfadores 
                     FROM MisionSucreRipesBundle:PeriodoAcademico p, MisionSucreRipesBundle:PeriodoAcademicoAmbiente pa JOIN pa.ambiente a
                     WHERE p.actual=:actual AND pa.periodoacademico=p.id
                     AND (a.condicion ='Nuevo' OR a.condicion ='Activo')
@@ -108,7 +159,9 @@ class AmbienteRepository extends EntityRepository
     {
           return $this->getEntityManager()
             ->createQuery(
-                "SELECT pa FROM MisionSucreRipesBundle:PeriodoAcademico p, MisionSucreRipesBundle:PeriodoAcademicoAmbiente pa JOIN 
+                "SELECT pa as ambiente, 
+               (select count(tr.id)  FROM MisionSucreRipesBundle:Triunfador tr WHERE tr.ambiente=am.id) AS cantidadtriunfadores  
+               FROM MisionSucreRipesBundle:PeriodoAcademico p, MisionSucreRipesBundle:PeriodoAcademicoAmbiente pa JOIN 
                     pa.ambiente am JOIN am.aldea al JOIN al.parroquia prq
                     WHERE p.actual=:actual AND prq.eje = :eje AND pa.periodoacademico=p.id
                     AND (am.condicion ='Nuevo' OR am.condicion ='Activo')
@@ -122,7 +175,8 @@ class AmbienteRepository extends EntityRepository
     {
           return $this->getEntityManager()
             ->createQuery(
-                "SELECT a as ambiente, (select count(tr.id)  FROM MisionSucreRipesBundle:Triunfador tr WHERE tr.ambiente=a.id) AS cantidadtriunfadores FROM MisionSucreRipesBundle:Ambiente a WHERE
+                "SELECT a as ambiente, (select count(tr.id)  FROM MisionSucreRipesBundle:Triunfador tr WHERE tr.ambiente=a.id) AS cantidadtriunfadores 
+                    FROM MisionSucreRipesBundle:Ambiente a WHERE
                     NOT EXISTS
                    ( SELECT pa FROM MisionSucreRipesBundle:PeriodoAcademicoAmbiente pa join pa.periodoacademico p WHERE pa.ambiente=a.id AND p.actual=:actual) 
                    AND (a.condicion ='Nuevo' OR a.condicion ='Activo')
@@ -131,20 +185,6 @@ class AmbienteRepository extends EntityRepository
             ->getResult();
     }
     
-    //Ambientes sin periodo de una Aldea
-    public function findAllOrderedByPeriodoAcademicoAndAldea($aldea,$modalidad="%%")
-    {
-          return $this->getEntityManager()
-            ->createQuery(
-                "SELECT a FROM MisionSucreRipesBundle:Ambiente a JOIN a.pnf pnf
-                    WHERE
-                    NOT EXISTS
-                   ( SELECT pa FROM MisionSucreRipesBundle:PeriodoAcademicoAmbiente pa JOIN pa.periodoacademico p WHERE pa.ambiente=a.id AND LOWER(p.actual)='si')
-                   AND a.aldea=:aldea AND pnf.modalidad LIKE :modalidad AND (a.condicion ='Nuevo' OR a.condicion ='Activo')
-                "
-            )->setParameters(array('aldea'=>$aldea,'modalidad'=>$modalidad))
-            ->getResult();
-    }
     public function findAllOrderedByPeriodoAcademicoAndAldeaAndTurno($aldea,$turno)
     {
           return $this->getEntityManager()
@@ -164,7 +204,8 @@ class AmbienteRepository extends EntityRepository
     {
           return $this->getEntityManager()
             ->createQuery(
-                "SELECT am FROM MisionSucreRipesBundle:Ambiente am JOIN am.aldea al JOIN al.parroquia prq
+                "SELECT am as ambiente, (select count(tr.id)  FROM MisionSucreRipesBundle:Triunfador tr WHERE tr.ambiente=am.id) AS cantidadtriunfadores 
+                    FROM MisionSucreRipesBundle:Ambiente am JOIN am.aldea al JOIN al.parroquia prq
                     WHERE
                     NOT EXISTS
                    ( SELECT pa FROM MisionSucreRipesBundle:PeriodoAcademicoAmbiente pa join pa.periodoacademico  p WHERE pa.ambiente=am.id AND p.actual=:actual) 

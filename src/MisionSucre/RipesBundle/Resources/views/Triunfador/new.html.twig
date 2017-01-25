@@ -37,13 +37,12 @@
         </tr><!-- Table Row -->
         </table>
         <h1 class="sub_heading_style">Ambiente </h1> 
-        <table cellspacing='0' style='margin-top: 0px; margin-bottom: 0px;margin-left: 0px;'> <!-- cellspacing='0' is important, must stay -->
+        <table cellspacing='0' style='margin-top: 0px; margin-bottom: 0px;margin-left: 10%;'> <!-- cellspacing='0' is important, must stay -->
                 <tr><th>ID</th><th>P.N.F.</th><th>Turno</th><th>Nombre</th><th>Promoción</th><th>Condición</th>
-                    <th>Trayecto</th><th>Tramo</th>
                 </tr><!-- Table Header -->  
             <tr>
                     
-                {% if ambiente.ambiente.turno == 'n' %}
+                {% if ambiente.turno == 'n' %}
                         {% set turno = 'Nocturno' %}
 
                 {% else%}	
@@ -51,8 +50,8 @@
                 {% endif %}	
 
                     
-                <td>{{ambiente.ambiente.id}}</td><td>{{ambiente.ambiente.pnf.nombre}}</td> <td>{{turno}}</td><td>{{ambiente.ambiente.nombre}}</td>
-                <td>{{ambiente.ambiente.promocion}}</td><td>{{ambiente.ambiente.condicion}}</td><td>{{ambiente.trayecto}}</td><td>{{ambiente.periodo}}</td>
+                <td>{{ambiente.id}}</td><td>{{ambiente.pnf.nombre}}</td> <td>{{turno}}</td><td>{{ambiente.nombre}}</td>
+                <td>{{ambiente.promocion}}</td><td>{{ambiente.condicion}}</td>
             </tr><!-- Table Row -->
     </table>    
 

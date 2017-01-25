@@ -1,0 +1,55 @@
+<?php
+
+namespace MisionSucre\RipesBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * PeriodoAcademicoAmbiente
+ *
+ * @ORM\Table(name="bibliorato")
+ * @ORM\Entity(repositoryClass="MisionSucre\RipesBundle\Entity\BiblioratoRepository")
+ */
+class Bibliorato
+{   
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="id", type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="AUTO")
+     */
+    private $id;
+    
+    /**
+     * @ORM\ManyToOne(targetEntity="Ambiente", inversedBy="biblioratos")
+     * @ORM\JoinColumn(name="ambiente_id", referencedColumnName="id")
+     */
+    protected $ambiente;
+    
+    /**
+     * @var string
+     *
+     * @ORM\Column(type="string", length=20)
+     */
+    protected $vagon;
+    /**
+     * @var string
+     *
+     * @ORM\Column(type="string", length=20)
+     */
+    protected $peldanyo;
+    /**
+     * @var string
+     *
+     * @ORM\Column(type="string", length=20)
+     */
+    protected $bibliorato;
+    /**
+     * @var string
+     *
+     * @ORM\Column(type="string", length=20)
+     */
+    protected $segmento;
+    
+    }

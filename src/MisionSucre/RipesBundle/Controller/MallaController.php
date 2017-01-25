@@ -61,7 +61,7 @@ public function registrarVinculacionUCAction(Request $request,$json)
                 
                 $mallauc = $this->getDoctrine()
                 ->getRepository('MisionSucreRipesBundle:Malla')
-                ->findOneByUc($uc->getId());
+                ->existeUnidadCurricular($datos[3],$uc->getId());
                 
                                    if($mallauc){
                                        $error.= "$c Unidad Curricular ya Vinculada / ";

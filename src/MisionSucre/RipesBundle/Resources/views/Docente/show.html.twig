@@ -4,6 +4,8 @@
 {{ parent() }}
 	<link rel="stylesheet" type="text/css" href="{{asset('css/table/littletable.css')}}">
 	<link rel="stylesheet" type="text/css" href="{{asset('css/blitzer/jquery-ui-1.10.4.custom.css')}}">
+        <link rel="stylesheet" type="text/css" href="{{asset('css/botones.css')}}">
+        <link rel="stylesheet" type="text/css" href="{{asset('css/color.css')}}">
 	
 {% endblock %}
 
@@ -55,9 +57,16 @@
             {% if is_granted('ROLE_COORD')  %}
             <td><a class="enlace" onclick="return confirm('******Confirmar Borrar******')" href="{{path('usuario_delete',{'id':usuario.id})}}">Borrar</a></td>
             {% endif%}
+            <td >
+                {% if bloqueo  %}
+                    <span style ="color: darkorange">Bloqueado por {{bloqueo.motivo}}</span>
+                {% else  %}
+                <a href="{{path('bloquear_new',{'cedula':persona.cedPer})}}" class='botonsimple red'>Bloquear Usuario</a>
+                {% endif  %}
+            </td>
         </tr><!-- Table Row -->
     </table>
-    
+  
   
   {% if  docente %}  
       <h1 class="heading_style">Docente</h1>  

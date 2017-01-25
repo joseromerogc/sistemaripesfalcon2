@@ -3,7 +3,9 @@ namespace MisionSucre\RipesBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Doctrine\ORM\EntityRepository;
+use MisionSucre\RipesBundle\Entity\ConsejoComunal;
 use Symfony\Component\HttpFoundation\Request;
+use MisionSucre\RipesBundle\Form\Type\ConsejoComunalType;
 
 class ConsejoComunalController extends Controller
 {
@@ -11,6 +13,73 @@ class ConsejoComunalController extends Controller
     {
         return $this->render('MisionSucreRipesBundle:Sociales:index.html.twig');
     }	
+    
+    public function newAction(Request $request)
+	{
+        /*
+         * Agregar un nuevo consejo comunal
+         */
+                $em = $this->getDoctrine()->getManager();
+                
+                $cc= new ConsejoComunal();
+                
+                /*DATOS */
+                $datos = $this->get('servicios.datos');
+                
+                /*FIN DATOS*/
+                
+		$form = $this->createForm(new ConsejoComunalType(), $cc)
+                ->add('municipio', 'choice', array(
+        'choices' => $datos->Municipios() , 'label'=>'Municipios*',
+            'placeholder'=>"Seleccione una",'mapped' => false
+            ))->add('save', 'submit',array('label' => 'Registrar Ubicación Geográfica'));
+                        ;
+                
+                $prq=null;
+                
+                if($request->getMethod() == 'POST'){
+                          $idprq=$this->get('request')->request->get('persona_parroquia');
+                          if($idprq){
+                            $prq= $em->getRepository('MisionSucreRipesBundle:Parroquia')->find($idprq);
+                          }
+                          
+                }
+                        
+                $form->handleRequest($request);
+                   
+		if ($form->isValid()) {
+                            
+                            $idprq = $form->get('prq')->getData();
+                            
+                            $prq = $em->getRepository('MisionSucreRipesBundle:Parroquia')->find($idprq);
+                            
+                            $cc->setParroquia($prq);
+                            
+                            if($em->getRepository('MisionSucreRipesBundle:ConsejoComunal')
+                                    ->buscarPorNombreParroquia($cc->getNombre(),$prq)){
+                                    $request->getSession()->getFlashBag()->add(
+                            'notice',
+                            'Consejo Comunal ya Registrado'
+                            );  
+                                    }
+                            else{        
+                            
+                            $em->persist($cc);
+                            $em->flush();
+                            $request->getSession()->getFlashBag()->add(
+                            'notice',
+                            'Consejo Comunal Registrado con Éxito'
+                            );  
+                                      
+                    return $this->redirect($this->generateUrl('comunitaria_consejocomunal_lista'));
+                            }
+		}
+		
+		return $this->render('MisionSucreRipesBundle:ConsejoComunal:new.html.twig', array(
+		'form' => $form->createView(),'mensaje_heading'=>'Registro de Consejo Comunal',
+                            'sub_heading'=>'Nuevos Datos','prq'=>$prq
+		));
+	}
           
  public function resumenAction(Request $request)
 	{       
@@ -170,9 +239,11 @@ class ConsejoComunalController extends Controller
             return $this->redirect($this->generateUrl('usuario'));
             }
             
+        $consejoscomunalessinparticipacion = $em->getRepository('MisionSucreRipesBundle:ConsejoComunal')->sinParticipacion();
+            
 	return $this->render(
 			'MisionSucreRipesBundle:ConsejoComunal:lista.html.twig',
-                array('consejoscomunales'=>$consejoscomunales )
+                array('consejoscomunales'=>$consejoscomunales,'consejoscomunalessinparticipacion'=>$consejoscomunalessinparticipacion )
 		);		
             
 		

@@ -106,23 +106,11 @@ public function listapnfAction(Request $request)
                 $pnf = $pp->getPnf();
                 $idpnf = $pp->getPnf()->getId();
                 
-                $ucmalla = $this->getDoctrine()
-                ->getRepository('MisionSucreRipesBundle:Malla')
-                ->findByPeriodopnf($idppnf);
-                
                 if($pnf->getModalidad()=="TRIMESTRAL"){
                     $p="Periodo";
                 }
                 else{
                     $p="Tramo";
-                }
-                
-                if($ucmalla){
-                    $request->getSession()->getFlashBag()->add(
-                    'notice',
-                    "$p No se puede Actualizar. Tiene Unidades Curriculares Vinculadas"
-                    );    
-                    return $this->redirect($this->generateUrl('pnf_show',array('id'=>$idpnf)));
                 }
                 
                 $form = $this->createForm(new PeriodoPnfType(),$pp)
@@ -150,7 +138,7 @@ public function listapnfAction(Request $request)
                             
                             $request->getSession()->getFlashBag()->add(
                             'notice',
-                            "$p Actualizado con $trayecto Éxito $periodo"
+                            "$p Actualizado  Éxito "
                             );            
                     return $this->redirect($this->generateUrl('pnf_show',array('id'=>$idpnf)));
 		}

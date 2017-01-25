@@ -1,0 +1,426 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<link rel="icon" type="image/x-icon" href="{{ asset('favicon.png') }}" />
+<link rel="stylesheet" type="text/css" href="{{ asset('css/base.css') }}"/>        
+<link rel="stylesheet" type="text/css" href="{{asset('css/botones.css')}}">
+</head>      
+<body>
+<h1 style="text-align: center;" class="heading_style">Vista Previa</h1>
+{% for flashMessage in app.session.flashbag.get('notice') %}
+        <div class="flash-notice">
+        {{ flashMessage }}
+        </div>
+{% endfor%}        
+<table style="border-collapse: collapse; padding: 0px; margin: 20px 30px 0px 20px"
+      cellpadding="0" cellspacing="0" id="Acta">
+    <style>
+    .naranja{
+        background-color:#ff6600;
+    }
+    .inline{
+        display: inline;
+    }
+    .titulo{
+        font-size: 8pt; font-family: arial;
+        text-align: center;
+        vertical-align: middle;
+    }
+    .negrita td{
+        font-weight: bold;        
+    }
+    .izquierda{
+        text-align: left;
+    }
+    .bordeinferior{
+        border-bottom: 1px solid black;
+    }
+    .sietept{
+        font-size: 7pt;
+    }
+    .nuevept{
+        font-size: 9pt;
+    }
+    .diezpt{
+        font-size: 10pt;
+    }
+    .centrado, tr td{
+        text-align: center;
+        vertical-align: middle;
+    }
+    #logo_uni{
+        width: 145px;
+        height: 50px;   
+    }
+    img{
+        vertical-align: middle;
+        padding-top: 15px;
+    }
+    .arial{
+        font-family: arial;
+    }
+    table{
+        margin-left: 1.5em;
+        font-family: arial;
+        width: 400px;
+    }
+    .borde {
+    border: 1px solid black;
+    }
+    .paddinglaterales {
+    padding: 0 10px 0 10px;
+    }
+    .padding{
+    padding: 10px 10px 10px 10px;
+    }
+</style>
+      <tbody>
+        <tr>
+          <td colspan="2" height="15"><br>
+          </td>
+          <td height="30" colspan="5" class="naranja titulo negrita" rowspan="1"><b>PROGRAMA NACIONAL DE FORMACION EN
+                  ADMINISTRACIÓN</b></td>
+          <td valign="top" colspan="3"><br>
+          </td>          
+        </tr>
+        <tr>
+          <td colspan="3" rowspan="1" height="92" valign="top"
+            ><img alt="misionsucre" src="{{asset('img/formatos/sWg9HG.png')}}" id="logo_uni"><br>
+          </td>
+          <td colspan="3" rowspan="1" class="arial" style="font-size:11pt"><b>ACTA DE EVALUACION
+              DEFINITIVA</b>
+            <br>
+          </td>
+          <td colspan="4" rowspan="1" align="center" valign="top"
+            ><img alt="misionsucre" src="{{asset('img/formatos/zgjemk.png')}}"
+              height="71" ><br>
+          </td>
+        </tr>
+        <tr class="naranja centrado nuevept" >
+          <td colspan="2" align="center" class="borde"><b>Estado<br>
+              </b> </td>
+          <td class="borde"><b>Municipio</b></td>
+          <td class="borde" colspan="3"
+            align="center"  width="208"><b>Aldea</b></td>
+          <td  colspan="4" 
+            align="center" class="borde" bgcolor="ff6600" valign="top" width="43"><b><font
+                face="Arial">Lapso</font></b></td>
+        </tr>
+        <tr class="centrado nuevept">
+          <td colspan="2" rowspan="1" height="20" class="borde"
+            >FALCÓN
+          </td>
+          <td align="center" class="borde"
+              valign="top" >{{ambiente.aldea.parroquia.municipio.municipio |upper}}
+          </td>
+          <td colspan="3" rowspan="1" class="borde"
+              align="center" valign="top" >{{ambiente.aldea.nombre |upper}}
+          </td>
+          <td colspan="1" rowspan="1" class="borde paddinglaterales" ><b>Inicio</b><br>
+          </td>
+          <td colspan="1"  class="centrado paddinglaterales borde">
+              {{periodoacademico.fechainicio |date('d')}}
+          </td>
+          <td colspan="1"  class="centrado paddinglaterales borde">
+              {{periodoacademico.fechainicio |date('m')}}
+          </td>
+          <td colspan="1"  class="centrado paddinglaterales borde">
+              {{periodoacademico.fechainicio |date('y')}}
+          </td>
+          
+        </tr>
+        <tr class="naranja centrado nuevept">
+          <td class="centrado paddinglaterales borde" colspan="3"><b>Unidad Curricular \ Eje \ Taller</b></td>
+          <td  class="centrado paddinglaterales borde" ><b>Trayecto</font></b> </td>
+          <td class="centrado paddinglaterales borde" ><b>Trimestre</b> </td>
+          <td class="centrado paddinglaterales borde"><b>Sección</b> </td>
+          <td class="centrado paddinglaterales borde"
+          </td>
+          <td colspan="1"  class="centrado paddinglaterales borde sietept">
+              día
+          </td>
+          <td colspan="1"  class="centrado paddinglaterales borde sietept">
+              mes
+          </td>
+          <td colspan="1"  class="centrado paddinglaterales borde sietept">
+              año
+          </td>
+          
+        </tr>
+        <tr class="centrado nuevept">
+          <td class="centrado paddinglaterales borde" colspan="3">{{malla.uc.nombre}}</td>
+          <td  class="centrado paddinglaterales borde" ><b>{{periodopnf.trayecto}}</font></b> </td>
+          <td class="centrado paddinglaterales borde" ><b>{{periodopnf.periodo}}</b> </td>
+          {% if  ambiente.seccion!=null %}     
+          <td class="centrado paddinglaterales borde"><b>{{ambiente.seccion}}</b> </td>
+          {% else%}
+          <td class="centrado paddinglaterales borde"><b>ÚNICA</b> </td>
+          {% endif%}
+          <td colspan="1" rowspan="1" class="borde paddinglaterales" ><b>Fin</b><br>
+          </td>
+          <td colspan="1"  class="centrado paddinglaterales borde">
+              {{periodoacademico.fechafin |date('d')}}
+          </td>
+          <td colspan="1"  class="centrado paddinglaterales borde">
+              {{periodoacademico.fechafin |date('m')}}
+          </td>
+          <td colspan="1"  class="centrado paddinglaterales borde">
+              {{periodoacademico.fechafin |date('y')}}
+          </td>
+        </tr>
+        <tr class="naranja centrado nuevept">
+          <td class="centrado paddinglaterales borde" colspan="4"><b>Nombre de la Profesora o Profesor Asesor</b></td>
+          </td>
+          <td class="centrado paddinglaterales borde" colspan="6"><b>Nombre de la Preparadora o Preparador</b></td>
+          </td>
+        </tr>
+        <tr class="centrado nuevept">
+          <td class="centrado paddinglaterales borde" colspan="4"><b>
+              {{docente.priNom|upper}} {{docente.priApe|upper}}
+              </b></td>
+          </td>
+          <td class="centrado paddinglaterales borde" colspan="6"><b></b></td>
+          </td>
+        </tr>
+        <tr class="naranja centrado diezpt">
+          <td class="centrado paddinglaterales borde" colspan="1" rowspan="2"><b>Nº</b></td>
+          </td>
+          <td class="centrado paddinglaterales borde" colspan="1"rowspan="2"><b>C.I.</b></td>
+          </td>
+          <td class="centrado paddinglaterales borde" colspan="1"rowspan="2"><b>APELLIDOS</b></td>
+          <td class="centrado paddinglaterales borde" colspan="1"rowspan="2"><b>NOMBRES</b></td>
+          </td>
+          <td class="centrado paddinglaterales borde" colspan="6"rowspan="1"><b>CALIFICACION</b></td>
+          </td>
+        </tr>
+        <tr class="naranja centrado diezpt">
+        <td class="centrado paddinglaterales borde sietept" colspan="1"rowspan="1"><b>númerica o literal</b></td>
+          </td>
+        <td class="centrado paddinglaterales borde sietept" colspan="5"rowspan="1"><b>en letras</b></td>
+          </td>
+        </tr>
+        {% set i = 1 %}
+
+        {% for t in triunfadores %}
+        <tr class="centrado diezpt">
+          <td class="centrado paddinglaterales borde" colspan="1"><b>{{i}}</b></td>
+          </td>
+          <td class="centrado paddinglaterales borde" colspan="1"><b>{{ t.cedPer}}</b></td>
+          </td>
+          <td class="centrado paddinglaterales borde" colspan="1"><b>{{ t.priApe |upper}}</b></td>
+          <td class="centrado paddinglaterales borde" colspan="1"><b>{{ t.priNom |upper}}</b></td>
+          </td>
+        
+          {% if t.asistencia |upper=="NO"  %}
+              <td class="centrado paddinglaterales borde " colspan="1"><b>PI</b></td>
+              <td class="centrado paddinglaterales borde" colspan="5"><b>PI</b></td>
+          {% else %}   
+        <td class="centrado paddinglaterales borde " colspan="1"><b>{{ t.valor}}</b></td>
+          {% endif %} 
+        
+        {% if t.valor ==1 %}   
+            <td class="centrado paddinglaterales borde" colspan="5"><b>UNO</b></td>
+        {% elseif t.valor ==2%}   
+            <td class="centrado paddinglaterales borde" colspan="5"><b>DOS</b></td>
+        {% elseif t.valor ==3%}
+            <td class="centrado paddinglaterales borde" colspan="5"><b>TRES</b></td>
+        {% elseif t.valor ==4%}
+            <td class="centrado paddinglaterales borde" colspan="5"><b>CUATRO</b></td>
+        {% elseif t.valor ==5%}
+            <td class="centrado paddinglaterales borde" colspan="5"><b>CINCO</b></td>
+        {% elseif t.valor ==6%}
+            <td class="centrado paddinglaterales borde" colspan="5"><b>SEIS</b></td>
+        {% elseif t.valor ==7%}
+            <td class="centrado paddinglaterales borde" colspan="5"><b>SIETE</b></td>
+        {% elseif t.valor ==8%}
+            <td class="centrado paddinglaterales borde" colspan="5"><b>OCHO</b></td>
+        {% elseif t.valor ==9%}
+            <td class="centrado paddinglaterales borde" colspan="5"><b>NUEVE</b></td>
+        {% elseif t.valor ==10%}
+            <td class="centrado paddinglaterales borde" colspan="5"><b>DIEZ</b></td>
+        {% elseif t.valor ==11%}
+            <td class="centrado paddinglaterales borde" colspan="5"><b>ONCE</b></td>
+        {% elseif t.valor ==12%}
+            <td class="centrado paddinglaterales borde" colspan="5"><b>DOCE</b></td>
+        {% elseif t.valor ==13%}
+            <td class="centrado paddinglaterales borde" colspan="5"><b>TRECE</b></td>
+        {% elseif t.valor ==14%}
+            <td class="centrado paddinglaterales borde" colspan="5"><b>CATORCE</b></td>
+        {% elseif t.valor ==15%}
+            <td class="centrado paddinglaterales borde" colspan="5"><b>QUINCE</b></td>
+        {% elseif t.valor ==16%}
+            <td class="centrado paddinglaterales borde" colspan="5"><b>DIECISEIS</b></td>
+        {% elseif t.valor ==17%}
+            <td class="centrado paddinglaterales borde" colspan="5"><b>DIECISIETE</b></td>
+        {% elseif t.valor ==18%}
+            <td class="centrado paddinglaterales borde" colspan="5"><b>DIECIOCHO</b></td>
+        {% elseif t.valor ==19%}
+            <td class="centrado paddinglaterales borde" colspan="5"><b>DIECINUEVE</b></td>
+        {% elseif t.valor ==20%}
+            <td class="centrado paddinglaterales borde" colspan="5"><b>VEINTE</b></td>
+        {% endif%}    
+        </tr>
+        {% set i = i+1 %}
+        {% endfor%}
+        {% for j in range(i, 30) %}
+        
+        <tr class="centrado diezpt">
+          <td class="centrado paddinglaterales borde" colspan="1"><b>{{j}}</b></td>
+          </td>
+          <td class="centrado paddinglaterales borde" colspan="1"><b></b></td>
+          </td>
+          <td class="centrado paddinglaterales borde" colspan="1"><b></b></td>
+          <td class="centrado paddinglaterales borde" colspan="1"><b></b></td>
+          </td>
+        <td class="centrado paddinglaterales borde sietept" colspan="1"><b></b></td>
+          </td>
+          
+        <td class="centrado paddinglaterales borde sietept" colspan="5"><b></b></td>
+          </td>
+        </tr>
+        {% endfor%}
+        <tr class="diezpt">
+          <td class="centrado padding" colspan="10"><b>VA SIN ENMIENDAS</b></td>
+        </tr>
+        <tr class="diezpt">
+          <td class="centrado padding bordeinferior" colspan="3"></td>
+          <td  colspan="1"></td>
+          <td class="centrado padding bordeinferior" colspan="6"></td>
+        </tr>
+        <tr class="diezpt izquierda">
+          <td colspan="3" class="izquierda">
+	Nombre y Firma - Vocero (a) estudiantil</td>
+          <td colspan="1">
+	</td>
+          <td colspan="6" class="izquierda">
+	Firma - Coordinador (a) Academico</td>
+        </tr>
+        <tr class="diezpt">
+          <td colspan="3" class="izquierda">
+	C.I.: {{cedulavocero}}</td>
+          <td colspan="1">
+	</td>
+          <td colspan="6" class="izquierda">
+	C.I.:</td>
+        </tr>
+          <td class="centrado padding sietept" colspan="10">SELLO</td>
+        </tr>
+        <tr class="diezpt">
+          <td class="centrado padding bordeinferior" colspan="3"></td>
+          <td  colspan="1"></td>
+          <td class="centrado padding bordeinferior" colspan="6"></td>
+        </tr>
+        <tr class="diezpt izquierda">
+          <td colspan="3" class="izquierda">
+Nombre y Firma - Coordinador (a) de Aldea</td>
+          <td colspan="1">
+	</td>
+          <td colspan="6" class="izquierda">
+Firma - Profesora o profesor Asesor</td>
+        </tr>
+        <tr class="diezpt">
+          <td colspan="3" class="izquierda">
+	C.I.: {{coordinador.cedPer}}</td>
+          <td colspan="1">
+	</td>
+          <td colspan="6" class="izquierda">
+	C.I.: {{cedulavocero}}</td>
+        </tr>
+        
+        {% if impresion is not null %}
+            <tr  >
+                <td colspan="7" class="izquierda" height="20px">
+                </td>
+            </tr>
+        <tr class="diezpt centrado " style="border-top: 33px;">
+            <td colspan="7" class="izquierda">
+                
+            </td>
+          <td colspan="1" class="centro borde">
+              dd
+          </td>
+          <td colspan="1" class="centro borde">
+	mm
+          </td>
+          <td colspan="1" class="centro borde">
+              aa
+          </td>
+        </tr>
+        <tr class="diezpt centrado">
+            <td colspan="7" class="izquierda">
+                
+            </td>
+          <td colspan="1" class="centro borde">
+              {{impresion.fechamodificacion |date('d')}}
+          </td>
+          <td colspan="1" class="centro borde">
+	{{impresion.fechamodificacion |date('m')}}
+          </td>
+          <td colspan="1" class="centro borde">
+              {{impresion.fechamodificacion |date('y')}}
+          </td>
+        </tr>
+        <tr class="diezpt centrado " style="border-top: 33px;">
+            <td colspan="7" class="izquierda">
+                
+            </td>
+          <td colspan="3" class="centro" style="font-size: 7px; padding: 5px; color: gray">
+              {{impresion.codigo}}
+          </td>
+        </tr>
+        {%endif%}
+      </tbody>
+    </table>
+
+        <div class="padding" >
+        {% if (actanota.validada | upper)=='SI' %}
+<input type="button" value="Imprimir" class="botonmediano blue" id="imprimir"  />
+<div id="error" class="error" >
+</div>
+    {% else %}
+<input type="button" value="Validar" class="botonmediano blue" id="validar" />
+<div id="error" class="error padding inline" >
+    PRECAUCIÓN: UNA VEZ VALIDADA NO PODRÁ REALIZAR MÁS CAMBIOS.
+</div>
+{% endif %}
+        </div>
+<script src="{{asset('js/jquery-1.10.2.js')}}" type="text/javascript" type="text/javascript">
+</script>              
+<script>
+            
+            $(function() {
+               
+               $('#imprimir').click( function () {
+
+
+var url = '/actanota/imprimir/'+{{actanota.id}};
+
+window.location.href = url;
+
+});
+
+$('#validar').click( function () {
+
+var url = '/actanota/validar/'+{{actanota.id}};
+if(confirm('******Confirmar Validar******'))
+    window.location.href = url;
+
+});
+});
+
+{#alert(data);
+
+$.ajax({
+        url: urlajax,
+        success: function (html) {
+            $('#error').html(html);
+        }
+    });
+});     
+               
+            }); #}
+            
+</script>
+
+</body>             
+</html>

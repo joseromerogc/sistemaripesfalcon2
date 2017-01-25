@@ -38,6 +38,23 @@ class ActaNota
      */
     protected $malla;
     
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="validada", type="string", length=2,nullable=true)
+     */
+    
+    private $validada;
+    
+    /**
+     * @ORM\OneToMany(targetEntity="Nota", mappedBy="actanota")
+     */
+    protected $notas;
+    /**
+     * @ORM\OneToMany(targetEntity="ImpresionActaNota", mappedBy="actanota")
+     */
+    protected $impresiones;
+    
 
     /**
      * Get id
@@ -116,5 +133,101 @@ class ActaNota
     public function getMalla()
     {
         return $this->malla;
+    }
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->notas = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+
+    /**
+     * Add notas
+     *
+     * @param \MisionSucre\RipesBundle\Entity\Nota $notas
+     * @return ActaNota
+     */
+    public function addNota(\MisionSucre\RipesBundle\Entity\Nota $notas)
+    {
+        $this->notas[] = $notas;
+
+        return $this;
+    }
+
+    /**
+     * Remove notas
+     *
+     * @param \MisionSucre\RipesBundle\Entity\Nota $notas
+     */
+    public function removeNota(\MisionSucre\RipesBundle\Entity\Nota $notas)
+    {
+        $this->notas->removeElement($notas);
+    }
+
+    /**
+     * Get notas
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getNotas()
+    {
+        return $this->notas;
+    }
+
+    /**
+     * Add impresiones
+     *
+     * @param \MisionSucre\RipesBundle\Entity\ImpresionActaNota $impresiones
+     * @return ActaNota
+     */
+    public function addImpresione(\MisionSucre\RipesBundle\Entity\ImpresionActaNota $impresiones)
+    {
+        $this->impresiones[] = $impresiones;
+
+        return $this;
+    }
+
+    /**
+     * Remove impresiones
+     *
+     * @param \MisionSucre\RipesBundle\Entity\ImpresionActaNota $impresiones
+     */
+    public function removeImpresione(\MisionSucre\RipesBundle\Entity\ImpresionActaNota $impresiones)
+    {
+        $this->impresiones->removeElement($impresiones);
+    }
+
+    /**
+     * Get impresiones
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getImpresiones()
+    {
+        return $this->impresiones;
+    }
+
+    /**
+     * Set validada
+     *
+     * @param string $validada
+     * @return ActaNota
+     */
+    public function setValidada($validada)
+    {
+        $this->validada = $validada;
+
+        return $this;
+    }
+
+    /**
+     * Get validada
+     *
+     * @return string 
+     */
+    public function getValidada()
+    {
+        return $this->validada;
     }
 }

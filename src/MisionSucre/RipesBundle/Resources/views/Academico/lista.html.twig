@@ -1,0 +1,75 @@
+{% extends 'MisionSucreRipesBundle::layout.html.twig' %}
+{% block stylesheets %}
+{{ parent() }}
+	<link rel="stylesheet" type="text/css" href="{{asset('css/demo_table.css')}}">
+	<link rel="stylesheet" type="text/css" href="{{asset('css/demo_page.css')}}">
+	<link rel="stylesheet" type="text/css" href="{{asset('css/botones.css')}}">
+	<link rel="stylesheet" type="text/css" href="{{asset('css/dataTables.tableTools.css')}}">
+	
+	
+{% endblock %}
+
+{% block content %}
+
+<h1 class="heading_style">Datos Académicos</h1> 
+<div id="dt_example">
+<div id="container" style="width: 100%">
+    
+<table cellpadding="0" cellspacing="0" border="0" class="display" id="example">
+	<thead>
+	<tr>
+            <th>ID</th><th>Cédula</th><th>Nombres</th><th>Apellidos</th>
+            <th>Título Universitario</th><th></th>
+        </tr><!-- Table Header -->  
+	</thead>
+	<tbody>
+	
+{% set i = 1 %}
+
+
+{% for a in academicos %}
+	
+
+	
+		<tr>
+    <td>{{i}}</td><td>{{ a.cedPer}}</td>
+    <td>{{ a.priNom |upper}} {{ a.segNom |upper}}</td>
+    <td>{{ a.priApe |upper}} {{ a.segApe |upper}}</td>
+            <td>{{a.titulouniversitario}}</td>
+            
+    <td><a class="enlace" href="{{path('usuario_show',{'id': a.u})}}">Mostrar</a></td>
+{% set i = i+1 %}
+		</tr>
+{% endfor %}            
+        </tbody>	
+</table>
+</div>
+</div>
+</div>
+<script src="{{asset('js/jquery.dataTables.js')}}" type="text/javascript" type="text/javascript"></script>
+<script src="{{asset('js/dataTables.tableTools.js')}}" type="text/javascript" type="text/javascript"></script>
+
+<script>
+$(document).ready(function() {
+$('#example').dataTable( {
+        "oLanguage": {
+            "sLengthMenu": "Mostrar _MENU_ Datos por Página",
+            "sZeroRecords": "No se encontraron Resultados",
+            "sSearch": "Filtro: ",
+            "sInfo": "Mostrando _START_ a _END_  de un Total de _TOTAL_ Datos",
+            "sInfoEmpty": "Mostrando 0 de 0 de 0 Datos",
+            "sInfoFiltered": "(Filtrado de un _MAX_ total de Datos)",
+            "oPaginate": {
+                "sNext": "Página Siguiente",
+                "sPrevious": "Página Anterior"
+                }
+        },
+        dom: 'T<"clear">lfrtip'
+        ,
+        tableTools:{
+        		"sSwfPath": "{{asset('swf/copy_csv_xls_pdf.swf')}}",
+        }
+    } );
+} );
+</script>
+{% endblock %}

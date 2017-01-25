@@ -18,12 +18,14 @@ class PeriodoTriunfadorController extends Controller
         $em = $this->getDoctrine()->getManager();
                 $idppamb = $request->request->get('pidppamb');
                 $idusr = $request->request->get('pidusr');
-//        $idppamb =1;
-//        $idusr   =271;     
+//$idppamb =1;
+//$idusr   =271;     
         
         $periodoacademicoambiente = $this->getDoctrine()
                 ->getRepository('MisionSucreRipesBundle:PeriodoAcademicoAmbiente')
                 ->find($idppamb);
+        
+        
                 
                 if(!$periodoacademicoambiente){
                 
@@ -58,7 +60,7 @@ class PeriodoTriunfadorController extends Controller
                 if($error)
                     return new Response("<h1>ERROR al Vincular Triunfador</h1>");
                 
-                $error = $validar->ValidarTriunfador($idusr,$request,$idamb);
+                $error = $validar->ValidarTriunfadorAmbiente($idusr,$request,$idamb);
                 if($error)
                     return new Response("<h1>ERROR al Vincular Triunfador</h1>");
                 
@@ -207,7 +209,7 @@ public function deleteAction(Request $request)
                     return new Response("<h1>ERROR al desVincular Triunfador</h1>");
                     
                 
-                $error = $validar->ValidarTriunfador($idusr,$request,$idamb);
+                $error = $validar->ValidarTriunfadorAmbiente($idusr,$request,$idamb);
                 if($error)
                     return new Response("<h1>ERROR al desVincular Triunfador</h1>");
                 

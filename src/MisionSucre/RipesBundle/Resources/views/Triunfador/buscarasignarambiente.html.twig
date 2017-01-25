@@ -306,6 +306,7 @@ var periodoacademico=$('.periodoacademico').val();
 var idtrf= {{datos.user.id}}
 
 var query='{"query":{"idtrf":"'+idtrf+'","aldea":"'+aldea+'","municipio":"'+municipio+'","parroquia":"'+parroquia+'","nombre":"'+nombre+'","turno":"'+turno+'","modalidad":"'+modalidad+'","pnf":"'+pnf+'","trayecto":"'+trayecto+'","periodo":"'+periodo+'","periodoacademico":"'+periodoacademico+'","condicion":"'+condicion+'"}}';
+{#alert(query);#}
 $.ajax({
         method: "POST",
         url: "../busquedaambiente",

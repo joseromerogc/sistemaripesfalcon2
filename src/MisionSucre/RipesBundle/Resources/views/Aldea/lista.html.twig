@@ -54,8 +54,9 @@
 </div>
 </div>
 
-<a href="new" id="boton_nuevo">Nueva Aldea</a>
-
+{% if is_granted('ROLE_ADMIN') %}
+<a href="{{path('aldea_new')}}" id="boton_nuevo">Nueva Aldea</a>
+{% endif %}
 <script src="{{asset('js/jquery.dataTables.js')}}" type="text/javascript" type="text/javascript"></script>
 <script src="{{asset('js/dataTables.tableTools.js')}}" type="text/javascript" type="text/javascript"></script>
 

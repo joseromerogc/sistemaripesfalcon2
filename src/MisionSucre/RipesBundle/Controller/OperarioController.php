@@ -115,7 +115,26 @@ class OperarioController extends Controller
 		
                 $per =  $em->getRepository('MisionSucreRipesBundle:Persona')->findOneByUser($idusr);
                 
-                $per =  $em->getRepository('MisionSucreRipesBundle:Persona')->findOneByUser($idusr);
+                if(!$per){
+                $request->getSession()->getFlashBag()->add(
+                            'notice',
+                            'Datos Personales no Registrado'
+                            );            
+                    return $this->redirect($this->generateUrl('persona_new'),array('id'=>$idusr));
+                }
+                
+                $bloqueo = $this->getDoctrine()
+                ->getRepository('MisionSucreRipesBundle:Bloqueado')
+                ->findOneByCedulas($per->getCedPer());
+                
+                if($bloqueo){
+                $request->getSession()->getFlashBag()->add(
+                            'notice',
+                            'Persona Bloqueada por '.$bloqueo->getMotivo()
+                            );            
+                    return $this->redirect($this->generateUrl('usuario_lista'));
+                }
+                
 		return $this->render('MisionSucreRipesBundle:Operario:new.html.twig', array(
 		'form' => $form->createView(),'mensaje_heading'=>'Nuevo Operario',
                     'sub_heading'=>'Aldea Universitaria <br>'.$aldea->getNombre(),'usr'=>$useroperario,
@@ -139,49 +158,19 @@ class OperarioController extends Controller
                 );
                 return $this->redirect($this->generateUrl('usuario_show',array('id'=>$idop)));
                 }
-                
+                $idusr = $operario->getUser()->getId();
                 $idaldea = $operario->getAldea()->getId();
                 
                 $aldea = $this->getDoctrine()
                 ->getRepository('MisionSucreRipesBundle:Aldea')
                 ->find($idaldea);
                 
-                $usr = $this->getUser();
+                                /*VALIDAR */
+                $validar = $this->get('servicios.validar');
                 
-                
-                if($usr->getTipUsr()==5){
-                        
-                    $coordaldea = $this->getDoctrine()
-                        ->getRepository('MisionSucreRipesBundle:CoordinadorAldea')
-                        ->findOneByUser($usr->getId());
-                        
-                        if(!$coordaldea){
-
-                        $request->getSession()->getFlashBag()->add(
-                        'notice',
-                        'Coordinador de Aldea No registrado(a)'
-                        );
-                        return $this->redirect($this->generateUrl('eje_new',array('id'=>$usr->getId())));
-                        } 
-                        $usrs = $em->getRepository('MisionSucreRipesBundle:CoordinadorAldea')->findAllByAldea($coordaldea->getAldea());
-                        
-                        if(!$coordaldea->getAldea()->getId()==$aldea->getId())
-                        {
-                        $request->getSession()->getFlashBag()->add(
-                        'notice',
-                        'Acceso Denegado a esta Aldea'
-                        );
-                        return $this->redirect($this->generateUrl('usuario_lista'));     
-                        }
-                        if($em->getRepository('MisionSucreRipesBundle:CoordinadorTurno')->CoordinadorTurno($operario->getTurno(),$coordaldea->getId()))
-                        {
-                        $request->getSession()->getFlashBag()->add(
-                        'notice',
-                        'Acceso Denegado a esta Turno'
-                        );
-                        return $this->redirect($this->generateUrl('usuario_lista'));     
-                        }
-                }
+                $error = $validar->ValidarIdUsuario($idusr, $request);
+                if($error)
+                    return $this->redirect($this->generateUrl($error['url'],array($error['param']=>$error['valueparam'])));
                 
         
                             $em->remove($operario);
@@ -288,78 +277,11 @@ public function showAction(Request $request,$id){
                 
                 $aldea=null;
                 
-                if($operario){
-                $ideje = $operario->getAldea()->getParroquia()->getEje()->getId();
-                $aldea = $operario->getAldea();
+                $validar = $this->get('servicios.validar');
+                $error = $validar->ValidarIdUsuario($id, $request);
+                if($error)
+                    return $this->redirect($this->generateUrl($error['url'],array($error['param']=>$error['valueparam'])));
                 
-                switch($usr->getTipUsr()){
-                    case 8:
-                        $coordeje = $this->getDoctrine()
-                        ->getRepository('MisionSucreRipesBundle:CoordinadorEje')
-                        ->findOneByUser($usr->getId());
-                        
-                        if(!$coordeje){
-
-                        $request->getSession()->getFlashBag()->add(
-                        'notice',
-                        'Coordinador de Eje No registrado(a)'
-                        );
-                        return $this->redirect($this->generateUrl('eje_new',array('id'=>$usr->getId())));
-                        } 
-                        
-                        if(!$coordeje->getEje()->id()==$ideje)
-                        {
-                        $request->getSession()->getFlashBag()->add(
-                        'notice',
-                        'Acceso Denegado a este Eje'
-                        );
-                        return $this->redirect($this->generateUrl('usuario_lista'));     
-                        }
-                    
-                        break;
-                    case 5:
-                        $coordaldea = $this->getDoctrine()
-                        ->getRepository('MisionSucreRipesBundle:CoordinadorAldea')
-                        ->findOneByUser($usr->getId());
-                        
-                        if(!$coordaldea){
-
-                        $request->getSession()->getFlashBag()->add(
-                        'notice',
-                        'Coordinador de Aldea No registrado(a)'
-                        );
-                        return $this->redirect($this->generateUrl('eje_new',array('id'=>$usr->getId())));
-                        } 
-                        $usrs = $em->getRepository('MisionSucreRipesBundle:CoordinadorAldea')->findAllByAldea($coordaldea->getAldea());
-                        
-                        if(!$coordaldea->getAldea()->getId()==$aldea->getId())
-                        {
-                        $request->getSession()->getFlashBag()->add(
-                        'notice',
-                        'Acceso Denegado a esta Aldea'
-                        );
-                        return $this->redirect($this->generateUrl('usuario_lista'));     
-                        }
-                        if($em->getRepository('MisionSucreRipesBundle:CoordinadorTurno')->CoordinadorTurno($operario->getTurno(),$coordaldea->getId()))
-                        {
-                        $request->getSession()->getFlashBag()->add(
-                        'notice',
-                        'Acceso Denegado a esta Turno'
-                        );
-                        return $this->redirect($this->generateUrl('usuario_lista'));     
-                        }
-                        break;
-                }
-                }
- else {
-     if($usr->getTipUsr()==5){    
-                        $coordaldea = $this->getDoctrine()
-                        ->getRepository('MisionSucreRipesBundle:CoordinadorAldea')
-                        ->findOneByUser($usr->getId());
-                        if($coordaldea)
-                            $aldea=$coordaldea->getAldea();
-                }
- }
                 $usuario =  $em->getRepository('MisionSucreRipesBundle:Role')->findOneByRole($id);    
                 $sociales =  $em->getRepository('MisionSucreRipesBundle:Social')->findOneByUser($id); 
                 $enfermedades =  $usr->getEnfermedades()->getValues();
@@ -372,13 +294,16 @@ public function showAction(Request $request,$id){
                 $comunitaria =  $em->getRepository('MisionSucreRipesBundle:ParticipacionComunitaria')->findOneByUser($id);       
                 $politica =  $em->getRepository('MisionSucreRipesBundle:ParticipacionPolitica')->findOneByUser($id);    
                 
+                $bloqueo = $this->getDoctrine()
+                ->getRepository('MisionSucreRipesBundle:Bloqueado')
+                ->findOneByCedulas($per->getCedPer());
                 
                 return $this->render(
 			'MisionSucreRipesBundle:Operario:show.html.twig',
 			array('usuario' => $usuario,'persona' => $per,'sociales'=> $sociales,'enfermedades'=>$enfermedades,
                         'discapacidad'=>$discapacidad,'arte'=>$arte,'deporte'=>$deporte,'trabajo'=>$trabajo,
                             'comunitaria'=>$comunitaria,'politica'=>$politica,'academico'=>$academico,'operario'=>$operario,
-                            'ubicacionvivienda'=>$ubicacionvivienda,'aldea'=>$aldea
+                            'ubicacionvivienda'=>$ubicacionvivienda,'aldea'=>$aldea,'bloqueo'=>$bloqueo
                         )
 		);
         }

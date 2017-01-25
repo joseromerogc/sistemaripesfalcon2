@@ -38,7 +38,8 @@ class PeriodoTriunfadorRepository extends EntityRepository
                     FROM MisionSucreRipesBundle:Persona p, MisionSucreRipesBundle:User u,
                     MisionSucreRipesBundle:Triunfador t,
                     MisionSucreRipesBundle:PeriodoAcademicoAmbiente ppamb JOIN ppamb.ambiente a
-                    WHERE p.user=u.id AND t.user=u.id  AND t.ambiente=a.id 
+                    WHERE p.user=u.id AND t.user=u.id  AND t.ambiente=a.id AND
+                    ppamb.id=:idpamb
                     AND 
                     NOT EXISTS (SELECT pt FROM MisionSucreRipesBundle:PeriodoTriunfador pt WHERE pt.user=u.id AND pt.periodoacademicoambiente=:idpamb )
                     ORDER BY p.priNom, p.segNom
@@ -58,6 +59,7 @@ class PeriodoTriunfadorRepository extends EntityRepository
             ->setParameters(array('user'=> $user,'idppamb'=>$idppamb))      
             ->getResult();
     }
+    
     public function ExistePeriodoAcademico($idpacad,$user){
         
         return $this->getEntityManager()

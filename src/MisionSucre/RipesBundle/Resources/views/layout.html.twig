@@ -75,6 +75,10 @@
                                         <span ><img src="{{asset('img/Zoom-icon.png')}}"/>
                                         </span>
                                         Buscar</a></li>
+                            <li><a href="{{path('atencion_resumen')}}">
+                                        <span ><img src="{{asset('img/Zoom-icon.png')}}"/>
+                                        </span>
+                                        Resumen</a></li>
                         </ul>
 		</li>
                 {% endif %}
@@ -122,6 +126,10 @@
                                         <span ><img src="{{asset('img/Mimetypes-application-pdf-icon.png')}}"/>
                                         </span>
                                         Manual de usuario</a></li>
+                            <li><a href="{{ path('bloquear_lista') }}">
+                                        <span ><img src="{{asset('img/Mimetypes-application-pdf-icon.png')}}"/>
+                                        </span>
+                                        Usuarios Bloqueados</a></li>
                         {% endif %}            
 			</ul>
                         
@@ -162,6 +170,10 @@
                                         <span ><img src="{{asset('img/Resume-icon-small.png')}}"/>
                                         </span>
                                         Actividades de Aldea</a></li>
+                                <li><a href="{{path('aldea_coordinador_lista')}}">
+                                        <span ><img src="{{asset('img/Link-icon.png')}}"/>
+                                        </span>
+                                        Coordinadores de Aldea</a></li>
                                 <li><a href="{{path('eje_lista')}}">
                                         <span ><img src="{{asset('img/Link-icon.png')}}"/>
                                         </span>
@@ -369,13 +381,14 @@
                 {% else%}
                    {% set class='' %}
                 {% endif %}
-             
-              
               {% if is_granted('ROLE_COORD')%}
                     <li class ={{class}}>
 			<h3><span><img src="{{asset('img/community-users-icon.png')}}"/></span>Participación Política-Comunitaria</h3>
 			<ul>
-                                  
+                                {% if is_granted('ROLE_ADMIN')%}
+                                <li><a href="{{path('consejo_comunal_new')}}"><span ><img src="{{asset('img/Actions-view-list-details-icon-small.png')}}"/>
+                                        </span>Nuevo Consejo Comunal</a></li>         
+                                {% endif%}            
                                 <li><a href="{{path('comunitaria_lista')}}"><span ><img src="{{asset('img/Actions-view-list-details-icon-small.png')}}"/>
                                         </span>Participación Comunitaria</a></li>         
                                 <li><a href="{{path('politica_lista')}}"><span ><img src="{{asset('img/Actions-view-list-details-icon-small.png')}}"/>
@@ -426,14 +439,52 @@
                  </li>
               {% endif%}
               
-              
-               {% set route = app.request.attributes.get('_route')| split('_',2) %}
-                {% if route[0] == 'consejocomunal'%}
+             {#listado admin#} 
+              {% if is_granted('ROLE_ADMIN') %}
+                {% set route = app.request.attributes.get('_route')| split('_',2) %}
+                    
+                {% if route[0] == 'listaadmin'%}
                    {% set class='active' %}
                 {% else%}
                    {% set class='' %}
                 {% endif %}
+                
+                <li class ={{class}}>
+			<h3><span><img src="{{asset('img/Teachers-icon.png')}}"/></span>Listas</h3>
+			<ul>
+				<li><a href="{{path('anexoaldea_listasadmin')}}"><span ><img src="{{asset('img/Natural-Link-icon.png')}}"/>
+                                        </span>Ambientes Comunales</a></li>
+				<li><a href="{{path('academico_listasadmin')}}"><span ><img src="{{asset('img/Natural-Link-icon.png')}}"/>
+                                        </span>Datos Académicos</a></li>
+              
+			</ul>
+		</li>
+             {% endif %}
+             {#finlistadoadmin#}                         
              
+             {#Resumenes estadisticos admin#}
+              {% if is_granted('ROLE_ADMIN') %}
+                {% set route = app.request.attributes.get('_route')| split('_',2) %}
+                    
+                {% if route[0] == 'resumenadmin'%}
+                   {% set class='active' %}
+                {% else%}
+                   {% set class='' %}
+                {% endif %}
+                
+                <li class ={{class}}>
+			<h3><span><img src="{{asset('img/Teachers-icon.png')}}"/></span>Resumen Estadistico</h3>
+			<ul>    
+                            <li><a href="{{path('anexoaldea_resumenadmin')}}"><span ><img src="{{asset('img/Natural-Link-icon.png')}}"/>
+                                        </span>Ambientes Comunales</a></li>
+                            <li><a href="{{path('academico_resumenadmin')}}"><span ><img src="{{asset('img/Natural-Link-icon.png')}}"/>
+                                        </span>Datos Académicos</a></li>
+				
+                                       
+			</ul>
+		</li>
+             {% endif %}
+              {#Fin de Resumenes estadisticos admin#}  
              
 	</ul>
 </div>

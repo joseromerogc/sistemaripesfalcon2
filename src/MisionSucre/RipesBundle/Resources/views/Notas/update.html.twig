@@ -1,0 +1,198 @@
+{% extends 'MisionSucreRipesBundle::layout.html.twig' %}
+
+{% block stylesheets %}
+{{ parent() }}
+	<link rel="stylesheet" type="text/css" href="{{asset('css/form/responsiveform.css')}}">
+	<link rel="stylesheet" media="screen and (max-width: 1200px) and (min-width: 601px)" href="{{asset('css/form/responsiveform1.css')}}" />
+	<link rel="stylesheet" media="screen and (max-width: 600px) and (min-width: 351px)" href="{{asset('css/form/responsiveform2.css')}}" />
+	<link rel="stylesheet" media="screen and (max-width: 350px)" href="{{asset('css/form/responsiveform3.css')}}" />
+        <link rel="stylesheet" type="text/css" href="{{asset('css/table/littletable.css')}}">
+{% endblock %}
+
+{% block content %}
+    <h1 class="heading_style">Carga de Notas</h1> 
+    <div>    
+    <h1 class="sub_heading_style">Información de Ambiente</h1> 
+    <table cellspacing='0' style='margin-top: 0px; margin-bottom: 0px;margin-left: 0px;'> <!-- cellspacing='0' is important, must stay -->
+                <tr><th>ID</th><th>Ambiente</th><th>P.N.F.</th><th>Turno</th><th>Anexo</th><th>Nombre</th><th>Promoción</th><th>Condición</th>
+                    <th>Ingreso</th><th>Egreso</th>
+                    <th></th>
+                </tr><!-- Table Header -->  
+            <tr>
+                    
+                {% if ambiente.turno == 'n' %}
+                        {% set turno = 'Nocturno' %}
+
+                {% else%}	
+                        {% set turno = 'Fines de Semana' %}
+                {% endif %}	
+
+                    
+                <td>{{ambiente.id}}</td>
+                <td><a href="{{path('aldea_show',{'id': ambiente.aldea.id})}}">{{ambiente.aldea.nombre}}<a></td>
+                <td><a class="enlace" href="{{path('pnf_show',{'id': periodopnf.pnf.id})}}">{{periodopnf.pnf.nombre}}</a></td>
+                <td>{{turno}}</td><td>{%if ambiente.anexo %} {{ambiente.anexo.nombre}} {%endif%}</td>
+                <td>{{ambiente.nombre}}</td>
+                <td>{{ambiente.promocion}}</td><td>{{ambiente.condicion}}</td>
+                <td>{{ambiente.ingreso}}</td><td>{{ambiente.egreso}}</td>
+                {% if is_granted('ROLE_COORD') %}
+                <td><a class="enlace" href="{{path('ambiente_update',{'idamb': ambiente.id})}}">Actualizar</a></td>
+                {% endif%}
+                
+            </tr><!-- Table Row -->
+    </table>    
+    <h1 class="sub_heading_style">Información de Periodo Académico-Unidad Curricular</h1>             
+    <table cellspacing='0' style='margin-top: 0px; margin-bottom: 0px;margin-left: 0px;'> <!-- cellspacing='0' is important, must stay -->
+        <tr><th>ID</th><th>Nombre</th><th>Trayecto</th><th>Periodo/Tramo</th><th>Actual</th><th>Nombre Unidad Curricular</th>
+            <th>Código</th>
+                </tr><!-- Table Header -->  
+            <tr>
+            
+                <td>{{periodoambiente.id}}</td>
+                <td>{{periodoacademico.nombre}}</td>
+                <td>{{periodopnf.trayecto}}</td><td>{{periodopnf.periodo}}</td>
+                <td>{{periodoacademico.actual}}</td>
+                <td>{{malla.uc.nombre}}</td>
+                <td>{{malla.uc.codigo}}</td>
+                {% if is_granted('ROLE_COORD') %}
+                <td><a class="enlace" href="{{path('periodo_academico_update_ambiente',{'idper': periodoambiente.id})}}">Actualizar</a></td>
+                {% endif%}
+                 </tr><!-- Table Row -->
+    </table>  
+    <h1 class="sub_heading_style">Información de Docente</h1>             
+    <table cellspacing='0' style='margin-top: 0px; margin-bottom: 0px;margin-left: 0px;'> <!-- cellspacing='0' is important, must stay -->
+        <tr><th>ID</th><th>Nombre</th><th>Apellio</th><th>Cédula</th>
+                </tr><!-- Table Header -->  
+            <tr>
+                <td>{{docente.user.id}}</td>
+                <td><a class="enlace" href="{{path('usuario_show',{'id': docente.user.id})}}">
+        {{docente.priNom|capitalize}} {{docente.segNom|capitalize}}</td>
+        <td>{{docente.priApe|capitalize}} {{docente.segApe|capitalize}}</td>
+        </a>
+    <td> {{docente.cedPer}}</td>    
+                 </tr><!-- Table Row -->
+    </table>             
+</div>
+
+{% if notas%}                 
+<div id="dt_example">
+<div id="container" style="width: 100%">
+<h1 class="heading_style">Ingrese las Notas:</h1> 
+<table cellpadding="0" cellspacing="0" border="0" class="display" id="example">
+	<thead>
+		<tr>
+			<th>#</th><th>ID</th><th>Cédula</th><th>Nombres</th><th>Apellidos</th><th>Asistencia</th>
+                        <th>Nota</th>
+		</tr>
+	</thead>
+	<tbody id="cuerpotabla">
+	
+
+{% set i = 1 %}
+{% for f in notas %}
+
+		<tr >
+    <td>{{i}}</td><td>{{ f.idpt}}</td>
+    <td>{{ f.cedPer}}</td>
+    <td>{{ f.priNom |upper}} {{ f.segNom |upper}}</td>
+    <td>{{ f.priApe |upper}} {{ f.segApe |upper}}</td>
+    <td><div class="center">
+        {% if f.asistencia =='Si'  %}    
+        <input type="radio" name="asistencia{{i}}" value="Si"  checked>Si
+        <input type="radio" name="asistencia{{i}}" value="No">No
+        <input type="radio" name="asistencia{{i}}" value="NM">No Matriculado
+        {% elseif f.asistencia=='No'  %}    
+        <input type="radio" name="asistencia{{i}}" value="Si"  >Si
+        <input type="radio" name="asistencia{{i}}" value="No" checked>No
+        <input type="radio" name="asistencia{{i}}" value="NM">No Matriculado
+        {% else%}    
+        <input type="radio" name="asistencia{{i}}" value="Si"  >Si
+        <input type="radio" name="asistencia{{i}}" value="No" >No
+        <input type="radio" name="asistencia{{i}}" value="NM" checked>No Matriculado
+        {% endif %}
+        </div>
+
+    </td>
+    <td style="background: #8ac5cf"><div class="center" >
+        <select id="nota{{i}}" name="nota{{i}}" required="required" >
+                    <option value="{{f.valor}}" selected>{{f.valor}}</option>    
+                    {% for j in range(0,20) %}
+                        <option value="{{j}}" > {{j}}</option>
+                    {% endfor%}    
+                    </select>
+        </div>
+
+    </td>
+    </tr>
+ {% set i = i+1 %}   
+{% endfor %}    
+        <tbody>		
+</table>
+</div>
+</div>
+<input type="button" value="Actualizar Notas" class="botonmediano purple" id="cargar"/>
+<input type="button" value="Ver Acta Nota" onclick="window.location='{{path('acta_nota_show',{'idan': actanota.id})}}'" class="botonmediano purple"/>
+{% else %}
+    <h1>No hay Notas Cargadas</h1>
+{% endif %} 
+    
+<script>    
+    
+$(document).ready(function(){
+
+$('#cargar').click( function () {
+
+var ids=[];
+var asistencia=[];
+var notas=[];
+var i=0;
+var notascero=0;
+
+$('#example tbody tr').each(function() {
+    ids[i]=$(this).find("td").eq(1).html();    
+    j=i+1;
+    asistencia[i]=$('input:radio[name=asistencia'+j+ ']:checked').val();
+    notas[i]=$('#nota'+j+'').val();
+    if(notas[i]==""){
+        notascero=1;
+    }
+    i++;
+});
+
+var data=[] ;
+data[0]=ids;
+data[1]=asistencia;
+data[2]=notas;
+data[3]={{actanota.id}};
+
+data= JSON.stringify(data);
+
+var urlajax = '/actanota/actualizarnotas/'+data;
+
+if(notascero)
+{
+   alert("Nota(s) Sin Valor");
+}else
+    {
+$.ajax({
+        url: urlajax,
+        success: function (html) {
+       
+        if(html=="good"){
+        alert("Actualización de Nota realizada con Éxitos")
+        location.reload();    
+        }
+        else{
+        $('.flash-notice').html(html);
+        }
+        }
+    });
+}    
+});
+
+
+});
+
+</script>
+{% endblock %}
+
